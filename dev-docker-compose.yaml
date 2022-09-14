@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   backend:
-    image: blockcoders/ink-substrate-explorer_backend:latest
+    image: fsirnibc/test1:latest
     restart: on-failure
     depends_on:
       - postgres

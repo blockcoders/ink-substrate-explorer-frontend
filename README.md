@@ -110,13 +110,13 @@ cp .env.sample .env
 ### Start the backend using Docker
 
 To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-compose.yaml** file already has an image set up ready to use.
-Running this command it will also start a container for pgAdmin and a local Substrate node that may be used for dev reasons.
+Running this command it will also start a container for pgAdmin.
 
 ```
 docker-compose up -f dev-docker-compose.yaml -d
 ```
 
-Another way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
+A  way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
 
 **Note**: Change the WS_PROVIDER var in the **.env** file to be `ws://127.0.0.1:9944`
 
