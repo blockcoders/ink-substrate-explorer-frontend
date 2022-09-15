@@ -113,7 +113,7 @@ To start the project a **PostgreSQL DB** is needed. For that, the **dev-docker-c
 Running this command it will also start a container for pgAdmin.
 
 ```
-docker-compose up -f dev-docker-compose.yaml -d
+docker-compose -f dev-docker-compose.yaml up -d
 ```
 
 To run a local node add to the **dev-docker-compose.yaml** file the following:
