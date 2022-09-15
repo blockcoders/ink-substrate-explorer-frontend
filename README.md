@@ -79,7 +79,7 @@ cp .env.sample .env
 
 - **NODE_ENV**=development
 - **PORT**=5000
-- **LOG_NAME**=ink-substrate-explorer-frontend
+- **LOG_NAME**=ink-substrate-explorer-api
 - **LOG_LEVEL**=debug
 
 <span style="color:#2a98db"> **GraphQL configurations** </span>
@@ -116,7 +116,18 @@ Running this command it will also start a container for pgAdmin.
 docker-compose up -f dev-docker-compose.yaml -d
 ```
 
-A  way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
+To run a local node add to the **dev-docker-compose.yaml** file the following:
+
+```
+  substrate:
+    image: blockcoders/substrate-contracts-node
+    restart: on-failure
+    ports:
+      - 9944:9944
+    command: '--dev --ws-external'
+```
+
+Another way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
 
 **Note**: Change the WS_PROVIDER var in the **.env** file to be `ws://127.0.0.1:9944`
 
