@@ -1,0 +1,25 @@
+.ink-tab {
+border: 0;
+ &-button {
+    border: 0 !important;
+ }
+ button {
+    border: 0 !important;
+    color: $black !important;
+    padding: 10px 25px;
+    border-radius: 20px !important;
+    font-weight: 600;
+ }
+
+ button.active {
+    border: 0 !important;
+    color: $black !important;
+    background-color: $wierd-violet !important;
+
+ }
+
+}
+
+.ink-tab-button.nav.nav-tabs button {
+    
+}

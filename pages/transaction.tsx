@@ -2,17 +2,17 @@ import type { NextPage } from 'next'
 import { Row, Container, Col, Table } from "react-bootstrap";
 
 
-const Home: NextPage = () => {
+const Transaction: NextPage = () => {
   return (
     <>
       <Row className='mb-5'>
         <Col>
-          <button className='ink-button ink-button_violet'>
+          <button className='ink-button ink-button_violetligth'>
             Blocks
           </button>
         </Col>
         <Col>
-          <button className='ink-button ink-button_violetligth'>
+          <button className='ink-button ink-button_violet'>
             Transaction
           </button>
         </Col>
@@ -55,4 +55,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Transaction

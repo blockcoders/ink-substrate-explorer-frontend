@@ -1,0 +1,28 @@
+.ink_table {
+    thead tr {
+        border: 0;
+    }
+    thead tr th {
+        padding-bottom: 20px;
+        border: 0;
+        font-size: 15px;
+    }
+    tbody {
+        padding-bottom: 20px;
+        box-shadow: 0 0 0 1px #ECE8ED;
+        border-radius: 10px;
+        tr td {
+            border: 0;
+            padding-bottom: 20px;
+            padding-top: 20px;
+            font-size: 12px;
+        }
+        tr {
+            border-bottom: 1px solid #ECE8ED;
+        }
+        tr:last-child {
+            border: 0;
+        }
+    }
+}
+

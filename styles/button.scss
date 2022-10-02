@@ -1,0 +1,18 @@
+.ink-button {
+    width: 100%;
+    padding: 10px 10px;
+    height: 55px;
+    border-radius: 16px;
+    border: 0;
+    font-size: 20px;
+    &_violet {
+        background-color: $dark-violet;
+        color: #fff;
+        font-weight: 600;
+    }
+    &_violetligth {
+        background-color: $light-violet;
+        color: $black;
+        font-weight: 600;
+    }
+}

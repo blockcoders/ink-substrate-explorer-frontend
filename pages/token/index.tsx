@@ -1,20 +1,32 @@
 import type { NextPage } from 'next'
 import { Row, Container, Col, Table } from "react-bootstrap";
+import Link from 'next/link'
 
 
-const Home: NextPage = () => {
+const Transaction: NextPage = () => {
   return (
     <>
       <Row className='mb-5'>
         <Col>
-          <button className='ink-button ink-button_violet'>
-            Blocks
-          </button>
+          <Link href="/token">
+            <button className='ink-button ink-button_violet'>
+              Transactions
+            </button>
+          </Link>
         </Col>
         <Col>
+        <Link href="/token/contracts">
           <button className='ink-button ink-button_violetligth'>
-            Transaction
+            Contracts
           </button>
+          </Link>
+        </Col>
+        <Col>
+        <Link href="/token/events">
+          <button className='ink-button ink-button_violetligth'>
+            Events
+          </button>
+          </Link>
         </Col>
       </Row>
       <Row>
@@ -55,4 +67,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Transaction
