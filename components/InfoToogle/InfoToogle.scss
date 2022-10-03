@@ -43,6 +43,9 @@
             color: $black;
             font-weight: 600;
         }
+        td {
+            border: 0;
+        }
     }
     @media (max-width: 1195px) {
         max-width: 520px;
