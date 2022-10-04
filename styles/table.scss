@@ -24,5 +24,16 @@
             border: 0;
         }
     }
+    &-number {
+        background-color: $light-blue;
+        color: $blue;
+        border: 1px solid $blue;
+        margin-top: 8px;
+        margin-left: 8px;
+        border-radius: 10px;
+        padding: 1px 7px;
+        display: inline-block;
+        font-weight: 600;
+    }
 }
 

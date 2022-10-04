@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import { Row, Container, Col, Table } from "react-bootstrap";
+import Link from 'next/link'
 
 
 const Home: NextPage = () => {
@@ -7,14 +8,18 @@ const Home: NextPage = () => {
     <>
       <Row className='mb-5'>
         <Col>
-          <button className='ink-button ink-button_violet'>
-            Blocks
-          </button>
+          <Link href="/">
+            <button className='ink-button ink-button_violet'>
+              Blocks
+            </button>
+          </Link>
         </Col>
         <Col>
-          <button className='ink-button ink-button_violetligth'>
-            Transaction
-          </button>
+          <Link href="/transaction">
+            <button className='ink-button ink-button_violetligth'>
+              Transaction
+            </button>
+          </Link>
         </Col>
       </Row>
       <Row>
