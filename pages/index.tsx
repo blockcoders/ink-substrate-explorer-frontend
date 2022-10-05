@@ -1,8 +1,17 @@
+import { getDataFromTree } from '@apollo/client/react/ssr'
+import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { Row, Col, Table } from 'react-bootstrap'
+import { GetBlocksQuery, useGetBlocksQuery } from '../generated'
+import withApollo from '../lib/withApollo'
+const SCHEMA_URL = process.env.SCHEMA_URL || 'http://localhost:8080/graphql'
 
 const Home: NextPage = () => {
+  const { data } = useGetBlocksQuery({ variables: { skip: 10, take: 10 } })
+  const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
+  console.log(SCHEMA_URL)
+  console.log(blocks.length)
   return (
     <>
       <Row className="mb-5">
@@ -55,4 +64,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default withApollo(Home, { getDataFromTree })
