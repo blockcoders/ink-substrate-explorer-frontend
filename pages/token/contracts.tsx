@@ -66,33 +66,61 @@ const Transaction: NextPage = () => {
                     </Col>
                   </Row>
                 </Col>
-                <Col xs="12"></Col>
+                <Col xs="12">
+
+                </Col>
                 <Col xs="12" className="my-5">
-                  <pre>
-                    <code>
-                      {` 
+                  <textarea className="form-control">
+                    {` 
+                     /**
                       *Submitted for verification at Etherscan.io on 2019-11-14
-                      */
-
-                      // hevm: flattened sources of /nix/store/8xb41r4qd0cjb63wcrxf1qmfg88p0961-dss-6fd7de0/src/dai.sol
-                      pragma solidity =0.5.12;
-
-                      ////// /nix/store/8xb41r4qd0cjb63wcrxf1qmfg88p0961-dss-6fd7de0/src/lib.sol
-                      // This program is free software: you can redistribute it and/or modify
-                      // it under the terms of the GNU General Public License as published by
-                      // the Free Software Foundation, either version 3 of the License, or
-                      // (at your option) any later version.
-
-                      // This program is distributed in the hope that it will be useful,
-                      // but WITHOUT ANY WARRANTY; without even the implied warranty of
-                      // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-                      // GNU General Public License for more details.
-
-                      // You should have received a copy of the GNU General Public License
-                      // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-                          modifier note {}`}
-                    </code>
-                  </pre>
+                     */
+                     
+                     // hevm: flattened sources of /nix/store/8xb41r4qd0cjb63wcrxf1qmfg88p0961-dss-6fd7de0/src/dai.sol
+                     pragma solidity =0.5.12;
+                     
+                     ////// /nix/store/8xb41r4qd0cjb63wcrxf1qmfg88p0961-dss-6fd7de0/src/lib.sol
+                     // This program is free software: you can redistribute it and/or modify
+                     // it under the terms of the GNU General Public License as published by
+                     // the Free Software Foundation, either version 3 of the License, or
+                     // (at your option) any later version.
+                     
+                     // This program is distributed in the hope that it will be useful,
+                     // but WITHOUT ANY WARRANTY; without even the implied warranty of
+                     // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                     // GNU General Public License for more details.
+                     
+                     // You should have received a copy of the GNU General Public License
+                     // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+                     
+                         modifier note {` }
+                  </textarea>
+                </Col>
+                <Col xs="12">
+                  <Row>
+                    <Col>
+                      <b>Contract ABI</b>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col xs="12" className="my-5">
+                  <textarea className="form-control">
+                    {` 
+[{"inputs":[{"internalType":"uint256","name":"chainId_","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"src","type":"address"},{"indexed":true,"internalType":"address","name":"guy","type":"address"},{"indexed":false,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":true,"inputs":[{"indexed":true,"internalType":"bytes4","name":"sig","type":"bytes4"},{"indexed":true,"internalType":"address","name":"usr","type":"address"},{"indexed":true,"internalType":"bytes32","name":"arg1","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"arg2","type":"bytes32"},{"indexed":false,"internalType":"bytes","name":"data","type":"bytes"}],"name":"LogNote","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"src","type":"address"},{"indexed":true,"internalType":"address","name":"dst","type":"address"},{"indexed":false,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Transfer","type":"event"},{"constant":true,"inputs":[],"name":"DOMAIN_SEPARATOR","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"PERMIT_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":` }
+                  </textarea>
+                </Col>
+                <Col xs="12">
+                  <Row>
+                    <Col>
+                      <b>Contract Creation Code</b>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col xs="12" className="my-5">
+                <textarea className="form-control">
+                    {` 
+[{"inputs":[{"internalType":"uint256","name":"chainId_","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"src","type":"address"},{"indexed":true,"internalType":"address","name":"guy","type":"address"},{"indexed":false,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":true,"inputs":[{"indexed":true,"internalType":"bytes4","name":"sig","type":"bytes4"},{"indexed":true,"internalType":"address","name":"usr","type":"address"},{"indexed":true,"internalType":"bytes32","name":"arg1","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"arg2","type":"bytes32"},{"indexed":false,"internalType":"bytes","name":"data","type":"bytes"}],"name":"LogNote","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"src","type":"address"},{"indexed":true,"internalType":"address","name":"dst","type":"address"},{"indexed":false,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Transfer","type":"event"},{"constant":true,"inputs":[],"name":"DOMAIN_SEPARATOR","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"PERMIT_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":` }
+                  </textarea>
                 </Col>
               </Row>
             </Tab>

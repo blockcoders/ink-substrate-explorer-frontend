@@ -28,7 +28,7 @@ const Home: NextPage = () => {
       </Row>
       <Row>
         <Col>
-          <Table responsive className="ink_table">
+          <Table responsive hover className='ink_table'>
             <thead>
               <tr>
                 <th>Block number</th>
@@ -44,7 +44,7 @@ const Home: NextPage = () => {
                 <td className="black">#15167764</td>
                 <td>15167764</td>
                 <td>Jul-18-2022 04:38:07 PM +UTC</td>
-                <td className="black">0xea674fdde714fd979de3edf0f56aa9716b898ec8 </td>
+                <td className='black'><Link href="/transaction/details/0xff8e6fb9752f34afc2f57816062530f21d000c231ffdc9f29f8e9853deaffb88">0xea674fdde714fd979de3edf0f56aa9716b898ec8 </Link></td>
                 <td>4</td>
                 <td>540 bytes</td>
               </tr>
@@ -52,7 +52,7 @@ const Home: NextPage = () => {
                 <td className="black">#15167764</td>
                 <td>15167764</td>
                 <td>Jul-18-2022 04:38:07 PM +UTC</td>
-                <td className="black">0xea674fdde714fd979de3edf0f56aa9716b898ec8 </td>
+                <td className='black'><Link href="/transaction/details/0xff8e6fb9752f34afc2f57816062530f21d000c231ffdc9f29f8e9853deaffb88">0xea674fdde714fd979de3edf0f56aa9716b898ec8 </Link></td>
                 <td>4</td>
                 <td>540 bytes</td>
               </tr>
