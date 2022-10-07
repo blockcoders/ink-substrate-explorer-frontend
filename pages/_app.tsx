@@ -1,22 +1,22 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { useEffect } from 'react';
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { Row, Container, Col } from "react-bootstrap";
-import {getTitle} from '../utils/pagetitile'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { Row, Container, Col } from 'react-bootstrap'
 import InfoToogle from '../components/InfoToogle/InfoToogle'
 import SearchBar from '../components/SearchBar/SearchBar'
 import Sidebar from '../components/Sidebar/Sidebar'
 import TokenInfo from '../components/TokenInfo/TokenInfo'
+import { getTitle } from '../utils/pagetitile'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/main.scss'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter();
+  const router = useRouter()
   useEffect(() => {
-    getTitle(router.pathname);
-  }, [router]);
+    getTitle(router.pathname)
+  }, [router])
   return (
     <>
       <Head>

@@ -19,7 +19,7 @@ const Transaction: NextPage = () => {
       </Row>
       <Row>
         <Col>
-          <Table responsive hover className='ink_table'>
+          <Table responsive hover className="ink_table">
             <thead>
               <tr>
                 <th>Tx Hash</th>
@@ -34,22 +34,22 @@ const Transaction: NextPage = () => {
             </thead>
             <tbody>
               <tr>
-                <td className='black'>0xcf903a6fa6da</td>
+                <td className="black">0xcf903a6fa6da</td>
                 <td>transferKeepAlive</td>
-                <td className='black'>#11,230,314</td>
-                <td >5 secs ago</td>
-                <td className='black'>1rk13zKThodKL</td>
-                <td className='black'> 148fP7zCq1JEr</td>
+                <td className="black">#11,230,314</td>
+                <td>5 secs ago</td>
+                <td className="black">1rk13zKThodKL</td>
+                <td className="black"> 148fP7zCq1JEr</td>
                 <td>32.756070 DOT</td>
                 <td>0.015600 DOT</td>
               </tr>
               <tr>
-                <td className='black'>0xcf903a6fa6da</td>
+                <td className="black">0xcf903a6fa6da</td>
                 <td>transferKeepAlive</td>
-                <td className='black'>#11,230,314</td>
-                <td >5 secs ago</td>
-                <td className='black'>1rk13zKThodKL</td>
-                <td className='black'> 148fP7zCq1JEr</td>
+                <td className="black">#11,230,314</td>
+                <td>5 secs ago</td>
+                <td className="black">1rk13zKThodKL</td>
+                <td className="black"> 148fP7zCq1JEr</td>
                 <td>32.756070 DOT</td>
                 <td>0.015600 DOT</td>
               </tr>
