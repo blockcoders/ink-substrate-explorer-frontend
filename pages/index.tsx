@@ -7,10 +7,9 @@ import { GetBlocksQuery, useGetBlocksQuery } from '../generated'
 import withApollo from '../lib/withApollo'
 
 const Home: NextPage = () => {
-  const { data } = useGetBlocksQuery({ variables: { skip: 10, take: 10 } })
+  const { data } = useGetBlocksQuery({ variables: { skip: 0, take: 10 } })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
 
-  console.log(blocks.length)
   return (
     <>
       <Row className="mb-5">
@@ -39,30 +38,20 @@ const Home: NextPage = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="black">#15167764</td>
-                <td>15167764</td>
-                <td>Jul-18-2022 04:38:07 PM +UTC</td>
-                <td className="black">
-                  <Link href="/transaction/details/0xff8e6fb9752f34afc2f57816062530f21d000c231ffdc9f29f8e9853deaffb88">
-                    0xea674fdde714fd979de3edf0f56aa9716b898ec8
-                  </Link>
-                </td>
-                <td>4</td>
-                <td>540 bytes</td>
-              </tr>
-              <tr>
-                <td className="black">#15167764</td>
-                <td>15167764</td>
-                <td>Jul-18-2022 04:38:07 PM +UTC</td>
-                <td className="black">
-                  <Link href="/transaction/details/0xff8e6fb9752f34afc2f57816062530f21d000c231ffdc9f29f8e9853deaffb88">
-                    0xea674fdde714fd979de3edf0f56aa9716b898ec8
-                  </Link>
-                </td>
-                <td>4</td>
-                <td>540 bytes</td>
-              </tr>
+              {blocks.map((block) => (
+                <tr key={block.hash}>
+                  <td className="black">#{block.number}</td>
+                  <td>{block.number}</td>
+                  <td>{new Date(block.timestamp).toUTCString()}</td>
+                  <td className="black">
+                    <Link href="/transaction/details/0xff8e6fb9752f34afc2f57816062530f21d000c231ffdc9f29f8e9853deaffb88">
+                      0xea674fdde714fd979de3edf0f56aa9716b898ec8
+                    </Link>
+                  </td>
+                  <td>{block?.transactions?.length || 0}</td>
+                  <td>540 bytes</td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </Col>

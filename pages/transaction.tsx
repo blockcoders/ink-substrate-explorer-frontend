@@ -1,8 +1,18 @@
+import { getDataFromTree } from '@apollo/client/react/ssr'
+import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { Row, Col, Table } from 'react-bootstrap'
+import { useGetTransactionsQuery, GetTransactionsQuery } from '../generated'
+import withApollo from '../lib/withApollo'
+
+const showShortHash = (hash: string) => {
+  return `${hash.slice(0, 6)}...${hash.slice(-6)}`
+}
 
 const Transaction: NextPage = () => {
+  const { data } = useGetTransactionsQuery({ variables: { skip: 0, take: 10 } })
+  const transactions = get(data, 'getTransactions', []) as GetTransactionsQuery['getTransactions']
   return (
     <>
       <Row className="mb-5">
@@ -33,26 +43,18 @@ const Transaction: NextPage = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="black">0xcf903a6fa6da</td>
-                <td>transferKeepAlive</td>
-                <td className="black">#11,230,314</td>
-                <td>5 secs ago</td>
-                <td className="black">1rk13zKThodKL</td>
-                <td className="black"> 148fP7zCq1JEr</td>
-                <td>32.756070 DOT</td>
-                <td>0.015600 DOT</td>
-              </tr>
-              <tr>
-                <td className="black">0xcf903a6fa6da</td>
-                <td>transferKeepAlive</td>
-                <td className="black">#11,230,314</td>
-                <td>5 secs ago</td>
-                <td className="black">1rk13zKThodKL</td>
-                <td className="black"> 148fP7zCq1JEr</td>
-                <td>32.756070 DOT</td>
-                <td>0.015600 DOT</td>
-              </tr>
+              {transactions.map((transaction) => (
+                <tr key={transaction.hash}>
+                  <td className="black">{showShortHash(transaction.hash)}</td>
+                  <td>{transaction.method}</td>
+                  <td className="black">{showShortHash(transaction.blockHash || '')}</td>
+                  <td>{new Date(transaction.timestamp).toUTCString()}</td>
+                  <td className="black">1rk13zKThodKL</td>
+                  <td className="black"> 148fP7zCq1JEr</td>
+                  <td>32.756070 DOT</td>
+                  <td>0.015600 DOT</td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </Col>
@@ -61,4 +63,4 @@ const Transaction: NextPage = () => {
   )
 }
 
-export default Transaction
+export default withApollo(Transaction, { getDataFromTree })

@@ -22,6 +22,7 @@ export type Block = {
   hash: Scalars['String'];
   number: Scalars['Int'];
   parentHash: Scalars['String'];
+  timestamp: Scalars['Float'];
   transactions: Array<Transaction>;
 };
 
@@ -39,6 +40,7 @@ export type Event = {
   index: Scalars['String'];
   method: Scalars['String'];
   section: Scalars['String'];
+  timestamp: Scalars['Float'];
   topics: Scalars['String'];
   transactionHash?: Maybe<Scalars['String']>;
 };
@@ -121,6 +123,7 @@ export type Transaction = {
   signature: Scalars['String'];
   /** Address of the signer */
   signer?: Maybe<Scalars['String']>;
+  timestamp: Scalars['Float'];
   /** Extra gas paid for the Tx as tip */
   tip?: Maybe<Scalars['Int']>;
 };
@@ -131,7 +134,15 @@ export type GetBlocksQueryVariables = Exact<{
 }>;
 
 
-export type GetBlocksQuery = { __typename?: 'Query', getBlocks: Array<{ __typename?: 'Block', hash: string, number: number, parentHash: string, transactions: Array<{ __typename?: 'Transaction', hash: string }> }> };
+export type GetBlocksQuery = { __typename?: 'Query', getBlocks: Array<{ __typename?: 'Block', hash: string, number: number, parentHash: string, timestamp: number, transactions: Array<{ __typename?: 'Transaction', hash: string }> }> };
+
+export type GetTransactionsQueryVariables = Exact<{
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+}>;
+
+
+export type GetTransactionsQuery = { __typename?: 'Query', getTransactions: Array<{ __typename?: 'Transaction', blockHash?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, timestamp: number, tip?: number | null, events: Array<{ __typename?: 'Event', method: string, section: string }> }> };
 
 
 export const GetBlocksDocument = gql`
@@ -140,6 +151,7 @@ export const GetBlocksDocument = gql`
     hash
     number
     parentHash
+    timestamp
     transactions {
       hash
     }
@@ -175,3 +187,51 @@ export function useGetBlocksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type GetBlocksQueryHookResult = ReturnType<typeof useGetBlocksQuery>;
 export type GetBlocksLazyQueryHookResult = ReturnType<typeof useGetBlocksLazyQuery>;
 export type GetBlocksQueryResult = Apollo.QueryResult<GetBlocksQuery, GetBlocksQueryVariables>;
+export const GetTransactionsDocument = gql`
+    query getTransactions($skip: Int!, $take: Int!) {
+  getTransactions(skip: $skip, take: $take) {
+    blockHash
+    events {
+      method
+      section
+    }
+    hash
+    method
+    nonce
+    section
+    signature
+    signer
+    timestamp
+    tip
+  }
+}
+    `;
+
+/**
+ * __useGetTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTransactionsQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useGetTransactionsQuery(baseOptions: Apollo.QueryHookOptions<GetTransactionsQuery, GetTransactionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTransactionsQuery, GetTransactionsQueryVariables>(GetTransactionsDocument, options);
+      }
+export function useGetTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTransactionsQuery, GetTransactionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTransactionsQuery, GetTransactionsQueryVariables>(GetTransactionsDocument, options);
+        }
+export type GetTransactionsQueryHookResult = ReturnType<typeof useGetTransactionsQuery>;
+export type GetTransactionsLazyQueryHookResult = ReturnType<typeof useGetTransactionsLazyQuery>;
+export type GetTransactionsQueryResult = Apollo.QueryResult<GetTransactionsQuery, GetTransactionsQueryVariables>;
