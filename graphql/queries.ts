@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const BLOCKS_QUERY = gql`
-  query getBlocks($skip: Int!, $take: Int!) {
-    getBlocks(skip: $skip, take: $take) {
+  query getBlocks($skip: Int!, $take: Int!, $orderByNumber: Boolean, $orderAsc: Boolean) {
+    getBlocks(skip: $skip, take: $take, orderByNumber: $orderByNumber, orderAsc: $orderAsc) {
       hash
       number
       parentHash

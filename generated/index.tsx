@@ -80,6 +80,8 @@ export type QueryGetBlockArgs = {
 
 
 export type QueryGetBlocksArgs = {
+  orderAsc?: InputMaybe<Scalars['Boolean']>;
+  orderByNumber?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
 };
@@ -131,6 +133,8 @@ export type Transaction = {
 export type GetBlocksQueryVariables = Exact<{
   skip: Scalars['Int'];
   take: Scalars['Int'];
+  orderByNumber?: InputMaybe<Scalars['Boolean']>;
+  orderAsc?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -146,8 +150,13 @@ export type GetTransactionsQuery = { __typename?: 'Query', getTransactions: Arra
 
 
 export const GetBlocksDocument = gql`
-    query getBlocks($skip: Int!, $take: Int!) {
-  getBlocks(skip: $skip, take: $take) {
+    query getBlocks($skip: Int!, $take: Int!, $orderByNumber: Boolean, $orderAsc: Boolean) {
+  getBlocks(
+    skip: $skip
+    take: $take
+    orderByNumber: $orderByNumber
+    orderAsc: $orderAsc
+  ) {
     hash
     number
     parentHash
@@ -173,6 +182,8 @@ export const GetBlocksDocument = gql`
  *   variables: {
  *      skip: // value for 'skip'
  *      take: // value for 'take'
+ *      orderByNumber: // value for 'orderByNumber'
+ *      orderAsc: // value for 'orderAsc'
  *   },
  * });
  */
