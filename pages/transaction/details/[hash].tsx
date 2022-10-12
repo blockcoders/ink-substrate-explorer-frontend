@@ -37,7 +37,7 @@ const Transaction: NextPage = () => {
           <Row>
             <Col className="mb-4">
               <h4>
-                <b>Sumarry</b>
+                <b>Summary</b>
               </h4>
             </Col>
           </Row>

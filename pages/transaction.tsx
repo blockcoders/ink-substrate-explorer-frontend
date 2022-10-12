@@ -45,9 +45,17 @@ const Transaction: NextPage = () => {
             <tbody>
               {transactions.map((transaction) => (
                 <tr key={transaction.hash}>
-                  <td className="black">{showShortHash(transaction.hash)}</td>
+                  <td className="black">
+                    <Link href={'/transaction/details/' + transaction.hash}>
+                      {showShortHash(transaction.hash || '')}
+                    </Link>
+                  </td>
                   <td>{transaction.method}</td>
-                  <td className="black">{showShortHash(transaction.blockHash || '')}</td>
+                  <td className="black">
+                    <Link href={'/block/details/' + transaction.blockHash}>
+                      {showShortHash(transaction.blockHash || '')}
+                    </Link>
+                  </td>
                   <td>{new Date(transaction.timestamp).toUTCString()}</td>
                   <td className="black">1rk13zKThodKL</td>
                   <td className="black"> 148fP7zCq1JEr</td>
