@@ -1,16 +1,50 @@
+import { getDataFromTree } from '@apollo/client/react/ssr'
+import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Image from 'next/future/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Row, Col, Table, Button } from 'react-bootstrap'
 import verifed from '../../../assets/img/arrow.svg'
+import { useGetTransactionQuery, GetTransactionQuery } from '../../../generated'
+import withApollo from '../../../lib/withApollo'
+
+const formatTimeAgo = (date: Date) => {
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
+  let interval = Math.floor(seconds / 31536000)
+  if (interval > 1) {
+    return `${interval} years`
+  }
+  interval = Math.floor(seconds / 2592000)
+  if (interval > 1) {
+    return `${interval} months`
+  }
+  interval = Math.floor(seconds / 86400)
+  if (interval > 1) {
+    return `${interval} days`
+  }
+  interval = Math.floor(seconds / 3600)
+  if (interval > 1) {
+    return `${interval} hours`
+  }
+  interval = Math.floor(seconds / 60)
+  if (interval > 1) {
+    return `${interval} minutes`
+  }
+  return `${Math.floor(seconds)} seconds`
+}
 
 const Transaction: NextPage = () => {
   const router = useRouter()
-  const { hash } = router.query
+  const hash = router.query?.hash as string
   const [open, setOpen] = useState(false)
   //const [text, setText] = useState(false)
   const [view, setView] = useState('Overview')
+
+  const { data } = useGetTransactionQuery({ variables: { hash } })
+  const transaction = get(data, 'getTransaction', []) as GetTransactionQuery['getTransaction']
+  const date = new Date(transaction.timestamp)
 
   return (
     <>
@@ -50,66 +84,76 @@ const Transaction: NextPage = () => {
                     <td>{hash}</td>
                   </tr>
                   <tr>
-                    <td className="black">Method</td>
-                    <td>TransferKeepAlive</td>
-                  </tr>
-                  <tr>
                     <td className="black">Block</td>
-                    <td>#11,230,314</td>
+                    <td>{transaction.blockHash}</td>
                   </tr>
                   <tr>
                     <td className="black">Timestamp</td>
-                    <td>16 mins ago (Aug-08-2022 10:25:29 PM +UTC)</td>
+                    <td>
+                      {formatTimeAgo(date) + ' ago'} ({date.toUTCString()})
+                    </td>
                   </tr>
                   <tr>
-                    <td className="black">Transaction action:</td>
-                    <td>Swap 3,315.160448 USDC For 3,315.5040207689524 DAI</td>
+                    <td className="black">Section</td>
+                    <td>{transaction.section}</td>
                   </tr>
                   <tr>
-                    <td className="black">From</td>
-                    <td>0xff8e6fb9752f34afc2f57816062530f21d000c231ffdc9f29f8e9853deaffb88</td>
+                    <td className="black">Method</td>
+                    <td>{transaction.method}</td>
                   </tr>
                   <tr>
-                    <td className="black">To</td>
-                    <td>0xff8e6fb9752f34afc2f57816062530f21d000c231ffdc9f29f8e9853deaffb88</td>
+                    <td className="black">Signer</td>
+                    <td>{transaction.signer}</td>
                   </tr>
                   <tr>
-                    <td className="black">Tokens transfered</td>
-                    <td>0xff8e6fb9752f34afc2f57816062530f21d000c231ffdc9f29f8e9853deaffb88</td>
+                    <td className="black">Signature</td>
+                    <td>{transaction.signature}</td>
                   </tr>
                   <tr>
-                    <td className="black">Amount</td>
-                    <td>32.756070 DOT</td>
+                    <td className="black">Nonce</td>
+                    <td>{transaction.nonce}</td>
                   </tr>
                   <tr>
-                    <td className="black">Ether Price</td>
-                    <td>0.015600 DOT</td>
+                    <td className="black">Encoded Length</td>
+                    <td>{transaction.encodedLength}</td>
                   </tr>
                   {open && (
                     <>
                       <tr>
-                        <td className="black">Gas Limit & Usage by Txn</td>
-                        <td>486,226 | 319,492 (65.71%)</td>
+                        <td className="black">Tip</td>
+                        <td>{transaction.tip}</td>
                       </tr>
                       <tr>
-                        <td className="black">Burnt & Txn Savings Fees</td>
-                        <td>
-                          🔥 Burnt: 0.003942155161876904 Ether ($6.56) 💸 Txn Savings: 0.004219543660102088 Ether
-                          ($7.03)
-                        </td>
+                        <td className="black">Era</td>
+                        <td>{transaction.era}</td>
                       </tr>
                       <tr>
-                        <td className="black">Others</td>
-                        <td>Txn Type: 2 (EIP-1559) Nonce: 61 Position: 129</td>
+                        <td className="black">Args</td>
+                        <td>{transaction.args}</td>
                       </tr>
                       <tr>
-                        <td className="black">Input Data</td>
-                        <td>
-                          <textarea className="form-control" rows={3}>
-                            Function: mint(uint64 quantity) *** MethodID: 0xfb9d09c8 [0]:
-                            0000000000000000000000000000000000000000000000000000000000000002
-                          </textarea>
-                        </td>
+                        <td className="black">callIndex</td>
+                        <td>{transaction.callIndex}</td>
+                      </tr>
+                      <tr>
+                        <td className="black">Decimals</td>
+                        <td>{transaction.decimals}</td>
+                      </tr>
+                      <tr>
+                        <td className="black">ss58</td>
+                        <td>{transaction.ss58}</td>
+                      </tr>
+                      <tr>
+                        <td className="black">Tokens</td>
+                        <td>{transaction.tokens}</td>
+                      </tr>
+                      <tr>
+                        <td className="black">Type</td>
+                        <td>{transaction.type}</td>
+                      </tr>
+                      <tr>
+                        <td className="black">Version</td>
+                        <td>{transaction.version}</td>
                       </tr>
                     </>
                   )}
@@ -183,4 +227,4 @@ const Transaction: NextPage = () => {
   )
 }
 
-export default Transaction
+export default withApollo(Transaction, { getDataFromTree })

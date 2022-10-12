@@ -33,3 +33,28 @@ export const TRANSACTIONS_QUERY = gql`
     }
   }
 `
+
+export const TRANSACTION_QUERY = gql`
+  query getTransaction($hash: String!) {
+    getTransaction(hash: $hash) {
+      args
+      blockHash
+      callIndex
+      decimals
+      encodedLength
+      era
+      hash
+      method
+      nonce
+      section
+      signature
+      signer
+      ss58
+      timestamp
+      tip
+      tokens
+      type
+      version
+    }
+  }
+`
