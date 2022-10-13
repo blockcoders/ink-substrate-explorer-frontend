@@ -2,7 +2,7 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Row, Container, Col } from 'react-bootstrap'
 import InfoToogle from '../components/InfoToogle/InfoToogle'
 import SearchBar from '../components/SearchBar/SearchBar'
@@ -13,9 +13,11 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/main.scss'
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [title, setTitle] = useState("");
   const router = useRouter()
   useEffect(() => {
-    getTitle(router.pathname)
+    const value:string = getTitle(router.pathname)
+    setTitle(value);
   }, [router])
   return (
     <>
@@ -37,7 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <Col xs="12">
                   <Row>
                     <Col className="d-flex align-items-center">
-                      <h1 className="ink_maincontainer-title">Page Title</h1>
+                      <h1 className="ink_maincontainer-title">{title}</h1>
                     </Col>
                     <Col>
                       <div className="d-flex justify-content-end">

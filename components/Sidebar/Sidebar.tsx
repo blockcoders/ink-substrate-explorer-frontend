@@ -12,8 +12,8 @@ function Navbar() {
     <>
       <div>
         <Image src={logo} alt="Logo" className="ink_sidebar-logo" />
-        <Nav defaultActiveKey="/" className="flex-column">
-          <Link href="/">
+        <Nav defaultActiveKey="/blocks" className="flex-column">
+          <Link href="/blocks">
             <Nav className="ink_sidebar-item">
               <Image src={blocks} alt="Logo" className="ink_sidebar-icon" /> <span>Blocks</span>
             </Nav>

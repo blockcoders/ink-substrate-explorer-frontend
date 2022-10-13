@@ -9,12 +9,12 @@ import withApollo from '../lib/withApollo'
 const Home: NextPage = () => {
   const { data } = useGetBlocksQuery({ variables: { skip: 0, take: 10 } })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
-
+  
   return (
     <>
       <Row className="mb-5">
         <Col>
-          <Link href="/">
+          <Link href="/blocks">
             <button className="ink-button ink-button_violet">Blocks</button>
           </Link>
         </Col>

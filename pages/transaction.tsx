@@ -17,7 +17,7 @@ const Transaction: NextPage = () => {
     <>
       <Row className="mb-5">
         <Col>
-          <Link href="/">
+          <Link href="/blocks">
             <button className="ink-button ink-button_violetligth">Blocks</button>
           </Link>
         </Col>
