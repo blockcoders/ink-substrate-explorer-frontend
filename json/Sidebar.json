@@ -1,0 +1,20 @@
+[
+    {
+        "label": "Blocks",
+        "value": "blocks",
+        "img": "blocks.svg",
+        "route": "/blocks"
+    },
+    {
+        "label": "Transaction",
+        "value": "transaction",
+        "img": "transaction.svg",
+        "route": "/transaction"
+    },
+    {
+        "label": "Token",
+        "value": "token",
+        "img": "token.svg",
+        "route": "/token"
+    }
+]

@@ -1,5 +1,4 @@
 export function getTitle(route: string) {
-    console.log(route);
     let title;
     if (route.includes("transaction")) {
         title = "Transaction";

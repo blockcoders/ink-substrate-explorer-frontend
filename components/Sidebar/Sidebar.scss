@@ -30,6 +30,11 @@
             background-color: white;
             border-radius: 20px;
         }
+        &_active {
+            color: $dark-violet;
+            background-color: white;
+            border-radius: 20px;
+        }
         @media (max-width: 780px) {
             span {
                 display: none;

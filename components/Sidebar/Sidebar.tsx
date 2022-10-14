@@ -1,35 +1,36 @@
 import Image from 'next/future/image'
 import Link from 'next/link'
-import * as React from 'react'
+import React, { useState, useEffect } from "react";
 import { Nav } from 'react-bootstrap'
-import blocks from '../../assets/img/blocks.svg'
 import logo from '../../assets/img/logo.svg'
-import token from '../../assets/img/token.svg'
-import transaction from '../../assets/img/transaction.svg'
+import { useRouter } from 'next/router'
+import { Sidebar } from "../../interfaces/sidebar";
+import Menu from '../../json/Sidebar.json';
+
+
 
 function Navbar() {
+  const [dataJson, setMenu] = useState<Sidebar[]>([]);;
+  const router = useRouter();
+
+  useEffect(() => {
+    setMenu(Menu);
+  }, []);
+
   return (
     <>
       <div>
         <Image src={logo} alt="Logo" className="ink_sidebar-logo" />
-        <Nav defaultActiveKey="/blocks" className="flex-column">
-          <Link href="/blocks">
-            <Nav className="ink_sidebar-item">
-              <Image src={blocks} alt="Logo" className="ink_sidebar-icon" /> <span>Blocks</span>
-            </Nav>
-          </Link>
-          <Link href="/transaction">
-            <Nav className="ink_sidebar-item">
-              <Image src={transaction} alt="Logo" className="ink_sidebar-icon" />
-              <span>Transaction</span>
-            </Nav>
-          </Link>
-          <Link href="/token">
-            <Nav className="ink_sidebar-item">
-              <Image src={token} alt="Logo" className="ink_sidebar-icon" />
-              <span>Token</span>
-            </Nav>
-          </Link>
+        <Nav activeKey={router.pathname} className="flex-column">
+          {dataJson.map((item, index) => (
+            <>
+              <Link href={item.route} key={index} >
+                <Nav className={"ink_sidebar-item" + (router.pathname === item.route ? " ink_sidebar-item_active" : "")}>
+                  <Image src={`/sidebar/${item.img}`} width="24" height="24" alt={item.label} className="ink_sidebar-icon" /> <span>{item.label}</span>
+                </Nav>
+              </Link>
+            </>
+          ))}
         </Nav>
       </div>
     </>

@@ -11,8 +11,10 @@ const showShortHash = (hash: string) => {
 }
 
 const Transaction: NextPage = () => {
+  
   const { data } = useGetTransactionsQuery({ variables: { skip: 0, take: 10 } })
   const transactions = get(data, 'getTransactions', []) as GetTransactionsQuery['getTransactions']
+
   return (
     <>
       <Row className="mb-5">

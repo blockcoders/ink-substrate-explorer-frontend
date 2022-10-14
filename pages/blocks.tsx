@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { getDataFromTree } from '@apollo/client/react/ssr'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
@@ -7,9 +8,14 @@ import { GetBlocksQuery, useGetBlocksQuery } from '../generated'
 import withApollo from '../lib/withApollo'
 
 const Home: NextPage = () => {
+  const [test, setBlocks] = useState([]);
   const { data } = useGetBlocksQuery({ variables: { skip: 0, take: 10 } })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
   
+  useEffect(() => {
+
+  }, []);
+
   return (
     <>
       <Row className="mb-5">
