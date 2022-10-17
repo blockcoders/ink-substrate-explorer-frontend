@@ -19,6 +19,7 @@ export type Scalars = {
 
 export type Block = {
   __typename?: 'Block';
+  encodedLength: Scalars['Float'];
   hash: Scalars['String'];
   number: Scalars['Int'];
   parentHash: Scalars['String'];
@@ -65,6 +66,7 @@ export type Query = {
   getEvents: Array<Event>;
   getTransaction: Transaction;
   getTransactions: Array<Transaction>;
+  getTransactionsByContract: Array<Transaction>;
   status: Scalars['String'];
 };
 
@@ -111,6 +113,14 @@ export type QueryGetTransactionsArgs = {
   take?: InputMaybe<Scalars['Int']>;
 };
 
+
+export type QueryGetTransactionsByContractArgs = {
+  address: Scalars['String'];
+  orderAsc?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
 export type Transaction = {
   __typename?: 'Transaction';
   args?: Maybe<Scalars['String']>;
@@ -142,7 +152,14 @@ export type GetBlocksQueryVariables = Exact<{
 }>;
 
 
-export type GetBlocksQuery = { __typename?: 'Query', getBlocks: Array<{ __typename?: 'Block', hash: string, number: number, parentHash: string, timestamp: number, transactions: Array<{ __typename?: 'Transaction', hash: string }> }> };
+export type GetBlocksQuery = { __typename?: 'Query', getBlocks: Array<{ __typename?: 'Block', hash: string, number: number, parentHash: string, timestamp: number, encodedLength: number, transactions: Array<{ __typename?: 'Transaction', hash: string }> }> };
+
+export type GetBlockQueryVariables = Exact<{
+  hash: Scalars['String'];
+}>;
+
+
+export type GetBlockQuery = { __typename?: 'Query', getBlock: { __typename?: 'Block', hash: string, number: number, parentHash: string, timestamp: number, encodedLength: number, transactions: Array<{ __typename?: 'Transaction', hash: string, timestamp: number, method: string, section: string, signature: string, nonce?: number | null }> } };
 
 export type GetTransactionsQueryVariables = Exact<{
   skip: Scalars['Int'];
@@ -159,6 +176,14 @@ export type GetTransactionQueryVariables = Exact<{
 
 export type GetTransactionQuery = { __typename?: 'Query', getTransaction: { __typename?: 'Transaction', args?: string | null, blockHash?: string | null, callIndex?: string | null, decimals?: string | null, encodedLength?: number | null, era?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, ss58?: string | null, timestamp: number, tip?: number | null, tokens?: string | null, type?: number | null, version?: number | null } };
 
+export type GetTransactionsByContractQueryVariables = Exact<{
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+}>;
+
+
+export type GetTransactionsByContractQuery = { __typename?: 'Query', getTransactions: Array<{ __typename?: 'Transaction', blockHash?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, timestamp: number, tip?: number | null, events: Array<{ __typename?: 'Event', method: string, section: string }> }> };
+
 
 export const GetBlocksDocument = gql`
     query getBlocks($skip: Int!, $take: Int!, $orderByNumber: Boolean, $orderAsc: Boolean) {
@@ -172,6 +197,7 @@ export const GetBlocksDocument = gql`
     number
     parentHash
     timestamp
+    encodedLength
     transactions {
       hash
     }
@@ -209,6 +235,53 @@ export function useGetBlocksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type GetBlocksQueryHookResult = ReturnType<typeof useGetBlocksQuery>;
 export type GetBlocksLazyQueryHookResult = ReturnType<typeof useGetBlocksLazyQuery>;
 export type GetBlocksQueryResult = Apollo.QueryResult<GetBlocksQuery, GetBlocksQueryVariables>;
+export const GetBlockDocument = gql`
+    query getBlock($hash: String!) {
+  getBlock(hash: $hash) {
+    hash
+    number
+    parentHash
+    timestamp
+    encodedLength
+    transactions {
+      hash
+      timestamp
+      method
+      section
+      signature
+      nonce
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetBlockQuery__
+ *
+ * To run a query within a React component, call `useGetBlockQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBlockQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBlockQuery({
+ *   variables: {
+ *      hash: // value for 'hash'
+ *   },
+ * });
+ */
+export function useGetBlockQuery(baseOptions: Apollo.QueryHookOptions<GetBlockQuery, GetBlockQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBlockQuery, GetBlockQueryVariables>(GetBlockDocument, options);
+      }
+export function useGetBlockLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBlockQuery, GetBlockQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBlockQuery, GetBlockQueryVariables>(GetBlockDocument, options);
+        }
+export type GetBlockQueryHookResult = ReturnType<typeof useGetBlockQuery>;
+export type GetBlockLazyQueryHookResult = ReturnType<typeof useGetBlockLazyQuery>;
+export type GetBlockQueryResult = Apollo.QueryResult<GetBlockQuery, GetBlockQueryVariables>;
 export const GetTransactionsDocument = gql`
     query getTransactions($skip: Int!, $take: Int!) {
   getTransactions(skip: $skip, take: $take) {
@@ -309,3 +382,51 @@ export function useGetTransactionLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetTransactionQueryHookResult = ReturnType<typeof useGetTransactionQuery>;
 export type GetTransactionLazyQueryHookResult = ReturnType<typeof useGetTransactionLazyQuery>;
 export type GetTransactionQueryResult = Apollo.QueryResult<GetTransactionQuery, GetTransactionQueryVariables>;
+export const GetTransactionsByContractDocument = gql`
+    query getTransactionsByContract($skip: Int!, $take: Int!) {
+  getTransactions(skip: $skip, take: $take) {
+    blockHash
+    events {
+      method
+      section
+    }
+    hash
+    method
+    nonce
+    section
+    signature
+    signer
+    timestamp
+    tip
+  }
+}
+    `;
+
+/**
+ * __useGetTransactionsByContractQuery__
+ *
+ * To run a query within a React component, call `useGetTransactionsByContractQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTransactionsByContractQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTransactionsByContractQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useGetTransactionsByContractQuery(baseOptions: Apollo.QueryHookOptions<GetTransactionsByContractQuery, GetTransactionsByContractQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTransactionsByContractQuery, GetTransactionsByContractQueryVariables>(GetTransactionsByContractDocument, options);
+      }
+export function useGetTransactionsByContractLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTransactionsByContractQuery, GetTransactionsByContractQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTransactionsByContractQuery, GetTransactionsByContractQueryVariables>(GetTransactionsByContractDocument, options);
+        }
+export type GetTransactionsByContractQueryHookResult = ReturnType<typeof useGetTransactionsByContractQuery>;
+export type GetTransactionsByContractLazyQueryHookResult = ReturnType<typeof useGetTransactionsByContractLazyQuery>;
+export type GetTransactionsByContractQueryResult = Apollo.QueryResult<GetTransactionsByContractQuery, GetTransactionsByContractQueryVariables>;

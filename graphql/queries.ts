@@ -7,8 +7,29 @@ export const BLOCKS_QUERY = gql`
       number
       parentHash
       timestamp
+      encodedLength
       transactions {
         hash
+      }
+    }
+  }
+`
+
+export const BLOCK_QUERY = gql`
+  query getBlock($hash: String!) {
+    getBlock(hash: $hash) {
+      hash
+      number
+      parentHash
+      timestamp
+      encodedLength
+      transactions {
+        hash
+        timestamp
+        method
+        section
+        signature
+        nonce
       }
     }
   }
@@ -55,6 +76,25 @@ export const TRANSACTION_QUERY = gql`
       tokens
       type
       version
+    }
+  }
+`
+export const TRANSACTIONS_BY_CONTRACT_QUERY = gql`
+  query getTransactionsByContract($address: String!, $skip: Int!, $take: Int!, $orderAsc: Boolean) {
+    getTransactionsByContract(skip: $skip, take: $take, orderAsc: $orderAsc, address: $address) {
+      blockHash
+      events {
+        method
+        section
+      }
+      hash
+      method
+      nonce
+      section
+      signature
+      signer
+      timestamp
+      tip
     }
   }
 `

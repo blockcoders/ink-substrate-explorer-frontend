@@ -2,17 +2,27 @@ import { getDataFromTree } from '@apollo/client/react/ssr'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import { Row, Col, Table } from 'react-bootstrap'
+import { useState } from 'react'
+import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import { useGetTransactionsQuery, GetTransactionsQuery } from '../generated'
+import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
 
-const showShortHash = (hash: string) => {
-  return `${hash.slice(0, 6)}...${hash.slice(-6)}`
-}
-
 const Transaction: NextPage = () => {
-  const { data } = useGetTransactionsQuery({ variables: { skip: 0, take: 10 } })
+  const [pagination, setPagination] = useState({ skip: 0, take: 10 })
+  const { data } = useGetTransactionsQuery({ variables: pagination })
   const transactions = get(data, 'getTransactions', []) as GetTransactionsQuery['getTransactions']
+
+  const nextPage = () => {
+    const { skip, take } = pagination
+    setPagination({ skip: skip + 10, take })
+  }
+
+  const previousPage = () => {
+    const { skip, take } = pagination
+    const newSkip = skip - 10
+    setPagination({ skip: newSkip < 0 ? 0 : newSkip, take })
+  }
 
   return (
     <>
@@ -29,43 +39,46 @@ const Transaction: NextPage = () => {
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="12">
           <Table responsive hover className="ink_table">
             <thead>
               <tr>
                 <th>Tx Hash</th>
-                <th>Method</th>
                 <th>Block</th>
-                <th>Age</th>
-                <th>From</th>
-                <th>to</th>
-                <th>Amount</th>
-                <th>Fee</th>
+                <th>Time</th>
+                <th>Method</th>
+                <th>Section</th>
+                <th>Signer</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((transaction) => (
                 <tr key={transaction.hash}>
                   <td className="black">
-                    <Link href={'/transaction/details/' + transaction.hash}>
-                      {showShortHash(transaction.hash || '')}
-                    </Link>
+                    <Link href={'/transaction/details/' + transaction.hash}>{showShortHash(transaction.hash)}</Link>
                   </td>
-                  <td>{transaction.method}</td>
                   <td className="black">
                     <Link href={'/block/details/' + transaction.blockHash}>
                       {showShortHash(transaction.blockHash || '')}
                     </Link>
                   </td>
-                  <td>{new Date(transaction.timestamp).toUTCString()}</td>
-                  <td className="black">1rk13zKThodKL</td>
-                  <td className="black"> 148fP7zCq1JEr</td>
-                  <td>32.756070 DOT</td>
-                  <td>0.015600 DOT</td>
+                  <td>
+                    {formatTimeAgo(new Date(transaction.timestamp)) + ' ago'} (
+                    {new Date(transaction.timestamp).toUTCString()})
+                  </td>
+                  <td>{transaction.method}</td>
+                  <td>{transaction.section}</td>
+                  <td className="black">{transaction.signer}</td>
                 </tr>
               ))}
             </tbody>
           </Table>
+        </Col>
+        <Col xs="12" className="d-flex justify-content-center my-4">
+          <Pagination>
+            <Pagination.Prev onClick={() => previousPage()} />
+            <Pagination.Next onClick={() => nextPage()} />
+          </Pagination>
         </Col>
       </Row>
     </>

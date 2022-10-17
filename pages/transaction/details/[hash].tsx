@@ -7,38 +7,13 @@ import { useState } from 'react'
 import { Row, Col, Table, Button } from 'react-bootstrap'
 import verifed from '../../../assets/img/arrow.svg'
 import { useGetTransactionQuery, GetTransactionQuery } from '../../../generated'
+import { formatTimeAgo } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
-
-const formatTimeAgo = (date: Date) => {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
-  let interval = Math.floor(seconds / 31536000)
-  if (interval > 1) {
-    return `${interval} years`
-  }
-  interval = Math.floor(seconds / 2592000)
-  if (interval > 1) {
-    return `${interval} months`
-  }
-  interval = Math.floor(seconds / 86400)
-  if (interval > 1) {
-    return `${interval} days`
-  }
-  interval = Math.floor(seconds / 3600)
-  if (interval > 1) {
-    return `${interval} hours`
-  }
-  interval = Math.floor(seconds / 60)
-  if (interval > 1) {
-    return `${interval} minutes`
-  }
-  return `${Math.floor(seconds)} seconds`
-}
 
 const Transaction: NextPage = () => {
   const router = useRouter()
   const hash = router.query?.hash as string
   const [open, setOpen] = useState(false)
-  //const [text, setText] = useState(false)
   const [view, setView] = useState('Overview')
 
   const { data } = useGetTransactionQuery({ variables: { hash } })
@@ -114,7 +89,7 @@ const Transaction: NextPage = () => {
                   </tr>
                   <tr>
                     <td className="black">Encoded Length</td>
-                    <td>{transaction.encodedLength}</td>
+                    <td>{transaction.encodedLength} bytes</td>
                   </tr>
                   {open && (
                     <>
