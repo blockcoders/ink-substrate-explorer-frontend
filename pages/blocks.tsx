@@ -8,21 +8,17 @@ import { GetBlocksQuery, useGetBlocksQuery } from '../generated'
 import withApollo from '../lib/withApollo'
 
 const Home: NextPage = () => {
-  const [test, setBlocks] = useState([]);
-  const [pagination, setPagination] = useState({ skip: 0, take: 10 });
+  const [test, setBlocks] = useState([])
+  const [pagination, setPagination] = useState({ skip: 0, take: 10 })
   const { data } = useGetBlocksQuery({ variables: pagination })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
 
   const addPagination = () => {
-    console.log(pagination);
-    setPagination(
-      { skip: 10, take: 20 }
-    );
-  };
+    console.log(pagination)
+    setPagination({ skip: 10, take: 20 })
+  }
 
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, [])
 
   return (
     <>
@@ -73,7 +69,7 @@ const Home: NextPage = () => {
           <Pagination>
             <Pagination.First />
             <Pagination.Prev />
-            <Pagination.Next onClick={() => addPagination()}  />
+            <Pagination.Next onClick={() => addPagination()} />
             <Pagination.Last />
           </Pagination>
         </Col>

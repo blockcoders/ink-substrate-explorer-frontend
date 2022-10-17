@@ -13,11 +13,11 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/main.scss'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState('')
   const router = useRouter()
   useEffect(() => {
-    const value:string = getTitle(router.pathname)
-    setTitle(value);
+    const value: string = getTitle(router.pathname)
+    setTitle(value)
   }, [router])
   return (
     <>
