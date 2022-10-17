@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react'
 import { getDataFromTree } from '@apollo/client/react/ssr'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import { GetBlocksQuery, useGetBlocksQuery } from '../generated'
 import withApollo from '../lib/withApollo'
 
 const Home: NextPage = () => {
-  const [test, setBlocks] = useState([])
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_test, _setBlocks] = useState([])
   const [pagination, setPagination] = useState({ skip: 0, take: 10 })
   const { data } = useGetBlocksQuery({ variables: pagination })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
@@ -18,6 +19,7 @@ const Home: NextPage = () => {
     setPagination({ skip: 10, take: 20 })
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   useEffect(() => {}, [])
 
   return (
