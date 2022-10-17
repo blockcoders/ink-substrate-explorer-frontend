@@ -2,25 +2,26 @@ import { getDataFromTree } from '@apollo/client/react/ssr'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import { GetBlocksQuery, useGetBlocksQuery } from '../generated'
 import withApollo from '../lib/withApollo'
 
 const Home: NextPage = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_test, _setBlocks] = useState([])
   const [pagination, setPagination] = useState({ skip: 0, take: 10 })
   const { data } = useGetBlocksQuery({ variables: pagination })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
 
-  const addPagination = () => {
-    console.log(pagination)
-    setPagination({ skip: 10, take: 20 })
+  const nextPage = () => {
+    const { skip, take } = pagination
+    setPagination({ skip: skip + 10, take })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  useEffect(() => {}, [])
+  const previousPage = () => {
+    const { skip, take } = pagination
+    const newSkip = skip - 10
+    setPagination({ skip: newSkip < 0 ? 0 : newSkip, take })
+  }
 
   return (
     <>
@@ -70,8 +71,8 @@ const Home: NextPage = () => {
         <Col xs="12" className="d-flex justify-content-center my-4">
           <Pagination>
             <Pagination.First />
-            <Pagination.Prev />
-            <Pagination.Next onClick={() => addPagination()} />
+            <Pagination.Prev onClick={() => previousPage()} />
+            <Pagination.Next onClick={() => nextPage()} />
             <Pagination.Last />
           </Pagination>
         </Col>
