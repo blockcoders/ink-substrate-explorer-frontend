@@ -173,6 +173,7 @@ export type GetTransactionsQueryVariables = Exact<{
   skip: Scalars['Int'];
   take: Scalars['Int'];
   orderAsc?: InputMaybe<Scalars['Boolean']>;
+  blockHash?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -311,8 +312,13 @@ export type GetBlockQueryHookResult = ReturnType<typeof useGetBlockQuery>;
 export type GetBlockLazyQueryHookResult = ReturnType<typeof useGetBlockLazyQuery>;
 export type GetBlockQueryResult = Apollo.QueryResult<GetBlockQuery, GetBlockQueryVariables>;
 export const GetTransactionsDocument = gql`
-    query getTransactions($skip: Int!, $take: Int!, $orderAsc: Boolean) {
-  getTransactions(skip: $skip, take: $take, orderAsc: $orderAsc) {
+    query getTransactions($skip: Int!, $take: Int!, $orderAsc: Boolean, $blockHash: String) {
+  getTransactions(
+    skip: $skip
+    take: $take
+    orderAsc: $orderAsc
+    blockHash: $blockHash
+  ) {
     blockHash
     events {
       method
@@ -345,6 +351,7 @@ export const GetTransactionsDocument = gql`
  *      skip: // value for 'skip'
  *      take: // value for 'take'
  *      orderAsc: // value for 'orderAsc'
+ *      blockHash: // value for 'blockHash'
  *   },
  * });
  */

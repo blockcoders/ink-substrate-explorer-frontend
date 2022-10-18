@@ -132,9 +132,7 @@ const Transaction: NextPage = () => {
             </Col>
           </Row>
           <Button onClick={() => setOpen(!open)} aria-expanded={open}>
-            {
-              open ? "Click to see less" : "Click to see more"
-            }
+            {open ? 'Show less' : 'Show more'}
           </Button>
         </>
       )}
