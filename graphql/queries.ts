@@ -98,3 +98,18 @@ export const TRANSACTIONS_BY_CONTRACT_QUERY = gql`
     }
   }
 `
+
+export const EVENTS_QUERY = gql`
+  query getEvents($contract: String!, $skip: Int!, $take: Int!, $orderAsc: Boolean) {
+    getEvents(skip: $skip, take: $take, orderAsc: $orderAsc, contract: $contract) {
+      id
+      data
+      index
+      method
+      section
+      timestamp
+      topics
+      transactionHash
+    }
+  }
+`
