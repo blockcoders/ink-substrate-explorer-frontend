@@ -15,7 +15,8 @@ const Transaction: NextPage = () => {
 
   const toogleOrder = () => {
     const { skip, take, orderAsc } = pagination
-    setPagination({ skip, take, orderAsc: !orderAsc })
+    const newPagination = { skip, take, orderAsc: !orderAsc }
+    setPagination(newPagination)
   }
 
   const nextPage = () => {
@@ -50,7 +51,7 @@ const Transaction: NextPage = () => {
               <tr>
                 <th>Tx Hash</th>
                 <th>Block</th>
-                <th>Time</th>
+                <th onClick={() => toogleOrder()}>Time</th>
                 <th>Method</th>
                 <th>Section</th>
                 <th>Signer</th>
