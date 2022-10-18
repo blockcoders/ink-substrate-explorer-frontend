@@ -1,4 +1,3 @@
-import { getDataFromTree } from '@apollo/client/react/ssr'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
@@ -71,9 +70,7 @@ const Home: NextPage = () => {
                   <td className="black">
                     <Link href={'/block/details/' + block.hash}>{block.hash}</Link>
                   </td>
-                  <td>
-                    {formatTimeAgo(new Date(block.timestamp)) + ' ago'} ({new Date(block.timestamp).toUTCString()})
-                  </td>
+                  <td>{formatTimeAgo(block.timestamp)}</td>
                   <td className="black">
                     <Link href={'/block/details/' + block.parentHash}>{showShortHash(block.parentHash)}</Link>
                   </td>
@@ -95,4 +92,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default withApollo(Home, { getDataFromTree })
+export default withApollo(Home)

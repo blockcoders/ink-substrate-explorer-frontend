@@ -1,4 +1,3 @@
-import { getDataFromTree } from '@apollo/client/react/ssr'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
@@ -78,10 +77,7 @@ const Transaction: NextPage = () => {
                       {showShortHash(transaction.blockHash || '')}
                     </Link>
                   </td>
-                  <td>
-                    {formatTimeAgo(new Date(transaction.timestamp)) + ' ago'} (
-                    {new Date(transaction.timestamp).toUTCString()})
-                  </td>
+                  <td>{formatTimeAgo(transaction.timestamp)}</td>
                   <td>{transaction.method}</td>
                   <td>{transaction.section}</td>
                   <td className="black">{transaction.signer}</td>
@@ -101,4 +97,4 @@ const Transaction: NextPage = () => {
   )
 }
 
-export default withApollo(Transaction, { getDataFromTree })
+export default withApollo(Transaction)

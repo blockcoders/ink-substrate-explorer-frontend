@@ -1,4 +1,3 @@
-import { getDataFromTree } from '@apollo/client/react/ssr'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Image from 'next/future/image'
@@ -18,7 +17,6 @@ const Transaction: NextPage = () => {
 
   const { data } = useGetTransactionQuery({ variables: { hash } })
   const transaction = get(data, 'getTransaction', []) as GetTransactionQuery['getTransaction']
-  const date = new Date(transaction.timestamp)
 
   return (
     <>
@@ -63,9 +61,7 @@ const Transaction: NextPage = () => {
                   </tr>
                   <tr>
                     <td className="black">Timestamp</td>
-                    <td>
-                      {formatTimeAgo(date) + ' ago'} ({date.toUTCString()})
-                    </td>
+                    <td>{formatTimeAgo(transaction.timestamp)}</td>
                   </tr>
                   <tr>
                     <td className="black">Section</td>
@@ -201,4 +197,4 @@ const Transaction: NextPage = () => {
   )
 }
 
-export default withApollo(Transaction, { getDataFromTree })
+export default withApollo(Transaction)

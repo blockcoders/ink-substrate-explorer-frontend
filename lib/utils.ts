@@ -1,5 +1,5 @@
-export const formatTimeAgo = (date: Date) => {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
+const getTimeAgo = (date: Date) => {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
   let interval = Math.floor(seconds / 31536000)
   if (interval > 1) {
     return `${interval} years`
@@ -21,6 +21,12 @@ export const formatTimeAgo = (date: Date) => {
     return `${interval} minutes`
   }
   return `${Math.floor(seconds)} seconds`
+}
+
+export const formatTimeAgo = (timestamp: number) => {
+  const date = new Date(timestamp)
+  const time = getTimeAgo(date)
+  return time + ' ago ' + `${date.toUTCString()}`
 }
 
 export const showShortHash = (hash: string) => {
