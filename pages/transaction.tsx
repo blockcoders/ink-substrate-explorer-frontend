@@ -9,19 +9,24 @@ import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
 
 const Transaction: NextPage = () => {
-  const [pagination, setPagination] = useState({ skip: 0, take: 10 })
+  const [pagination, setPagination] = useState({ skip: 0, take: 10, orderAsc: false })
   const { data } = useGetTransactionsQuery({ variables: pagination })
   const transactions = get(data, 'getTransactions', []) as GetTransactionsQuery['getTransactions']
 
+  const toogleOrder = () => {
+    const { skip, take, orderAsc } = pagination
+    setPagination({ skip, take, orderAsc: !orderAsc })
+  }
+
   const nextPage = () => {
-    const { skip, take } = pagination
-    setPagination({ skip: skip + 10, take })
+    const { skip, take, orderAsc } = pagination
+    setPagination({ skip: skip + 10, take, orderAsc })
   }
 
   const previousPage = () => {
-    const { skip, take } = pagination
+    const { skip, take, orderAsc } = pagination
     const newSkip = skip - 10
-    setPagination({ skip: newSkip < 0 ? 0 : newSkip, take })
+    setPagination({ skip: newSkip < 0 ? 0 : newSkip, take, orderAsc })
   }
 
   return (
