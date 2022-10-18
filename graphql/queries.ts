@@ -36,8 +36,8 @@ export const BLOCK_QUERY = gql`
 `
 
 export const TRANSACTIONS_QUERY = gql`
-  query getTransactions($skip: Int!, $take: Int!) {
-    getTransactions(skip: $skip, take: $take) {
+  query getTransactions($skip: Int!, $take: Int!, $orderAsc: Boolean) {
+    getTransactions(skip: $skip, take: $take, orderAsc: $orderAsc) {
       blockHash
       events {
         method

@@ -109,6 +109,7 @@ export type QueryGetTransactionArgs = {
 
 export type QueryGetTransactionsArgs = {
   blockHash?: InputMaybe<Scalars['String']>;
+  orderAsc?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
 };
@@ -164,6 +165,7 @@ export type GetBlockQuery = { __typename?: 'Query', getBlock: { __typename?: 'Bl
 export type GetTransactionsQueryVariables = Exact<{
   skip: Scalars['Int'];
   take: Scalars['Int'];
+  orderAsc?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -177,12 +179,14 @@ export type GetTransactionQueryVariables = Exact<{
 export type GetTransactionQuery = { __typename?: 'Query', getTransaction: { __typename?: 'Transaction', args?: string | null, blockHash?: string | null, callIndex?: string | null, decimals?: string | null, encodedLength?: number | null, era?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, ss58?: string | null, timestamp: number, tip?: number | null, tokens?: string | null, type?: number | null, version?: number | null } };
 
 export type GetTransactionsByContractQueryVariables = Exact<{
+  address: Scalars['String'];
   skip: Scalars['Int'];
   take: Scalars['Int'];
+  orderAsc?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type GetTransactionsByContractQuery = { __typename?: 'Query', getTransactions: Array<{ __typename?: 'Transaction', blockHash?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, timestamp: number, tip?: number | null, events: Array<{ __typename?: 'Event', method: string, section: string }> }> };
+export type GetTransactionsByContractQuery = { __typename?: 'Query', getTransactionsByContract: Array<{ __typename?: 'Transaction', blockHash?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, timestamp: number, tip?: number | null, events: Array<{ __typename?: 'Event', method: string, section: string }> }> };
 
 
 export const GetBlocksDocument = gql`
@@ -283,8 +287,8 @@ export type GetBlockQueryHookResult = ReturnType<typeof useGetBlockQuery>;
 export type GetBlockLazyQueryHookResult = ReturnType<typeof useGetBlockLazyQuery>;
 export type GetBlockQueryResult = Apollo.QueryResult<GetBlockQuery, GetBlockQueryVariables>;
 export const GetTransactionsDocument = gql`
-    query getTransactions($skip: Int!, $take: Int!) {
-  getTransactions(skip: $skip, take: $take) {
+    query getTransactions($skip: Int!, $take: Int!, $orderAsc: Boolean) {
+  getTransactions(skip: $skip, take: $take, orderAsc: $orderAsc) {
     blockHash
     events {
       method
@@ -316,6 +320,7 @@ export const GetTransactionsDocument = gql`
  *   variables: {
  *      skip: // value for 'skip'
  *      take: // value for 'take'
+ *      orderAsc: // value for 'orderAsc'
  *   },
  * });
  */
@@ -383,8 +388,13 @@ export type GetTransactionQueryHookResult = ReturnType<typeof useGetTransactionQ
 export type GetTransactionLazyQueryHookResult = ReturnType<typeof useGetTransactionLazyQuery>;
 export type GetTransactionQueryResult = Apollo.QueryResult<GetTransactionQuery, GetTransactionQueryVariables>;
 export const GetTransactionsByContractDocument = gql`
-    query getTransactionsByContract($skip: Int!, $take: Int!) {
-  getTransactions(skip: $skip, take: $take) {
+    query getTransactionsByContract($address: String!, $skip: Int!, $take: Int!, $orderAsc: Boolean) {
+  getTransactionsByContract(
+    skip: $skip
+    take: $take
+    orderAsc: $orderAsc
+    address: $address
+  ) {
     blockHash
     events {
       method
@@ -414,8 +424,10 @@ export const GetTransactionsByContractDocument = gql`
  * @example
  * const { data, loading, error } = useGetTransactionsByContractQuery({
  *   variables: {
+ *      address: // value for 'address'
  *      skip: // value for 'skip'
  *      take: // value for 'take'
+ *      orderAsc: // value for 'orderAsc'
  *   },
  * });
  */
