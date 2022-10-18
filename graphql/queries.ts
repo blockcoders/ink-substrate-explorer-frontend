@@ -103,6 +103,19 @@ export const EVENTS_QUERY = gql`
   query getEvents($contract: String!, $skip: Int!, $take: Int!, $orderAsc: Boolean) {
     getEvents(skip: $skip, take: $take, orderAsc: $orderAsc, contract: $contract) {
       id
+      index
+      method
+      section
+      timestamp
+      transactionHash
+    }
+  }
+`
+
+export const EVENT_QUERY = gql`
+  query getEvent($id: String!) {
+    getEvent(id: $id) {
+      id
       data
       index
       method

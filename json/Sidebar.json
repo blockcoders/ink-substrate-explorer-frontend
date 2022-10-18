@@ -6,15 +6,15 @@
         "route": "/blocks"
     },
     {
-        "label": "Transaction",
+        "label": "Transactions",
         "value": "transaction",
         "img": "transaction.svg",
         "route": "/transaction"
     },
     {
-        "label": "Token",
-        "value": "token",
-        "img": "token.svg",
-        "route": "/token"
+        "label": "Contracts",
+        "value": "contract",
+        "img": "contract.svg",
+        "route": "/contract"
     }
 ]

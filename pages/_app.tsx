@@ -4,10 +4,10 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Row, Container, Col } from 'react-bootstrap'
+import ContractInfo from '../components/ContractInfo/ContractInfo'
 import InfoToogle from '../components/InfoToogle/InfoToogle'
 import SearchBar from '../components/SearchBar/SearchBar'
 import Sidebar from '../components/Sidebar/Sidebar'
-import TokenInfo from '../components/TokenInfo/TokenInfo'
 import { getTitle } from '../utils/pagetitile'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/main.scss'
@@ -48,9 +48,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                     </Col>
                   </Row>
                 </Col>
-                {router.pathname.includes('token') && (
+                {router.pathname.includes('contract') && (
                   <Col className="mt-4">
-                    <TokenInfo />
+                    <ContractInfo />
                   </Col>
                 )}
                 <div className="content-page_inside">

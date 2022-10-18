@@ -63,6 +63,7 @@ export type Query = {
   getBlock: Block;
   getBlocks: Array<Block>;
   getContract: Contract;
+  getEvent: Event;
   getEvents: Array<Event>;
   getTransaction: Transaction;
   getTransactions: Array<Transaction>;
@@ -91,6 +92,11 @@ export type QueryGetBlocksArgs = {
 
 export type QueryGetContractArgs = {
   address: Scalars['String'];
+};
+
+
+export type QueryGetEventArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -197,7 +203,14 @@ export type GetEventsQueryVariables = Exact<{
 }>;
 
 
-export type GetEventsQuery = { __typename?: 'Query', getEvents: Array<{ __typename?: 'Event', id: string, data?: string | null, index: string, method: string, section: string, timestamp: number, topics: string, transactionHash?: string | null }> };
+export type GetEventsQuery = { __typename?: 'Query', getEvents: Array<{ __typename?: 'Event', id: string, index: string, method: string, section: string, timestamp: number, transactionHash?: string | null }> };
+
+export type GetEventQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetEventQuery = { __typename?: 'Query', getEvent: { __typename?: 'Event', id: string, data?: string | null, index: string, method: string, section: string, timestamp: number, topics: string, transactionHash?: string | null } };
 
 
 export const GetBlocksDocument = gql`
@@ -457,12 +470,10 @@ export const GetEventsDocument = gql`
     query getEvents($contract: String!, $skip: Int!, $take: Int!, $orderAsc: Boolean) {
   getEvents(skip: $skip, take: $take, orderAsc: $orderAsc, contract: $contract) {
     id
-    data
     index
     method
     section
     timestamp
-    topics
     transactionHash
   }
 }
@@ -498,3 +509,45 @@ export function useGetEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type GetEventsQueryHookResult = ReturnType<typeof useGetEventsQuery>;
 export type GetEventsLazyQueryHookResult = ReturnType<typeof useGetEventsLazyQuery>;
 export type GetEventsQueryResult = Apollo.QueryResult<GetEventsQuery, GetEventsQueryVariables>;
+export const GetEventDocument = gql`
+    query getEvent($id: String!) {
+  getEvent(id: $id) {
+    id
+    data
+    index
+    method
+    section
+    timestamp
+    topics
+    transactionHash
+  }
+}
+    `;
+
+/**
+ * __useGetEventQuery__
+ *
+ * To run a query within a React component, call `useGetEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEventQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetEventQuery(baseOptions: Apollo.QueryHookOptions<GetEventQuery, GetEventQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEventQuery, GetEventQueryVariables>(GetEventDocument, options);
+      }
+export function useGetEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEventQuery, GetEventQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEventQuery, GetEventQueryVariables>(GetEventDocument, options);
+        }
+export type GetEventQueryHookResult = ReturnType<typeof useGetEventQuery>;
+export type GetEventLazyQueryHookResult = ReturnType<typeof useGetEventLazyQuery>;
+export type GetEventQueryResult = Apollo.QueryResult<GetEventQuery, GetEventQueryVariables>;

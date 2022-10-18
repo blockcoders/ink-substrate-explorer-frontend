@@ -1,3 +1,4 @@
+import { getDataFromTree } from '@apollo/client/react/ssr/getDataFromTree'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
@@ -92,4 +93,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default withApollo(Home)
+export default withApollo(Home, { getDataFromTree })

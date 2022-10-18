@@ -4,18 +4,18 @@ import { Row, Col, Table } from 'react-bootstrap'
 import profile from '../../assets/img/profile.svg'
 import recipent from '../../assets/img/recipent.svg'
 
-function TokenInfo() {
+function ContractInfo() {
   return (
     <>
       <Row>
         <Col>
-          <div className=" ink_infotoogle ink_infotoogle-tokeninfo">
+          <div className=" ink_infotoogle ink_infotoogle-contractinfo">
             <Row>
               <Col xs="12">
                 <Image src={recipent} alt="Icon" /> <h5 className="d-inline-block">Transaction Receipt Event Logs</h5>
               </Col>
               <Col xs="12" className="mt-3">
-                <Table className="ink_infotoogle-tokeninfo_table">
+                <Table className="ink_infotoogle-contractinfo_table">
                   <tbody>
                     <tr>
                       <td>Name </td>
@@ -40,13 +40,13 @@ function TokenInfo() {
           </div>
         </Col>
         <Col>
-          <div className=" ink_infotoogle ink_infotoogle-tokeninfo">
+          <div className=" ink_infotoogle ink_infotoogle-contractinfo">
             <Row>
               <Col xs="12">
                 <Image src={profile} alt="Icon" /> <h5 className="d-inline-block">Profile Summary</h5>
               </Col>
               <Col xs="12" className="mt-3">
-                <Table className="ink_infotoogle-tokeninfo_table">
+                <Table className="ink_infotoogle-contractinfo_table">
                   <tbody>
                     <tr>
                       <td>Contract </td>
@@ -73,4 +73,4 @@ function TokenInfo() {
   )
 }
 
-export default TokenInfo
+export default ContractInfo

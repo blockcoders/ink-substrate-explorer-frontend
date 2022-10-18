@@ -1,33 +1,31 @@
+import { useRouter } from 'next/dist/client/router'
 import Image from 'next/future/image'
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
-import Form from 'react-bootstrap/Form'
-import InputGroup from 'react-bootstrap/InputGroup'
 import icon from '../../assets/img/search-icon.svg'
-import { useRouter } from "next/dist/client/router";
 
 function Searchbar() {
-
-  const [selectedType, setSelectedType] = useState("type");
-  const [search, setSearch] = useState("");
-  const router = useRouter();
+  const [selectedType, setSelectedType] = useState('type')
+  const [search, setSearch] = useState('')
+  const router = useRouter()
 
   const change = (e: any) => {
-    setSelectedType(e.target.value);
-  };
+    setSelectedType(e.target.value)
+  }
 
   const handleKeyPress = (e: any) => {
-    if (e.key === "Enter") {
-      handleSubmit();
+    if (e.key === 'Enter') {
+      handleSubmit()
     }
-  };
+  }
 
   const handleSubmit = () => {
-    search.length > 0 && selectedType !== "type" &&
+    search.length > 0 &&
+      selectedType !== 'type' &&
       router.push({
         pathname: `${selectedType}/details/${search}`,
-      });
-  };
+      })
+  }
 
   return (
     <>
@@ -53,18 +51,16 @@ function Searchbar() {
                   value={selectedType}
                   onChange={change}
                 >
-                  <option value={"type"}>
-                    Search for...
-                  </option>
-                  <option value="transaction">Tx Hash</option>
+                  <option value={'type'}>Search by...</option>
+                  <option value="transaction">Transaction Hash</option>
                   <option value="block">Block Hash</option>
-                  <option value="block">Contract Adress</option>
+                  <option value="block">Contract Address</option>
                 </select>
               </span>
               <input
                 type="text"
                 className="form-control ink_searchbar-input"
-                placeholder="Address, Tx Hast, Block"
+                placeholder="Contract Address, Tx Hash, Block Hash"
                 onKeyPress={handleKeyPress}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -74,7 +70,7 @@ function Searchbar() {
                 id="search"
                 onClick={handleSubmit}
               >
-                 <Image src={icon} alt="Icon" />
+                <Image src={icon} alt="Icon" />
               </button>
             </div>
           </>
