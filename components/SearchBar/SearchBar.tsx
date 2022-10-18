@@ -54,7 +54,7 @@ function Searchbar() {
                   <option value={'type'}>Search by...</option>
                   <option value="transaction">Transaction Hash</option>
                   <option value="block">Block Hash</option>
-                  <option value="block">Contract Address</option>
+                  <option value="contract">Contract Address</option>
                 </select>
               </span>
               <input

@@ -5,12 +5,12 @@
         border-radius: 14px;
         min-width: 130px;
         font-weight: 600;
-        &-overview {
+        &-btn {
             background-color: $grey;
             color: $blue;
             border: 1px solid $blue;
         }
-        &-logs {
+        &-active {
             background-color: $blue;
             color: #fff;
             border: 1px solid $blue;
