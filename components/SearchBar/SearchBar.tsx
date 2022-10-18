@@ -23,7 +23,7 @@ function Searchbar() {
     search.length > 0 &&
       selectedType !== 'type' &&
       router.push({
-        pathname: `${selectedType}/details/${search}`,
+        pathname: `/${selectedType}/details/${search}`,
       })
   }
 

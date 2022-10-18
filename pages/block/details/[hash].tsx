@@ -14,7 +14,7 @@ const Block: NextPage = () => {
   const { data } = useGetBlockQuery({ variables: { hash } })
   const block = get(data, 'getBlock', []) as GetBlockQuery['getBlock']
 
-  const [pagination, setPagination] = useState({ skip: 0, take: 5, orderAsc: false, blockHash: block.hash })
+  const [pagination, setPagination] = useState({ skip: 0, take: 5, orderAsc: false, blockHash: block.hash || hash })
   const { data: txData } = useGetTransactionsQuery({ variables: pagination })
   const transactions = get(txData, 'getTransactions', []) as GetTransactionsQuery['getTransactions']
 
@@ -53,7 +53,9 @@ const Block: NextPage = () => {
               </tr>
               <tr>
                 <td className="black">Hash</td>
-                <td>{block.hash}</td>
+                <td>
+                  <Link href={'/block/details/' + block.hash}>{block.hash}</Link>
+                </td>
               </tr>
               <tr>
                 <td className="black">Timestamp</td>
@@ -61,7 +63,9 @@ const Block: NextPage = () => {
               </tr>
               <tr>
                 <td className="black">Parent</td>
-                <td>{block.parentHash}</td>
+                <td>
+                  <Link href={'/block/details/' + block.parentHash}>{block.parentHash}</Link>
+                </td>
               </tr>
               <tr>
                 <td className="black">Size</td>
