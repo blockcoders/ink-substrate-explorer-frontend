@@ -24,14 +24,14 @@ const Transaction: NextPage = () => {
         <Col className="d-flex justify-content-end transaction-tabs">
           <Button
             variant="primary"
-            className={"transaction-tabs_buttons transaction-tabs_buttons-btn"}
+            className={"transaction-tabs_buttons transaction-tabs_buttons-btn " + (view === "Overview" ? "transaction-tabs_buttons-btn_active" : "")}
             onClick={() => setView('Overview')}
           >
             Overview
           </Button>
           <Button
             variant="primary"
-            className={"transaction-tabs_buttons transaction-tabs_buttons-btn"}
+            className={"transaction-tabs_buttons transaction-tabs_buttons-btn " + (view === "Logs" ? "transaction-tabs_buttons-btn_active" : "")}
             onClick={() => setView('Logs')}
           >
             Logs
