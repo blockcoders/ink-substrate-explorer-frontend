@@ -9,19 +9,30 @@ import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
 
 const Home: NextPage = () => {
-  const [pagination, setPagination] = useState({ skip: 0, take: 10 })
+  const [pagination, setPagination] = useState({ skip: 0, take: 10, orderByNumber: false, orderAsc: false })
   const { data } = useGetBlocksQuery({ variables: pagination })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
 
+  const toogleOrder = () => {
+    const { skip, take, orderByNumber, orderAsc } = pagination
+    const newPagination = { skip, take, orderByNumber, orderAsc: !orderAsc }
+    setPagination(newPagination)
+  }
+
+  const toogleOrderByNumber = () => {
+    const { skip, take, orderByNumber, orderAsc } = pagination
+    const newPagination = { skip, take, orderByNumber: !orderByNumber, orderAsc }
+    setPagination(newPagination)
+  }
   const nextPage = () => {
-    const { skip, take } = pagination
-    setPagination({ skip: skip + 10, take })
+    const { skip, take, orderAsc, orderByNumber } = pagination
+    setPagination({ skip: skip + 10, take, orderAsc, orderByNumber })
   }
 
   const previousPage = () => {
-    const { skip, take } = pagination
+    const { skip, take, orderAsc, orderByNumber } = pagination
     const newSkip = skip - 10
-    setPagination({ skip: newSkip < 0 ? 0 : newSkip, take })
+    setPagination({ skip: newSkip < 0 ? 0 : newSkip, take, orderAsc, orderByNumber })
   }
 
   return (
@@ -43,9 +54,11 @@ const Home: NextPage = () => {
           <Table responsive hover className="ink_table">
             <thead>
               <tr>
-                <th>Block number</th>
+                <th onClick={() => toogleOrderByNumber()}>Block number</th>
+                {/* <---  example de como cambiar entre order by number y timestamp*/}
                 <th>Block Hash</th>
-                <th>Time</th>
+                <th onClick={() => toogleOrder()}>Time</th>
+                {/* <---  example de como cambiar entre order ASC y DESC (ambos deberian poder cambiar esto )*/}
                 <th>Parent Hash</th>
                 <th>Transactions</th>
                 <th>Size</th>
