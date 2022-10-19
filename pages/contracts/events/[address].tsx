@@ -15,7 +15,7 @@ const Events: NextPage = () => {
     skip: 0,
     take: 5,
     orderAsc: false,
-    contract: '5GBxhTAsEbYquX5XNjKHS5LAj8326AuP6uQA8ri8VZ9rhVeK', // This shouldnt be here
+    contract: address,
   })
 
   const { data } = useGetEventsQuery({ variables: pagination })

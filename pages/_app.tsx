@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Row, Container, Col } from 'react-bootstrap'
 import ContractInfo from '../components/ContractInfo/ContractInfo'
-import InfoToogle from '../components/InfoToogle/InfoToogle'
+import InfoCard from '../components/InfoCard/InfoCard'
 import SearchBar from '../components/SearchBar/SearchBar'
 import Sidebar from '../components/Sidebar/Sidebar'
 import { getTitle } from '../utils/pagetitile'
@@ -43,7 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     </Col>
                     <Col>
                       <div className="d-flex justify-content-end">
-                        <InfoToogle />
+                        <InfoCard />
                       </div>
                     </Col>
                   </Row>

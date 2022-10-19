@@ -15,7 +15,7 @@ const Transaction: NextPage = () => {
     skip: 0,
     take: 5,
     orderAsc: false,
-    address: '5GBxhTAsEbYquX5XNjKHS5LAj8326AuP6uQA8ri8VZ9rhVeK', // This shouldnt be here
+    address: address,
   })
   const { data } = useGetTransactionsByContractQuery({ variables: pagination })
   const transactions = get(

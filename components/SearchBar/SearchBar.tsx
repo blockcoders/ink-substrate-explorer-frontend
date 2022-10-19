@@ -37,17 +37,6 @@ function Searchbar() {
     <>
       <Row>
         <Col>
-          {/* <InputGroup className="mb-3 ink_searchbar">
-            <InputGroup.Text className="ink_searchbar-icon" id="search">
-              <Image src={icon} alt="Icon" />{' '}
-            </InputGroup.Text>
-            <Form.Control
-              placeholder="Search by Address, Tx Hast, Block"
-              aria-label="search"
-              aria-describedby="search"
-              className="ink_searchbar-input"
-            />
-          </InputGroup> */}
           <>
             <div className="input-group ink_searchbar">
               <span className="input-group-text ink_searchbar-select p-1">

@@ -37,6 +37,8 @@ export type Contract = {
 export type Event = {
   __typename?: 'Event';
   data?: Maybe<Scalars['String']>;
+  decodedData?: Maybe<Scalars['String']>;
+  formattedData: Scalars['String'];
   id: Scalars['String'];
   index: Scalars['String'];
   method: Scalars['String'];
@@ -59,6 +61,7 @@ export type MutationUploadMetadataArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  decodeEvent: Scalars['String'];
   decodeEvents: Scalars['String'];
   getBlock: Block;
   getBlocks: Array<Block>;
@@ -69,11 +72,22 @@ export type Query = {
   getTransactions: Array<Transaction>;
   getTransactionsByContract: Array<Transaction>;
   status: Scalars['String'];
+  version: Scalars['String'];
+};
+
+
+export type QueryDecodeEventArgs = {
+  contractAddress: Scalars['String'];
+  id: Scalars['String'];
 };
 
 
 export type QueryDecodeEventsArgs = {
-  contractAddress: Scalars['String'];
+  contract?: InputMaybe<Scalars['String']>;
+  orderAsc?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  transactionHash?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -184,7 +198,7 @@ export type GetTransactionQueryVariables = Exact<{
 }>;
 
 
-export type GetTransactionQuery = { __typename?: 'Query', getTransaction: { __typename?: 'Transaction', args?: string | null, blockHash?: string | null, callIndex?: string | null, decimals?: string | null, encodedLength?: number | null, era?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, ss58?: string | null, timestamp: number, tip?: number | null, tokens?: string | null, type?: number | null, version?: number | null, events: Array<{ __typename?: 'Event', id: string, data?: string | null, index: string, method: string, section: string, timestamp: number, topics: string, transactionHash?: string | null }> } };
+export type GetTransactionQuery = { __typename?: 'Query', getTransaction: { __typename?: 'Transaction', args?: string | null, blockHash?: string | null, callIndex?: string | null, decimals?: string | null, encodedLength?: number | null, era?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, ss58?: string | null, timestamp: number, tip?: number | null, tokens?: string | null, type?: number | null, version?: number | null, events: Array<{ __typename?: 'Event', data?: string | null, decodedData?: string | null, formattedData: string, id: string, index: string, method: string, section: string, timestamp: number, topics: string, transactionHash?: string | null }> } };
 
 export type GetTransactionsByContractQueryVariables = Exact<{
   address: Scalars['String'];
@@ -221,7 +235,20 @@ export type GetEventQueryVariables = Exact<{
 }>;
 
 
-export type GetEventQuery = { __typename?: 'Query', getEvent: { __typename?: 'Event', id: string, data?: string | null, index: string, method: string, section: string, timestamp: number, topics: string, transactionHash?: string | null } };
+export type GetEventQuery = { __typename?: 'Query', getEvent: { __typename?: 'Event', id: string, data?: string | null, decodedData?: string | null, formattedData: string, index: string, method: string, section: string, timestamp: number, topics: string, transactionHash?: string | null } };
+
+export type GetLastBlockQueryVariables = Exact<{
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+}>;
+
+
+export type GetLastBlockQuery = { __typename?: 'Query', getBlocks: Array<{ __typename?: 'Block', number: number, timestamp: number }> };
+
+export type VersionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type VersionQuery = { __typename?: 'Query', version: string };
 
 
 export const GetBlocksDocument = gql`
@@ -398,8 +425,10 @@ export const GetTransactionDocument = gql`
     type
     version
     events {
-      id
       data
+      decodedData
+      formattedData
+      id
       index
       method
       section
@@ -596,6 +625,8 @@ export const GetEventDocument = gql`
   getEvent(id: $id) {
     id
     data
+    decodedData
+    formattedData
     index
     method
     section
@@ -633,3 +664,72 @@ export function useGetEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetEventQueryHookResult = ReturnType<typeof useGetEventQuery>;
 export type GetEventLazyQueryHookResult = ReturnType<typeof useGetEventLazyQuery>;
 export type GetEventQueryResult = Apollo.QueryResult<GetEventQuery, GetEventQueryVariables>;
+export const GetLastBlockDocument = gql`
+    query getLastBlock($skip: Int!, $take: Int!) {
+  getBlocks(skip: $skip, take: $take) {
+    number
+    timestamp
+  }
+}
+    `;
+
+/**
+ * __useGetLastBlockQuery__
+ *
+ * To run a query within a React component, call `useGetLastBlockQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLastBlockQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLastBlockQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useGetLastBlockQuery(baseOptions: Apollo.QueryHookOptions<GetLastBlockQuery, GetLastBlockQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLastBlockQuery, GetLastBlockQueryVariables>(GetLastBlockDocument, options);
+      }
+export function useGetLastBlockLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLastBlockQuery, GetLastBlockQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLastBlockQuery, GetLastBlockQueryVariables>(GetLastBlockDocument, options);
+        }
+export type GetLastBlockQueryHookResult = ReturnType<typeof useGetLastBlockQuery>;
+export type GetLastBlockLazyQueryHookResult = ReturnType<typeof useGetLastBlockLazyQuery>;
+export type GetLastBlockQueryResult = Apollo.QueryResult<GetLastBlockQuery, GetLastBlockQueryVariables>;
+export const VersionDocument = gql`
+    query version {
+  version
+}
+    `;
+
+/**
+ * __useVersionQuery__
+ *
+ * To run a query within a React component, call `useVersionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useVersionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVersionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useVersionQuery(baseOptions?: Apollo.QueryHookOptions<VersionQuery, VersionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<VersionQuery, VersionQueryVariables>(VersionDocument, options);
+      }
+export function useVersionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VersionQuery, VersionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<VersionQuery, VersionQueryVariables>(VersionDocument, options);
+        }
+export type VersionQueryHookResult = ReturnType<typeof useVersionQuery>;
+export type VersionLazyQueryHookResult = ReturnType<typeof useVersionLazyQuery>;
+export type VersionQueryResult = Apollo.QueryResult<VersionQuery, VersionQueryVariables>;

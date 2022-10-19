@@ -159,3 +159,17 @@ export const EVENT_QUERY = gql`
     }
   }
 `
+export const GET_LAST_BLOCK_QUERY = gql`
+  query getLastBlock($skip: Int!, $take: Int!) {
+    getBlocks(skip: $skip, take: $take) {
+      number
+      timestamp
+    }
+  }
+`
+
+export const GET_VERSION_QUERY = gql`
+  query version {
+    version
+  }
+`
