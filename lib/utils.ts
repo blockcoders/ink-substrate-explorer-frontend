@@ -26,7 +26,7 @@ const getTimeAgo = (date: Date) => {
 export const formatTimeAgo = (timestamp: number) => {
   const date = new Date(timestamp)
   const time = getTimeAgo(date)
-  return time + ' ago ' + `${date.toUTCString()}`
+  return time + ' ago ' + `(${date.toUTCString()})`
 }
 
 export const showShortHash = (hash: string) => {
