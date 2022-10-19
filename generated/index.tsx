@@ -196,6 +196,16 @@ export type GetTransactionsByContractQueryVariables = Exact<{
 
 export type GetTransactionsByContractQuery = { __typename?: 'Query', getTransactionsByContract: Array<{ __typename?: 'Transaction', blockHash?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, timestamp: number, tip?: number | null, events: Array<{ __typename?: 'Event', method: string, section: string }> }> };
 
+export type GetTransactionsByBlockQueryVariables = Exact<{
+  blockHash: Scalars['String'];
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+  orderAsc?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type GetTransactionsByBlockQuery = { __typename?: 'Query', getTransactions: Array<{ __typename?: 'Transaction', blockHash?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, timestamp: number, tip?: number | null, events: Array<{ __typename?: 'Event', method: string, section: string }> }> };
+
 export type GetEventsQueryVariables = Exact<{
   contract: Scalars['String'];
   skip: Scalars['Int'];
@@ -473,6 +483,61 @@ export function useGetTransactionsByContractLazyQuery(baseOptions?: Apollo.LazyQ
 export type GetTransactionsByContractQueryHookResult = ReturnType<typeof useGetTransactionsByContractQuery>;
 export type GetTransactionsByContractLazyQueryHookResult = ReturnType<typeof useGetTransactionsByContractLazyQuery>;
 export type GetTransactionsByContractQueryResult = Apollo.QueryResult<GetTransactionsByContractQuery, GetTransactionsByContractQueryVariables>;
+export const GetTransactionsByBlockDocument = gql`
+    query getTransactionsByBlock($blockHash: String!, $skip: Int!, $take: Int!, $orderAsc: Boolean) {
+  getTransactions(
+    skip: $skip
+    take: $take
+    orderAsc: $orderAsc
+    blockHash: $blockHash
+  ) {
+    blockHash
+    events {
+      method
+      section
+    }
+    hash
+    method
+    nonce
+    section
+    signature
+    signer
+    timestamp
+    tip
+  }
+}
+    `;
+
+/**
+ * __useGetTransactionsByBlockQuery__
+ *
+ * To run a query within a React component, call `useGetTransactionsByBlockQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTransactionsByBlockQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTransactionsByBlockQuery({
+ *   variables: {
+ *      blockHash: // value for 'blockHash'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *      orderAsc: // value for 'orderAsc'
+ *   },
+ * });
+ */
+export function useGetTransactionsByBlockQuery(baseOptions: Apollo.QueryHookOptions<GetTransactionsByBlockQuery, GetTransactionsByBlockQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTransactionsByBlockQuery, GetTransactionsByBlockQueryVariables>(GetTransactionsByBlockDocument, options);
+      }
+export function useGetTransactionsByBlockLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTransactionsByBlockQuery, GetTransactionsByBlockQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTransactionsByBlockQuery, GetTransactionsByBlockQueryVariables>(GetTransactionsByBlockDocument, options);
+        }
+export type GetTransactionsByBlockQueryHookResult = ReturnType<typeof useGetTransactionsByBlockQuery>;
+export type GetTransactionsByBlockLazyQueryHookResult = ReturnType<typeof useGetTransactionsByBlockLazyQuery>;
+export type GetTransactionsByBlockQueryResult = Apollo.QueryResult<GetTransactionsByBlockQuery, GetTransactionsByBlockQueryVariables>;
 export const GetEventsDocument = gql`
     query getEvents($contract: String!, $skip: Int!, $take: Int!, $orderAsc: Boolean) {
   getEvents(skip: $skip, take: $take, orderAsc: $orderAsc, contract: $contract) {

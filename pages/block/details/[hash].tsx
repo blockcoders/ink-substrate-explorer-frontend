@@ -4,7 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
-import { useGetBlockQuery, GetBlockQuery, GetTransactionsQuery, useGetTransactionsQuery } from '../../../generated'
+import {
+  useGetBlockQuery,
+  GetBlockQuery,
+  GetTransactionsByBlockQuery,
+  useGetTransactionsByBlockQuery,
+} from '../../../generated'
 import { formatTimeAgo, showShortHash } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
 
@@ -15,12 +20,11 @@ const Block: NextPage = () => {
   const block = get(data, 'getBlock', []) as GetBlockQuery['getBlock']
 
   const [pagination, setPagination] = useState({ skip: 0, take: 5, orderAsc: false, blockHash: block.hash || hash })
-  const { data: txData } = useGetTransactionsQuery({ variables: pagination })
-  const transactions = get(txData, 'getTransactions', []) as GetTransactionsQuery['getTransactions']
+  const { data: txData } = useGetTransactionsByBlockQuery({ variables: pagination })
+  const transactions = get(txData, 'getTransactions', []) as GetTransactionsByBlockQuery['getTransactions']
 
   const toogleOrder = () => {
     setPagination({ ...pagination, orderAsc: !pagination.orderAsc })
-    console.log(pagination)
   }
 
   const nextPage = () => {
@@ -54,7 +58,9 @@ const Block: NextPage = () => {
               <tr>
                 <td className="black">Hash</td>
                 <td>
-                  <Link href={'/block/details/' + block.hash}>{block.hash}</Link>
+                  <Link href={'/block/details/' + block.hash}>
+                    <a>{block.hash}</a>
+                  </Link>
                 </td>
               </tr>
               <tr>
@@ -64,7 +70,9 @@ const Block: NextPage = () => {
               <tr>
                 <td className="black">Parent</td>
                 <td>
-                  <Link href={'/block/details/' + block.parentHash}>{block.parentHash}</Link>
+                  <Link href={'/block/details/' + block.parentHash}>
+                    <a>{block.parentHash}</a>
+                  </Link>
                 </td>
               </tr>
               <tr>

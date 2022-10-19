@@ -98,6 +98,25 @@ export const TRANSACTIONS_BY_CONTRACT_QUERY = gql`
     }
   }
 `
+export const TRANSACTIONS_BY_BLOCK_QUERY = gql`
+  query getTransactionsByBlock($blockHash: String!, $skip: Int!, $take: Int!, $orderAsc: Boolean) {
+    getTransactions(skip: $skip, take: $take, orderAsc: $orderAsc, blockHash: $blockHash) {
+      blockHash
+      events {
+        method
+        section
+      }
+      hash
+      method
+      nonce
+      section
+      signature
+      signer
+      timestamp
+      tip
+    }
+  }
+`
 
 export const EVENTS_QUERY = gql`
   query getEvents($contract: String!, $skip: Int!, $take: Int!, $orderAsc: Boolean) {
