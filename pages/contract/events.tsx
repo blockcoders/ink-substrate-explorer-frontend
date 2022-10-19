@@ -55,24 +55,24 @@ const Transaction: NextPage = () => {
           <Table responsive hover className="ink_table">
             <thead>
               <tr>
+                <th>Index</th>
+                <th>Section</th>
+                <th>Method</th>
                 <th>Transaction Hash</th>
                 <th onClick={() => toogleOrder()}>Time</th>
-                <th>Index</th>
-                <th>Method</th>
-                <th>Section</th>
                 <th>More</th>
               </tr>
             </thead>
             <tbody>
               {events.map((event) => (
                 <tr key={event.id}>
+                  <td className="black">{event.index}</td>
+                  <td>{event.section}</td>
+                  <td>{event.method}</td>
                   <td className="black">
                     <Link href={'/transaction/details/' + event.transactionHash}>{event?.transactionHash}</Link>
                   </td>
                   <td>{formatTimeAgo(event.timestamp)}</td>
-                  <td className="black">{event.index}</td>
-                  <td>{event.method}</td>
-                  <td>{event.section}</td>
                   <td>Click Here!</td>
                 </tr>
               ))}
