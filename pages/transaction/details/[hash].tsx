@@ -177,15 +177,18 @@ const Transaction: NextPage = () => {
                       <td className="black">Topics:</td>
                       <td>
                         <div className="transactions-logs">
-                          {event.topics.split(',').map((topic: any, index: number) => (
-                            <div className="transactions-logs-row">
-                              <div className="transactions-logs-number">{index}</div>
-                              <div className="transactions-logs-arrow">
-                                <Image src={verifed} alt="Icon" />
+                          {event.topics
+                            .slice(1, -1)
+                            .split(',')
+                            .map((topic: any, index: number) => (
+                              <div className="transactions-logs-row">
+                                <div className="transactions-logs-number">{index}</div>
+                                <div className="transactions-logs-arrow">
+                                  <Image src={verifed} alt="Icon" />
+                                </div>
+                                <div className="transactions-logs-hash">{topic}</div>
                               </div>
-                              <div className="transactions-logs-hash">{topic}</div>
-                            </div>
-                          ))}
+                            ))}
                         </div>
                       </td>
                     </tr>

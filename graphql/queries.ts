@@ -77,8 +77,10 @@ export const TRANSACTION_QUERY = gql`
       type
       version
       events {
-        id
         data
+        decodedData
+        formattedData
+        id
         index
         method
         section
@@ -146,6 +148,8 @@ export const EVENT_QUERY = gql`
     getEvent(id: $id) {
       id
       data
+      decodedData
+      formattedData
       index
       method
       section

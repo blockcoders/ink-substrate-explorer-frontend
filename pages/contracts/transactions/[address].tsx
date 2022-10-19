@@ -1,18 +1,21 @@
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
-import { useGetTransactionsByContractQuery, GetTransactionsByContractQuery } from '../../generated'
-import { formatTimeAgo, showShortHash } from '../../lib/utils'
-import withApollo from '../../lib/withApollo'
+import { useGetTransactionsByContractQuery, GetTransactionsByContractQuery } from '../../../generated'
+import { formatTimeAgo, showShortHash } from '../../../lib/utils'
+import withApollo from '../../../lib/withApollo'
 
 const Transaction: NextPage = () => {
+  const router = useRouter()
+  const address = router.query?.address as string
   const [pagination, setPagination] = useState({
     skip: 0,
     take: 5,
     orderAsc: false,
-    address: '5HbiqNyWkVdVhLQQrU9ovLoXEHenEvzLNAXUmUEFwAD5c4Lg', // This shouldnt be here
+    address: '5GBxhTAsEbYquX5XNjKHS5LAj8326AuP6uQA8ri8VZ9rhVeK', // This shouldnt be here
   })
   const { data } = useGetTransactionsByContractQuery({ variables: pagination })
   const transactions = get(
@@ -38,17 +41,17 @@ const Transaction: NextPage = () => {
     <>
       <Row className="mb-5">
         <Col>
-          <Link href="/contract">
+          <Link href={'/contracts/transactions/' + address}>
             <button className="ink-button ink-button_violet">Transactions</button>
           </Link>
         </Col>
         <Col>
-          <Link href="/contract/contracts">
-            <button className="ink-button ink-button_violetligth">Contracts</button>
+          <Link href={'/contracts/contract/' + address}>
+            <button className="ink-button ink-button_violetligth">Contract</button>
           </Link>
         </Col>
         <Col>
-          <Link href="/contract/events">
+          <Link href={'/contracts/events/' + address}>
             <button className="ink-button ink-button_violetligth">Events</button>
           </Link>
         </Col>

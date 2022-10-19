@@ -2,13 +2,16 @@ import hljs from 'highlight.js'
 import type { NextPage } from 'next'
 import Image from 'next/future/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Row, Col, Table, Tab, Tabs } from 'react-bootstrap'
 import 'highlight.js/styles/github.css'
 import Accordion from 'react-bootstrap/Accordion'
-import verifed from '../../assets/img/verifed.svg'
+import verifed from '../../../assets/img/verifed.svg'
 
-const Transaction: NextPage = () => {
+const Contract: NextPage = () => {
+  const router = useRouter()
+  const address = router.query?.address as string
   useEffect(() => {
     hljs.highlightAll()
   }, [])
@@ -16,17 +19,17 @@ const Transaction: NextPage = () => {
     <>
       <Row className="mb-5">
         <Col>
-          <Link href="/contract">
+          <Link href={'/contracts/transactions/' + address}>
             <button className="ink-button ink-button_violetligth">Transactions</button>
           </Link>
         </Col>
         <Col>
-          <Link href="/contract/contracts">
-            <button className="ink-button ink-button_violet">Contracts</button>
+          <Link href={'/contracts/contract/' + address}>
+            <button className="ink-button ink-button_violet">Contract</button>
           </Link>
         </Col>
         <Col>
-          <Link href="/contract/events">
+          <Link href={'/contracts/events/' + address}>
             <button className="ink-button ink-button_violetligth">Events</button>
           </Link>
         </Col>
@@ -201,4 +204,4 @@ const Transaction: NextPage = () => {
   )
 }
 
-export default Transaction
+export default Contract

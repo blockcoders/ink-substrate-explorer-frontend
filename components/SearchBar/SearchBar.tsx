@@ -20,11 +20,17 @@ function Searchbar() {
   }
 
   const handleSubmit = () => {
-    search.length > 0 &&
-      selectedType !== 'type' &&
-      router.push({
-        pathname: `/${selectedType}/details/${search}`,
-      })
+    if (search.length > 0 && selectedType !== 'type') {
+      if (selectedType !== 'contracts/transactions') {
+        router.push({
+          pathname: `/${selectedType}/details/${search}`,
+        })
+      } else {
+        router.push({
+          pathname: `/${selectedType}/${search}`,
+        })
+      }
+    }
   }
 
   return (
@@ -54,7 +60,7 @@ function Searchbar() {
                   <option value={'type'}>Search by...</option>
                   <option value="transaction">Transaction Hash</option>
                   <option value="block">Block Hash</option>
-                  <option value="contract">Contract Address</option>
+                  <option value="contracts/transactions">Contract Address</option>
                 </select>
               </span>
               <input

@@ -9,12 +9,12 @@
         "label": "Transactions",
         "value": "transaction",
         "img": "transaction.svg",
-        "route": "/transaction"
+        "route": "/transactions"
     },
     {
         "label": "Contracts",
         "value": "contract",
         "img": "contract.svg",
-        "route": "/contract"
+        "route": "/contracts/transactions/0"
     }
 ]
