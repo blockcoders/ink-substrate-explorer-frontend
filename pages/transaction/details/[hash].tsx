@@ -151,52 +151,53 @@ const Transaction: NextPage = () => {
               </h4>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <Table className="ink_table">
-                <tbody>
-                  <span className="ink_table-number">212</span>
-                  <tr>
-                    <td className="black">Address</td>
-                    <td>{hash}</td>
-                  </tr>
-                  <tr>
-                    <td className="black">Name:</td>
-                    <td>Transfer (index_topic_1 address from, index_topic_2 address to, uint256 value)</td>
-                  </tr>
-                  <tr>
-                    <td className="black">Topics:</td>
-                    <td>
-                      <div className="transactions-logs">
-                        <div className="transactions-logs-row">
-                          <div className="transactions-logs-number">1</div>
-                          <div className="transactions-logs-arrow">
-                            <Image src={verifed} alt="Icon" />
-                          </div>
-                          <div className="transactions-logs-hash">
-                            0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
-                          </div>
+          {transaction.events.map((event, index) => (
+            <Row key={index}>
+              <Col>
+                <Table className="ink_table">
+                  <tbody>
+                    <span className="ink_table-number">{event.index}</span>
+                    <tr>
+                      <td className="black">Transaction Hash</td>
+                      <td>{event.transactionHash}</td>
+                    </tr>
+                    <tr>
+                      <td className="black">Time:</td>
+                      <td>{formatTimeAgo(event.timestamp)}</td>
+                    </tr>
+                    <tr>
+                      <td className="black">Method:</td>
+                      <td>{event.method}</td>
+                    </tr>
+                    <tr>
+                      <td className="black">Section:</td>
+                      <td>{event.section}</td>
+                    </tr>
+                    <tr>
+                      <td className="black">Topics:</td>
+                      <td>
+                        <div className="transactions-logs">
+                          {event.topics.split(',').map((topic: any, index: number) => (
+                            <div className="transactions-logs-row">
+                              <div className="transactions-logs-number">{index}</div>
+                              <div className="transactions-logs-arrow">
+                                <Image src={verifed} alt="Icon" />
+                              </div>
+                              <div className="transactions-logs-hash">{topic}</div>
+                            </div>
+                          ))}
                         </div>
-                        <div className="transactions-logs-row">
-                          <div className="transactions-logs-number">2</div>
-                          <div className="transactions-logs-arrow">
-                            <Image src={verifed} alt="Icon" />
-                          </div>
-                          <div className="transactions-logs-hash">
-                            0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="black">Data:</td>
-                    <td>Value : 3315160448</td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Col>
-          </Row>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="black">Data:</td>
+                      <td>{event.data}</td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </Col>
+            </Row>
+          ))}
         </>
       )}
     </>

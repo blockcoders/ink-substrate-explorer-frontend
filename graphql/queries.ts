@@ -76,6 +76,16 @@ export const TRANSACTION_QUERY = gql`
       tokens
       type
       version
+      events {
+        id
+        data
+        index
+        method
+        section
+        timestamp
+        topics
+        transactionHash
+      }
     }
   }
 `

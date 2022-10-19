@@ -184,7 +184,7 @@ export type GetTransactionQueryVariables = Exact<{
 }>;
 
 
-export type GetTransactionQuery = { __typename?: 'Query', getTransaction: { __typename?: 'Transaction', args?: string | null, blockHash?: string | null, callIndex?: string | null, decimals?: string | null, encodedLength?: number | null, era?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, ss58?: string | null, timestamp: number, tip?: number | null, tokens?: string | null, type?: number | null, version?: number | null } };
+export type GetTransactionQuery = { __typename?: 'Query', getTransaction: { __typename?: 'Transaction', args?: string | null, blockHash?: string | null, callIndex?: string | null, decimals?: string | null, encodedLength?: number | null, era?: string | null, hash: string, method: string, nonce?: number | null, section: string, signature: string, signer?: string | null, ss58?: string | null, timestamp: number, tip?: number | null, tokens?: string | null, type?: number | null, version?: number | null, events: Array<{ __typename?: 'Event', id: string, data?: string | null, index: string, method: string, section: string, timestamp: number, topics: string, transactionHash?: string | null }> } };
 
 export type GetTransactionsByContractQueryVariables = Exact<{
   address: Scalars['String'];
@@ -397,6 +397,16 @@ export const GetTransactionDocument = gql`
     tokens
     type
     version
+    events {
+      id
+      data
+      index
+      method
+      section
+      timestamp
+      topics
+      transactionHash
+    }
   }
 }
     `;
