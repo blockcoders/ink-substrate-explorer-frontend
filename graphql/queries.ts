@@ -173,3 +173,17 @@ export const GET_VERSION_QUERY = gql`
     version
   }
 `
+export const GET_CONTRACT_QUERIES = gql`
+  query getContractQueries($address: String!) {
+    getContractQueries(address: $address) {
+      address
+      metadata
+      queries {
+        method
+        docs
+        args
+        name
+      }
+    }
+  }
+`

@@ -32,6 +32,15 @@ export type Contract = {
   address: Scalars['String'];
   events: Array<Event>;
   metadata?: Maybe<Scalars['String']>;
+  queries: Array<ContractQuery>;
+};
+
+export type ContractQuery = {
+  __typename?: 'ContractQuery';
+  args: Array<Scalars['String']>;
+  docs: Array<Scalars['String']>;
+  method: Scalars['String'];
+  name: Scalars['String'];
 };
 
 export type Event = {
@@ -66,6 +75,7 @@ export type Query = {
   getBlock: Block;
   getBlocks: Array<Block>;
   getContract: Contract;
+  getContractQueries: Contract;
   getEvent: Event;
   getEvents: Array<Event>;
   getTransaction: Transaction;
@@ -105,6 +115,11 @@ export type QueryGetBlocksArgs = {
 
 
 export type QueryGetContractArgs = {
+  address: Scalars['String'];
+};
+
+
+export type QueryGetContractQueriesArgs = {
   address: Scalars['String'];
 };
 
@@ -249,6 +264,13 @@ export type VersionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type VersionQuery = { __typename?: 'Query', version: string };
+
+export type GetContractQueriesQueryVariables = Exact<{
+  address: Scalars['String'];
+}>;
+
+
+export type GetContractQueriesQuery = { __typename?: 'Query', getContractQueries: { __typename?: 'Contract', address: string, metadata?: string | null, queries: Array<{ __typename?: 'ContractQuery', method: string, docs: Array<string>, args: Array<string>, name: string }> } };
 
 
 export const GetBlocksDocument = gql`
@@ -733,3 +755,45 @@ export function useVersionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ve
 export type VersionQueryHookResult = ReturnType<typeof useVersionQuery>;
 export type VersionLazyQueryHookResult = ReturnType<typeof useVersionLazyQuery>;
 export type VersionQueryResult = Apollo.QueryResult<VersionQuery, VersionQueryVariables>;
+export const GetContractQueriesDocument = gql`
+    query getContractQueries($address: String!) {
+  getContractQueries(address: $address) {
+    address
+    metadata
+    queries {
+      method
+      docs
+      args
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetContractQueriesQuery__
+ *
+ * To run a query within a React component, call `useGetContractQueriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetContractQueriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetContractQueriesQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetContractQueriesQuery(baseOptions: Apollo.QueryHookOptions<GetContractQueriesQuery, GetContractQueriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetContractQueriesQuery, GetContractQueriesQueryVariables>(GetContractQueriesDocument, options);
+      }
+export function useGetContractQueriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetContractQueriesQuery, GetContractQueriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetContractQueriesQuery, GetContractQueriesQueryVariables>(GetContractQueriesDocument, options);
+        }
+export type GetContractQueriesQueryHookResult = ReturnType<typeof useGetContractQueriesQuery>;
+export type GetContractQueriesLazyQueryHookResult = ReturnType<typeof useGetContractQueriesLazyQuery>;
+export type GetContractQueriesQueryResult = Apollo.QueryResult<GetContractQueriesQuery, GetContractQueriesQueryVariables>;

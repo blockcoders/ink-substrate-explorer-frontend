@@ -1,13 +1,26 @@
 import hljs from 'highlight.js'
+import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { Row, Col, Table, Tab, Tabs } from 'react-bootstrap'
+import { Row, Col, Table, Tab, Tabs, Button } from 'react-bootstrap'
 import 'highlight.js/styles/github.css'
 import Accordion from 'react-bootstrap/Accordion'
 import verifed from '../../../assets/img/verifed.svg'
+import { useGetContractQueriesQuery, GetContractQueriesQuery } from '../../../generated'
+import withApollo from '../../../lib/withApollo'
+
+const getArgName = (arg: string) => {
+  const argObject = JSON.parse(arg)
+  return argObject.name
+}
+
+const getArgType = (arg: string) => {
+  const argObject = JSON.parse(arg)
+  return argObject.type.type
+}
 
 const Contract: NextPage = () => {
   const router = useRouter()
@@ -15,6 +28,8 @@ const Contract: NextPage = () => {
   useEffect(() => {
     hljs.highlightAll()
   }, [])
+  const { data } = useGetContractQueriesQuery({ variables: { address } })
+  const contract = get(data, 'getContractQueries', []) as GetContractQueriesQuery['getContractQueries']
   return (
     <>
       <Row className="mb-5">
@@ -125,77 +140,40 @@ const Contract: NextPage = () => {
                 </Col>
               </Row>
             </Tab>
-            <Tab className="ink-tab_button" eventKey="Read" title="Read">
+            <Tab className="ink-tab_button" eventKey="Read" title="Run contract methods">
               <Row>
                 <Col className="my-5">
                   <Accordion className="ink-accordion" defaultActiveKey={['0']}>
-                    <Accordion.Item eventKey="0" className="ink-accordion_item">
-                      <Accordion.Header>1.Domain_separator</Accordion.Header>
-                      <Accordion.Body>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                      </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="1" className="ink-accordion_item">
-                      <Accordion.Header>2.Permit_typehash</Accordion.Header>
-                      <Accordion.Body>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                      </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="2" className="ink-accordion_item">
-                      <Accordion.Header>3. Allowance</Accordion.Header>
-                      <Accordion.Body>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                      </Accordion.Body>
-                    </Accordion.Item>
+                    {contract?.queries?.map((query, index) => (
+                      <Accordion.Item key={index} eventKey={`${index}`} className="ink-accordion_item">
+                        <Accordion.Header>{query.name}</Accordion.Header>
+                        <Accordion.Body>
+                          {query.docs}
+                          {query.args.map((arg, i) => (
+                            <Row key={index + '-' + i} className="my-3">
+                              <Col xs="12">
+                                <b>{getArgName(arg)}</b>
+                                <input
+                                  type="text"
+                                  className="form-control ink_searchbar-input"
+                                  placeholder={getArgType(arg)}
+                                />
+                              </Col>
+                            </Row>
+                          ))}
+                          <Row className="my-3">
+                            <Col xs="2">
+                              <Button type="submit" className="ink-button ink-button_primary">
+                                Run
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    ))}
                   </Accordion>
                 </Col>
               </Row>
-            </Tab>
-            <Tab className="ink-tab_button" eventKey="Write" title="Write">
-              <Accordion className="ink-accordion" defaultActiveKey={['0']}>
-                <Accordion.Item eventKey="0" className="ink-accordion_item">
-                  <Accordion.Header>Approve</Accordion.Header>
-                  <Accordion.Body>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.
-                  </Accordion.Body>
-                </Accordion.Item>
-                <Accordion.Item eventKey="1" className="ink-accordion_item">
-                  <Accordion.Header>2.Burn</Accordion.Header>
-                  <Accordion.Body>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.
-                  </Accordion.Body>
-                </Accordion.Item>
-                <Accordion.Item eventKey="2" className="ink-accordion_item">
-                  <Accordion.Header>3. Deny</Accordion.Header>
-                  <Accordion.Body>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
             </Tab>
           </Tabs>
         </Col>
@@ -204,4 +182,4 @@ const Contract: NextPage = () => {
   )
 }
 
-export default Contract
+export default withApollo(Contract)
