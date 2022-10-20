@@ -76,7 +76,9 @@ const Events: NextPage = () => {
                     <Link href={'/transaction/details/' + event.transactionHash}>{event?.transactionHash}</Link>
                   </td>
                   <td>{formatTimeAgo(event.timestamp)}</td>
-                  <td>Click Here!</td>
+                  <td>
+                    <Link href={`/contracts/events/${address}/${event.id}`}>Show more</Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

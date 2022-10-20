@@ -151,7 +151,7 @@ const Transaction: NextPage = () => {
               </h4>
             </Col>
           </Row>
-          {transaction.events.map((event, index) => (
+          {transaction?.events?.map((event, index) => (
             <Row key={index}>
               <Col>
                 <Table className="ink_table">

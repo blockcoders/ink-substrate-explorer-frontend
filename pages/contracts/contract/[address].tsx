@@ -13,13 +13,15 @@ import { useGetContractQueriesQuery, GetContractQueriesQuery } from '../../../ge
 import withApollo from '../../../lib/withApollo'
 
 const getArgName = (arg: string) => {
-  const argObject = JSON.parse(arg)
-  return argObject.name
+  const { name } = JSON.parse(arg)
+  return name
 }
 
 const getArgType = (arg: string) => {
-  const argObject = JSON.parse(arg)
-  return argObject.type.type
+  const {
+    type: { type },
+  } = JSON.parse(arg)
+  return type
 }
 
 const Contract: NextPage = () => {
