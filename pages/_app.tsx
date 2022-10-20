@@ -48,11 +48,6 @@ function MyApp({ Component, pageProps }: AppProps) {
                     </Col>
                   </Row>
                 </Col>
-                {router.pathname.includes('contract') && (
-                  <Col className="mt-4">
-                    <ContractInfo />
-                  </Col>
-                )}
                 <div className="content-page_inside">
                   <Component {...pageProps} />
                 </div>

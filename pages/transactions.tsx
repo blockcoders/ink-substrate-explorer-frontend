@@ -51,8 +51,8 @@ const Transaction: NextPage = () => {
                 <th>Tx Hash</th>
                 <th>Block</th>
                 <th onClick={() => toogleOrder()}>Time</th>
-                <th>Method</th>
                 <th>Section</th>
+                <th>Method</th>
                 <th>Signer</th>
               </tr>
             </thead>
@@ -68,8 +68,8 @@ const Transaction: NextPage = () => {
                     </Link>
                   </td>
                   <td>{formatTimeAgo(transaction.timestamp)}</td>
-                  <td>{transaction.method}</td>
                   <td>{transaction.section}</td>
+                  <td>{transaction.method}</td>
                   <td className="black">{transaction.signer}</td>
                 </tr>
               ))}
