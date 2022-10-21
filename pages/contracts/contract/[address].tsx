@@ -4,12 +4,18 @@ import type { NextPage } from 'next'
 import Image from 'next/future/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { Row, Col, Tab, Tabs, Button } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import { Row, Col, Tab, Tabs } from 'react-bootstrap'
 import 'highlight.js/styles/github.css'
 import Accordion from 'react-bootstrap/Accordion'
 import verifed from '../../../assets/img/verifed.svg'
-import { useGetContractQueriesQuery, GetContractQueriesQuery } from '../../../generated'
+import {
+  useGetContractQueriesQuery,
+  GetContractQueriesQuery,
+  useUploadMetadataMutation,
+  useExecuteQueryMutation,
+  QueryArgs,
+} from '../../../generated'
 import withApollo from '../../../lib/withApollo'
 
 const getArgName = (arg: string) => {
@@ -24,14 +30,63 @@ const getArgType = (arg: string) => {
   return type
 }
 
+const getEmptyQuery = () => {
+  const address = ''
+  const method = ''
+  const args: QueryArgs = {
+    options: {
+      gasLimit: '',
+      storageLimit: undefined,
+      value: undefined,
+    },
+    sender: '',
+  }
+  return {
+    address,
+    method,
+    args,
+  }
+}
+
 const Contract: NextPage = () => {
   const router = useRouter()
   const address = router.query?.address as string
+
+  const { data } = useGetContractQueriesQuery({ variables: { address } })
+  const contract = get(data, 'getContractQueries', []) as GetContractQueriesQuery['getContractQueries']
+  const [abi, setAbi] = useState('')
+  const [parameters, setParameters] = useState([getEmptyQuery()])
+  console.log(parameters)
   useEffect(() => {
     hljs.highlightAll()
   }, [])
-  const { data } = useGetContractQueriesQuery({ variables: { address } })
-  const contract = get(data, 'getContractQueries', []) as GetContractQueriesQuery['getContractQueries']
+
+  const [uploadMetadataMutation] = useUploadMetadataMutation({
+    variables: { contractAddress: '', metadata: '' },
+  })
+
+  const [executeQueryMutation] = useExecuteQueryMutation({
+    variables: getEmptyQuery(),
+  })
+
+  const sendTransaction = async (index: number) => {
+    try {
+      const { data } = await executeQueryMutation({ variables: parameters[index] })
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const uploadAbi = async () => {
+    try {
+      await uploadMetadataMutation({ variables: { contractAddress: address, metadata: abi } })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setAbi('')
+    }
+  }
   return (
     <>
       <Row className="mb-5">
@@ -57,7 +112,7 @@ const Contract: NextPage = () => {
             <Tab className="ink-tab_button" eventKey="contractAbi" title="Contract ABI">
               <Row>
                 <Col className="my-3" xs={12}>
-                  {!contract?.metadata || (
+                  {contract?.metadata && (
                     <>
                       <Image src={verifed} alt="Icon" />
                       <b> Contract ABI Verified</b>
@@ -83,12 +138,13 @@ const Contract: NextPage = () => {
                     className="form-control"
                     rows={12}
                     placeholder="Plase upload the metadata of the contract in a Base64 encoded format."
-                  >
-                    {contract?.metadata}
-                  </textarea>
+                    onChange={(e) => setAbi(e.target.value)}
+                  ></textarea>
                 </Col>
                 <Col className="my-3" xs={12}>
-                  <Button className="ink-button ink-button_violet mt-3">Upload</Button>
+                  <button className="ink-button ink-button_violet mt-3" onClick={() => uploadAbi()}>
+                    Upload
+                  </button>
                 </Col>
               </Row>
             </Tab>
@@ -110,15 +166,21 @@ const Contract: NextPage = () => {
                                     type="text"
                                     className="form-control ink_searchbar-input"
                                     placeholder={getArgType(arg)}
+                                    onChange={(e) => {
+                                      //addValue(e.target.value, getArgName(arg))
+                                    }}
                                   />
                                 </Col>
                               </Row>
                             ))}
                             <Row className="my-3">
-                              <Col xs="2">
-                                <Button type="submit" className="ink-button ink-button_primary">
-                                  Run
-                                </Button>
+                              <Col xs={2}>
+                                <button
+                                  className="ink-button ink-button_violet mt-3"
+                                  onClick={() => sendTransaction(index)}
+                                >
+                                  Send
+                                </button>
                               </Col>
                             </Row>
                           </Accordion.Body>

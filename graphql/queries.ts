@@ -187,3 +187,20 @@ export const GET_CONTRACT_QUERIES = gql`
     }
   }
 `
+export const UPLOAD_ABI_MUTATION = gql`
+  mutation uploadMetadata($contractAddress: String!, $metadata: String!) {
+    uploadMetadata(contractAddress: $contractAddress, metadata: $metadata)
+  }
+`
+export const EXECUTE_QUERY_MUTATION = gql`
+  mutation executeQuery($address: String!, $args: QueryArgs!, $method: String!) {
+    executeQuery(address: $address, args: $args, method: $method) {
+      debugMessage
+      gasConsumed
+      gasRequired
+      output
+      result
+      storageDeposit
+    }
+  }
+`
