@@ -16,6 +16,7 @@ function Searchbar() {
   const handleKeyPress = (e: any) => {
     if (e.key === 'Enter') {
       handleSubmit()
+      console.log(search);
     }
   }
 
@@ -30,6 +31,8 @@ function Searchbar() {
           pathname: `/${selectedType}/${search}`,
         })
       }
+      setSearch("");
+      console.log(search);
     }
   }
 
@@ -57,6 +60,7 @@ function Searchbar() {
                 className="form-control ink_searchbar-input"
                 placeholder="Contract Address, Tx Hash, Block Hash"
                 onKeyPress={handleKeyPress}
+                value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
               <button
