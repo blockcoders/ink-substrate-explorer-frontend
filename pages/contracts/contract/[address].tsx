@@ -36,10 +36,11 @@ const getEmptyQuery = () => {
   const args: QueryArgs = {
     options: {
       gasLimit: '',
-      storageLimit: undefined,
-      value: undefined,
+      storageLimit: '',
+      value: '',
     },
     sender: '',
+    values: [],
   }
   return {
     address,
@@ -48,15 +49,83 @@ const getEmptyQuery = () => {
   }
 }
 
+const DEFUALT_OPTIONS = { gasLimit: '200000000000', storageLimit: '', value: '' }
+
 const Contract: NextPage = () => {
   const router = useRouter()
   const address = router.query?.address as string
+  const sender = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY' // TODO: get from wallet
 
   const { data } = useGetContractQueriesQuery({ variables: { address } })
   const contract = get(data, 'getContractQueries', []) as GetContractQueriesQuery['getContractQueries']
-  const [abi, setAbi] = useState('')
-  const [parameters, setParameters] = useState([getEmptyQuery()])
+
+  const [options, setOptions] = useState()
+  const [parameters, setParameters] = useState()
+  const [base64Abi, setBase64Abi] = useState('')
+
+  const getDefaultOptions = () => {
+    const op: any = {}
+    contract?.queries?.forEach((query) => {
+      const { method } = query
+      op[method] = DEFUALT_OPTIONS
+    })
+    return op
+  }
+
+  const setDefaultOptions = () => {
+    if (options) return
+    setOptions(getDefaultOptions())
+  }
+
+  const getDefaultParameters = () => {
+    const params: any = {}
+    contract?.queries?.forEach((query) => {
+      const { args, method } = query
+      params[method] = {}
+      args.forEach((arg) => {
+        const { name } = JSON.parse(arg)
+        params[method][name] = ''
+      })
+    })
+    return params
+  }
+
+  const setDefaultParameters = () => {
+    if (parameters) return
+    const params = getDefaultParameters()
+    setParameters(params)
+  }
+
+  const setDefautls = () => {
+    setDefaultOptions()
+    setDefaultParameters()
+  }
+
+  const updateOptions = (method: string, arg: 'gasLimit' | 'storageLimit' | 'value', value: string) => {
+    let op
+    if (!options) {
+      op = getDefaultOptions()
+    } else {
+      op = { ...(options as any) }
+    }
+    console.log('UPDATE OPTIONS', op, method, value)
+    op[method][arg] = value
+    setOptions(op)
+  }
+
+  const updateParams = (method: string, arg: string, value: string) => {
+    let params
+    if (!parameters) {
+      params = getDefaultParameters()
+    } else {
+      params = { ...(parameters as any) }
+    }
+    console.log('UPDATE PARAMS', params, method, arg, value)
+    params[method][arg] = value
+    setParameters(params)
+  }
   console.log(parameters)
+
   useEffect(() => {
     hljs.highlightAll()
   }, [])
@@ -69,9 +138,18 @@ const Contract: NextPage = () => {
     variables: getEmptyQuery(),
   })
 
-  const sendTransaction = async (index: number) => {
+  const sendTransaction = async (method: string) => {
+    if (!parameters) return
+    if (!options) return
     try {
-      const { data } = await executeQueryMutation({ variables: parameters[index] })
+      const query = getEmptyQuery()
+      query.address = address
+      query.method = method
+      query.args.sender = sender
+      query.args.values = Object.values(parameters[method])
+      query.args.options = options[method]
+      console.log('SEND TRANSACTION', query)
+      const { data } = await executeQueryMutation({ variables: query })
       console.log(data)
     } catch (error) {
       console.log(error)
@@ -80,11 +158,11 @@ const Contract: NextPage = () => {
 
   const uploadAbi = async () => {
     try {
-      await uploadMetadataMutation({ variables: { contractAddress: address, metadata: abi } })
+      await uploadMetadataMutation({ variables: { contractAddress: address, metadata: base64Abi } })
     } catch (error) {
       console.log(error)
     } finally {
-      setAbi('')
+      setBase64Abi('')
     }
   }
   return (
@@ -124,10 +202,9 @@ const Contract: NextPage = () => {
                     className="form-control"
                     rows={15}
                     placeholder="No metadata found. Upload your contract metadata to verify your contract."
+                    value={contract?.metadata || 'Not found'}
                     readOnly
-                  >
-                    {contract?.metadata}
-                  </textarea>
+                  ></textarea>
                 </Col>
               </Row>
             </Tab>
@@ -138,7 +215,7 @@ const Contract: NextPage = () => {
                     className="form-control"
                     rows={12}
                     placeholder="Plase upload the metadata of the contract in a Base64 encoded format."
-                    onChange={(e) => setAbi(e.target.value)}
+                    onChange={(e) => setBase64Abi(e.target.value)}
                   ></textarea>
                 </Col>
                 <Col className="my-3" xs={12}>
@@ -148,7 +225,7 @@ const Contract: NextPage = () => {
                 </Col>
               </Row>
             </Tab>
-            <Tab className="ink-tab_button" eventKey="Read" title="Run contract methods">
+            <Tab className="ink-tab_button" eventKey="Read" title="Run contract methods" onClick={() => setDefautls()}>
               <Row>
                 <Col className="my-5">
                   {contract?.queries ? (
@@ -167,17 +244,56 @@ const Contract: NextPage = () => {
                                     className="form-control ink_searchbar-input"
                                     placeholder={getArgType(arg)}
                                     onChange={(e) => {
-                                      //addValue(e.target.value, getArgName(arg))
+                                      const { method } = query
+                                      const { value } = e.target
+                                      updateParams(method, getArgName(arg), value)
                                     }}
                                   />
                                 </Col>
                               </Row>
                             ))}
+                            <Row key={`gasLimit-${index}`} className="my-3">
+                              <Col xs="12">
+                                <b>gasLimit</b>
+                                <input
+                                  type="text"
+                                  className="form-control ink_searchbar-input"
+                                  placeholder="200000000000"
+                                  onChange={(e) => {
+                                    updateOptions(query.method, 'gasLimit', e.target.value)
+                                  }}
+                                />
+                              </Col>
+                            </Row>
+                            <Row key={`storageLimit-${index}`} className="my-3">
+                              <Col xs="12">
+                                <b>storageLimit</b>
+                                <input
+                                  type="text"
+                                  className="form-control ink_searchbar-input"
+                                  onChange={(e) => {
+                                    updateOptions(query.method, 'storageLimit', e.target.value)
+                                  }}
+                                />
+                              </Col>
+                            </Row>
+                            <Row key={`value-${index}`} className="my-3">
+                              <Col xs="12">
+                                <b>value</b>
+                                <input
+                                  type="text"
+                                  className="form-control ink_searchbar-input"
+                                  onChange={(e) => {
+                                    updateOptions(query.method, 'value', e.target.value)
+                                  }}
+                                />
+                              </Col>
+                            </Row>
                             <Row className="my-3">
                               <Col xs={2}>
                                 <button
                                   className="ink-button ink-button_violet mt-3"
-                                  onClick={() => sendTransaction(index)}
+                                  onClick={() => sendTransaction(query?.method)}
                                 >
                                   Send
                                 </button>

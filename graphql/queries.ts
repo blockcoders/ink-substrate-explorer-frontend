@@ -204,3 +204,14 @@ export const EXECUTE_QUERY_MUTATION = gql`
     }
   }
 `
+export const GET_CONTRACTS_QUERY = gql`
+  query getContracts($skip: Int!, $take: Int!) {
+    getContracts(skip: $skip, take: $take) {
+      hasMetadata
+      address
+      events {
+        id
+      }
+    }
+  }
+`
