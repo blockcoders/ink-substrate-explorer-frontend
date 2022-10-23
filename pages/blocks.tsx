@@ -47,6 +47,11 @@ const Home: NextPage = () => {
             <button className="ink-button ink-button_violetligth">Transaction</button>
           </Link>
         </Col>
+        <Col>
+          <Link href="/contracts">
+            <button className="ink-button ink-button_violetligth">Contracts</button>
+          </Link>
+        </Col>
       </Row>
       <Row>
         <Col xs="12">

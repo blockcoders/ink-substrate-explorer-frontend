@@ -211,6 +211,7 @@ export const GET_CONTRACTS_QUERY = gql`
       address
       events {
         id
+        timestamp
       }
     }
   }

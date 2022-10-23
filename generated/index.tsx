@@ -333,7 +333,7 @@ export type GetContractsQueryVariables = Exact<{
 }>;
 
 
-export type GetContractsQuery = { __typename?: 'Query', getContracts: Array<{ __typename?: 'Contract', hasMetadata: boolean, address: string, events: Array<{ __typename?: 'Event', id: string }> }> };
+export type GetContractsQuery = { __typename?: 'Query', getContracts: Array<{ __typename?: 'Contract', hasMetadata: boolean, address: string, events: Array<{ __typename?: 'Event', id: string, timestamp: number }> }> };
 
 
 export const GetBlocksDocument = gql`
@@ -939,6 +939,7 @@ export const GetContractsDocument = gql`
     address
     events {
       id
+      timestamp
     }
   }
 }
