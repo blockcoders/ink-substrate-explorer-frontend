@@ -43,6 +43,7 @@ const Contract: NextPage = () => {
 
   const [options, setOptions] = useState()
   const [results, setResults] = useState<any>()
+  const [extensionDapp, setExtensionDapp] = useState<any>()
   const [parameters, setParameters] = useState()
   const [base64Abi, setBase64Abi] = useState('')
 
@@ -93,10 +94,12 @@ const Contract: NextPage = () => {
     setParameters(params)
   }
 
-  const setDefautls = () => {
+  const setDefautls = async () => {
     setDefaultOptions()
     setDefaultParameters()
     setDefaultResults()
+    const edapp = await import('@polkadot/extension-dapp')
+    extensionSetup(edapp)
   }
 
   const updateOptions = (method: string, arg: 'gasLimit' | 'storageLimit' | 'value', value: string) => {
@@ -129,11 +132,24 @@ const Contract: NextPage = () => {
     variables: { contractAddress: '', metadata: '' },
   })
 
+  const extensionSetup = async (extension: any) => {
+    const { web3Accounts, web3Enable } = extension
+    const extensions = await web3Enable('Ink! Explorer')
+    if (extensions.length === 0) {
+      console.log('No extension installed!')
+      return
+    }
+    const accounts = await web3Accounts()
+    console.log(accounts)
+    setExtensionDapp(extension)
+  }
+
   const send = async (method: string) => {
     if (!parameters) return
     if (!options) return
     if (!results) return
     if (!contract) return
+    if (!extensionDapp) return
     try {
       const api = await connect(WS_PROVIDER)
       const { metadata } = contract || {}
@@ -150,7 +166,6 @@ const Contract: NextPage = () => {
       const values = Object.values(parameters[method]) || []
       let result
       if (query.meta.isMutating) {
-        const extensionDapp = await import('@polkadot/extension-dapp')
         console.log('extensionDapp', extensionDapp)
         const injector = await extensionDapp.web3FromAddress(sender)
         result = await tx(options, ...values).signAndSend(sender, { signer: injector?.signer || undefined })
