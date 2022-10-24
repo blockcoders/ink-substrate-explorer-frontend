@@ -20,9 +20,12 @@ const Event: NextPage = () => {
   })
 
   const decode = async () => {
-    console.log('decode', { contractAddress: address, id: eventId })
-    const { data } = await decodeEventMutation({ variables: { contractAddress: address, id: eventId } })
-    console.log(data)
+    try {
+      const { data } = await decodeEventMutation({ variables: { contractAddress: address, id: eventId } })
+      console.log(data)
+    } catch (error: any) {
+      console.log('ERROR: ', error.message)
+    }
   }
 
   return (
