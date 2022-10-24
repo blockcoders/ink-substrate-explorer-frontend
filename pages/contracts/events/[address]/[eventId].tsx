@@ -2,6 +2,7 @@ import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Image from 'next/future/image'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { Row, Col, Table } from 'react-bootstrap'
 import verifed from '../../../../assets/img/arrow.svg'
 import { GetEventQuery, useDecodeEventMutation, useGetEventQuery } from '../../../../generated'
@@ -14,6 +15,7 @@ const Event: NextPage = () => {
   const eventId = router.query?.eventId as string
   const { data } = useGetEventQuery({ variables: { id: eventId } })
   const event = get(data, 'getEvent', []) as GetEventQuery['getEvent']
+  const [formattedData, setFormattedData] = useState<any>(event.formattedData)
 
   const [decodeEventMutation] = useDecodeEventMutation({
     variables: { contractAddress: '', id: '' },
@@ -21,8 +23,8 @@ const Event: NextPage = () => {
 
   const decode = async () => {
     try {
-      const { data } = await decodeEventMutation({ variables: { contractAddress: address, id: eventId } })
-      console.log(data)
+      await decodeEventMutation({ variables: { contractAddress: address, id: eventId } })
+      setFormattedData(event.formattedData)
     } catch (error: any) {
       console.log('ERROR: ', error.message)
     }
@@ -89,7 +91,15 @@ const Event: NextPage = () => {
                 </tr>
                 <tr>
                   <td className="black">Formatted Data:</td>
-                  <td>{event.formattedData}</td>
+                  <td>
+                    <textarea
+                      readOnly
+                      className="form-control"
+                      rows={5}
+                      placeholder="Verify that the contract has the metadata uploaded and decode the event"
+                      value={formattedData}
+                    ></textarea>
+                  </td>
                 </tr>
               </tbody>
             </Table>

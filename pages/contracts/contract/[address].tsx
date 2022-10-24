@@ -15,6 +15,7 @@ import {
   useUploadMetadataMutation,
   useExecuteQueryMutation,
   QueryArgs,
+  QueryResult,
 } from '../../../generated'
 import withApollo from '../../../lib/withApollo'
 
@@ -51,6 +52,10 @@ const getEmptyQuery = () => {
 
 const DEFUALT_OPTIONS = { gasLimit: '200000000000', storageLimit: '', value: '' }
 
+type QueriesResults = {
+  [key: string]: QueryResult
+}
+
 const Contract: NextPage = () => {
   const router = useRouter()
   const address = router.query?.address as string
@@ -60,8 +65,30 @@ const Contract: NextPage = () => {
   const contract = get(data, 'getContractQueries', []) as GetContractQueriesQuery['getContractQueries']
 
   const [options, setOptions] = useState()
+  const [results, setResults] = useState<QueriesResults>()
   const [parameters, setParameters] = useState()
   const [base64Abi, setBase64Abi] = useState('')
+
+  const getDefaultResults = () => {
+    const res: any = {}
+    contract?.queries?.forEach((query) => {
+      const { method } = query
+      res[method] = {
+        debugMessage: '',
+        gasConsumed: '',
+        gasRequired: '',
+        output: '',
+        result: '',
+        storageDeposit: '',
+      }
+    })
+    return res
+  }
+
+  const setDefaultResults = () => {
+    if (results) return
+    setResults(getDefaultResults())
+  }
 
   const getDefaultOptions = () => {
     const op: any = {}
@@ -99,6 +126,7 @@ const Contract: NextPage = () => {
   const setDefautls = () => {
     setDefaultOptions()
     setDefaultParameters()
+    setDefaultResults()
   }
 
   const updateOptions = (method: string, arg: 'gasLimit' | 'storageLimit' | 'value', value: string) => {
@@ -108,7 +136,6 @@ const Contract: NextPage = () => {
     } else {
       op = { ...(options as any) }
     }
-    console.log('UPDATE OPTIONS', op, method, value)
     op[method][arg] = value
     setOptions(op)
   }
@@ -120,11 +147,9 @@ const Contract: NextPage = () => {
     } else {
       params = { ...(parameters as any) }
     }
-    console.log('UPDATE PARAMS', params, method, arg, value)
     params[method][arg] = value
     setParameters(params)
   }
-  console.log(parameters)
 
   useEffect(() => {
     hljs.highlightAll()
@@ -141,6 +166,7 @@ const Contract: NextPage = () => {
   const sendTransaction = async (method: string) => {
     if (!parameters) return
     if (!options) return
+    if (!results) return
     try {
       const query = getEmptyQuery()
       query.address = address
@@ -148,13 +174,17 @@ const Contract: NextPage = () => {
       query.args.sender = sender
       query.args.values = Object.values(parameters[method])
       query.args.options = options[method]
-      console.log('SEND TRANSACTION', query)
       const { data } = await executeQueryMutation({ variables: query })
-      console.log(data)
+      const res = get(data, 'executeQuery', {})
+      console.log(res)
+      //const injector = await web3FromAddress(sender as string)
+      //console.log(await res.signAndSend(sender as string, { signer: injector?.signer || undefined }))
+      //setResults({ ...results, [method]: res })
     } catch (error) {
       console.log(error)
     }
   }
+  console.log('results', results)
 
   const uploadAbi = async () => {
     try {
@@ -235,6 +265,13 @@ const Contract: NextPage = () => {
                           <Accordion.Header>{query.name}</Accordion.Header>
                           <Accordion.Body>
                             {query.docs}
+                            {query.args.length > 0 && (
+                              <Row className="my-3">
+                                <Col xs="12">
+                                  <b>Method Arguments</b>
+                                </Col>
+                              </Row>
+                            )}
                             {query.args.map((arg, i) => (
                               <Row key={index + '-' + i} className="my-3">
                                 <Col xs="12">
@@ -252,6 +289,11 @@ const Contract: NextPage = () => {
                                 </Col>
                               </Row>
                             ))}
+                            <Row className="my-3">
+                              <Col xs="12">
+                                <b>Options</b>
+                              </Col>
+                            </Row>
                             <Row key={`gasLimit-${index}`} className="my-3">
                               <Col xs="12">
                                 <b>gasLimit</b>
@@ -289,6 +331,26 @@ const Contract: NextPage = () => {
                                 />
                               </Col>
                             </Row>
+                            {results && (
+                              <Row className="my-3">
+                                <Col xs="12">
+                                  <b>Result</b>
+                                </Col>
+                              </Row>
+                            )}
+                            {results &&
+                              Object.keys(results[query?.method])
+                                .filter((k) => !k.startsWith('_'))
+                                .map((result, i) => (
+                                  <Row key={i} className="my-3">
+                                    <Col xs="12">
+                                      <b>
+                                        {result}: {results[query.method][result as keyof QueryResult]}
+                                      </b>
+                                    </Col>
+                                  </Row>
+                                ))}
+
                             <Row className="my-3">
                               <Col xs={2}>
                                 <button

@@ -9,8 +9,6 @@ import { useGetLastBlockQuery, GetLastBlockQuery, useVersionQuery, VersionQuery 
 import { getTimeAgo } from '../../lib/utils'
 import withApollo from '../../lib/withApollo'
 
-const client = Binance()
-
 function InfoCard() {
   const [price, setPrice] = useState(0)
   const { data } = useGetLastBlockQuery({ variables: { skip: 0, take: 1 } })
@@ -18,15 +16,19 @@ function InfoCard() {
   const { data: versionData } = useVersionQuery()
   const version = get(versionData, 'version', []) as VersionQuery['version']
   const token = 'DOT'
-  client
-    .avgPrice({ symbol: `${token}USDT` })
-    .then((res) => {
-      const result = Number((res as AvgPriceResult).price)
-      setPrice(result)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+
+  React.useEffect(() => {
+    const client = Binance()
+    client
+      .avgPrice({ symbol: `${token}USDT` })
+      .then((res) => {
+        const result = Number((res as AvgPriceResult).price)
+        setPrice(result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
   return (
     <>
       <div className="ink_infocard">
