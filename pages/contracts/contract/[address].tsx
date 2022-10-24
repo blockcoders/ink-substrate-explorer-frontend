@@ -169,11 +169,12 @@ const Contract: NextPage = () => {
         console.log('extensionDapp', extensionDapp)
         const injector = await extensionDapp.web3FromAddress(account)
         result = await tx(options, ...values).signAndSend(account, { signer: injector?.signer || undefined })
+        setResults({ ...results, [method]: { hash: result.toString() } })
       } else {
         result = await query(account, options[method], ...values)
+        setResults({ ...results, [method]: result })
       }
-      console.log('RESULT', result)
-      setResults({ ...results, [method]: result })
+      console.log('RESULT', result.toString())
     } catch (error) {
       console.log(error)
     }
