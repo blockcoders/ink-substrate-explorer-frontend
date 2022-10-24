@@ -38,7 +38,7 @@ const Contract: NextPage = () => {
   const address = router.query?.address as string
 
   const { data } = useGetContractQueriesQuery({ variables: { address } })
-  const contract = get(data, 'getContractQueries', []) as GetContractQueriesQuery['getContractQueries']
+  const contract = get(data, 'getContractQueries', undefined) as GetContractQueriesQuery['getContractQueries']
 
   const [options, setOptions] = useState()
   const [account, setAccount] = useState('')
@@ -46,6 +46,10 @@ const Contract: NextPage = () => {
   const [extensionDapp, setExtensionDapp] = useState<any>()
   const [parameters, setParameters] = useState()
   const [base64Abi, setBase64Abi] = useState('')
+
+  useEffect(() => {
+    hljs.highlightAll()
+  }, [])
 
   const getDefaultResults = () => {
     const res: any = {}
@@ -102,6 +106,11 @@ const Contract: NextPage = () => {
     extensionSetup(edapp)
   }
 
+  useEffect(() => {
+    if (!contract) return
+    setDefautls()
+  }, [contract])
+
   const updateOptions = (method: string, arg: 'gasLimit' | 'storageLimit' | 'value', value: string) => {
     let op
     if (!options) {
@@ -124,13 +133,19 @@ const Contract: NextPage = () => {
     setParameters(params)
   }
 
-  useEffect(() => {
-    hljs.highlightAll()
-  }, [])
-
   const [uploadMetadataMutation] = useUploadMetadataMutation({
     variables: { contractAddress: '', metadata: '' },
   })
+
+  const uploadAbi = async () => {
+    try {
+      await uploadMetadataMutation({ variables: { contractAddress: address, metadata: base64Abi } })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setBase64Abi('')
+    }
+  }
 
   const extensionSetup = async (extension: any) => {
     const { web3Accounts, web3Enable } = extension
@@ -166,7 +181,6 @@ const Contract: NextPage = () => {
       const values = Object.values(parameters[method]) || []
       let result
       if (query.meta.isMutating) {
-        console.log('extensionDapp', extensionDapp)
         const injector = await extensionDapp.web3FromAddress(account)
         result = await tx(options, ...values).signAndSend(account, { signer: injector?.signer || undefined })
         setResults({ ...results, [method]: { hash: result.toString() } })
@@ -174,21 +188,11 @@ const Contract: NextPage = () => {
         result = await query(account, options[method], ...values)
         setResults({ ...results, [method]: result })
       }
-      console.log('RESULT', result.toString())
     } catch (error) {
       console.log(error)
     }
   }
 
-  const uploadAbi = async () => {
-    try {
-      await uploadMetadataMutation({ variables: { contractAddress: address, metadata: base64Abi } })
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setBase64Abi('')
-    }
-  }
   return (
     <>
       <Row className="mb-5">
@@ -249,7 +253,7 @@ const Contract: NextPage = () => {
                 </Col>
               </Row>
             </Tab>
-            <Tab className="ink-tab_button" eventKey="Read" title="Run contract methods" onClick={() => setDefautls()}>
+            <Tab className="ink-tab_button" eventKey="Read" title="Run contract methods">
               <Row>
                 <Col className="my-5">
                   {contract?.queries && contract?.queries.length > 0 ? (
@@ -325,7 +329,7 @@ const Contract: NextPage = () => {
                                 />
                               </Col>
                             </Row>
-                            {results && (
+                            {results && results[query?.method] && (
                               <Row className="my-3">
                                 <Col xs="12">
                                   <b>Result</b>
@@ -333,6 +337,7 @@ const Contract: NextPage = () => {
                               </Row>
                             )}
                             {results &&
+                              results[query?.method] &&
                               Object.keys(results[query?.method])
                                 .filter((k) => !k.startsWith('_'))
                                 .map((result, i) => (
