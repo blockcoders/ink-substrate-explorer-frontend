@@ -77,7 +77,9 @@ const Events: NextPage = () => {
                   </td>
                   <td>{formatTimeAgo(event.timestamp)}</td>
                   <td>
-                    <span className="ink-button_showmore"><Link href={`/contracts/events/${address}/${event.id}`} > Show more</Link></span>
+                    <span className="ink-button_showmore">
+                      <Link href={`/contracts/events/${address}/${event.id}`}> Show more</Link>
+                    </span>
                   </td>
                 </tr>
               ))}

@@ -16,7 +16,6 @@ function Searchbar() {
   const handleKeyPress = (e: any) => {
     if (e.key === 'Enter') {
       handleSubmit()
-      console.log(search);
     }
   }
 
@@ -31,8 +30,7 @@ function Searchbar() {
           pathname: `/${selectedType}/${search}`,
         })
       }
-      setSearch("");
-      console.log(search);
+      setSearch('')
     }
   }
 
