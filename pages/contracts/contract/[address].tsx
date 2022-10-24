@@ -1,3 +1,6 @@
+import { ApiPromise, WsProvider } from '@polkadot/api'
+import { Abi, ContractPromise } from '@polkadot/api-contract'
+import { web3FromAddress } from '@polkadot/extension-dapp'
 import hljs from 'highlight.js'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
@@ -9,15 +12,11 @@ import { Row, Col, Tab, Tabs } from 'react-bootstrap'
 import 'highlight.js/styles/github.css'
 import Accordion from 'react-bootstrap/Accordion'
 import verifed from '../../../assets/img/verifed.svg'
-import {
-  useGetContractQueriesQuery,
-  GetContractQueriesQuery,
-  useUploadMetadataMutation,
-  useExecuteQueryMutation,
-  QueryArgs,
-  QueryResult,
-} from '../../../generated'
+import { useGetContractQueriesQuery, GetContractQueriesQuery, useUploadMetadataMutation } from '../../../generated'
 import withApollo from '../../../lib/withApollo'
+
+const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
+const DEFAULT_OPTIONS = { gasLimit: '', storageLimit: '', value: '' }
 
 const getArgName = (arg: string) => {
   const { name } = JSON.parse(arg)
@@ -31,29 +30,8 @@ const getArgType = (arg: string) => {
   return type
 }
 
-const getEmptyQuery = () => {
-  const address = ''
-  const method = ''
-  const args: QueryArgs = {
-    options: {
-      gasLimit: '',
-      storageLimit: '',
-      value: '',
-    },
-    sender: '',
-    values: [],
-  }
-  return {
-    address,
-    method,
-    args,
-  }
-}
-
-const DEFUALT_OPTIONS = { gasLimit: '200000000000', storageLimit: '', value: '' }
-
-type QueriesResults = {
-  [key: string]: QueryResult
+const connect = async (provider: string | string[] | undefined) => {
+  return ApiPromise.create({ provider: new WsProvider(provider) })
 }
 
 const Contract: NextPage = () => {
@@ -65,7 +43,7 @@ const Contract: NextPage = () => {
   const contract = get(data, 'getContractQueries', []) as GetContractQueriesQuery['getContractQueries']
 
   const [options, setOptions] = useState()
-  const [results, setResults] = useState<QueriesResults>()
+  const [results, setResults] = useState<any>()
   const [parameters, setParameters] = useState()
   const [base64Abi, setBase64Abi] = useState('')
 
@@ -73,14 +51,7 @@ const Contract: NextPage = () => {
     const res: any = {}
     contract?.queries?.forEach((query) => {
       const { method } = query
-      res[method] = {
-        debugMessage: '',
-        gasConsumed: '',
-        gasRequired: '',
-        output: '',
-        result: '',
-        storageDeposit: '',
-      }
+      res[method] = {}
     })
     return res
   }
@@ -94,7 +65,7 @@ const Contract: NextPage = () => {
     const op: any = {}
     contract?.queries?.forEach((query) => {
       const { method } = query
-      op[method] = DEFUALT_OPTIONS
+      op[method] = DEFAULT_OPTIONS
     })
     return op
   }
@@ -159,32 +130,38 @@ const Contract: NextPage = () => {
     variables: { contractAddress: '', metadata: '' },
   })
 
-  const [executeQueryMutation] = useExecuteQueryMutation({
-    variables: getEmptyQuery(),
-  })
-
-  const sendTransaction = async (method: string) => {
+  const send = async (method: string) => {
     if (!parameters) return
     if (!options) return
     if (!results) return
+    if (!contract) return
     try {
-      const query = getEmptyQuery()
-      query.address = address
-      query.method = method
-      query.args.sender = sender
-      query.args.values = Object.values(parameters[method])
-      query.args.options = options[method]
-      const { data } = await executeQueryMutation({ variables: query })
-      const res = get(data, 'executeQuery', {})
-      console.log(res)
-      //const injector = await web3FromAddress(sender as string)
-      //console.log(await res.signAndSend(sender as string, { signer: injector?.signer || undefined }))
-      //setResults({ ...results, [method]: res })
+      const api = await connect(WS_PROVIDER)
+      const { metadata } = contract || {}
+      if (!metadata) {
+        throw new Error('Contract metadata not found')
+      }
+      const abi = new Abi(metadata)
+      const contractPromise = new ContractPromise(api, abi, address)
+      const query = contractPromise.query[method]
+      const tx = contractPromise.tx[method]
+      if (!query || !tx) {
+        throw new Error('Query/Transaction method not found')
+      }
+      const values = Object.values(parameters[method]) || []
+      let result
+      if (query.meta.isMutating) {
+        const injector = await web3FromAddress(sender)
+        result = await tx(options, ...values).signAndSend(sender, { signer: injector?.signer || undefined })
+      } else {
+        result = await query(sender, options[method], ...values)
+      }
+      console.log('RESULT', result)
+      setResults({ ...results, [method]: result })
     } catch (error) {
       console.log(error)
     }
   }
-  console.log('results', results)
 
   const uploadAbi = async () => {
     try {
@@ -345,7 +322,7 @@ const Contract: NextPage = () => {
                                   <Row key={i} className="my-3">
                                     <Col xs="12">
                                       <b>
-                                        {result}: {results[query.method][result as keyof QueryResult]}
+                                        {result}: {results[query.method][result]}
                                       </b>
                                     </Col>
                                   </Row>
@@ -355,7 +332,7 @@ const Contract: NextPage = () => {
                               <Col xs={2}>
                                 <button
                                   className="ink-button ink-button_violet mt-3"
-                                  onClick={() => sendTransaction(query?.method)}
+                                  onClick={() => send(query?.method)}
                                 >
                                   Send
                                 </button>

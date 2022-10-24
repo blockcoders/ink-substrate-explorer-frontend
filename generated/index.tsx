@@ -62,7 +62,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   decodeEvent: Scalars['String'];
   decodeEvents: Scalars['String'];
-  executeQuery: QueryResult;
   uploadMetadata: Scalars['Boolean'];
 };
 
@@ -79,13 +78,6 @@ export type MutationDecodeEventsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   transactionHash?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationExecuteQueryArgs = {
-  address: Scalars['String'];
-  args?: InputMaybe<QueryArgs>;
-  method: Scalars['String'];
 };
 
 
@@ -172,28 +164,6 @@ export type QueryGetTransactionsByContractArgs = {
   orderAsc?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-export type QueryArgs = {
-  options: QueryOptions;
-  sender: Scalars['String'];
-  values?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type QueryOptions = {
-  gasLimit: Scalars['String'];
-  storageLimit?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['String']>;
-};
-
-export type QueryResult = {
-  __typename?: 'QueryResult';
-  debugMessage: Scalars['String'];
-  gasConsumed: Scalars['String'];
-  gasRequired: Scalars['String'];
-  output: Scalars['String'];
-  result: Scalars['String'];
-  storageDeposit: Scalars['String'];
 };
 
 export type Transaction = {
@@ -317,15 +287,6 @@ export type UploadMetadataMutationVariables = Exact<{
 
 
 export type UploadMetadataMutation = { __typename?: 'Mutation', uploadMetadata: boolean };
-
-export type ExecuteQueryMutationVariables = Exact<{
-  address: Scalars['String'];
-  args: QueryArgs;
-  method: Scalars['String'];
-}>;
-
-
-export type ExecuteQueryMutation = { __typename?: 'Mutation', executeQuery: { __typename?: 'QueryResult', debugMessage: string, gasConsumed: string, gasRequired: string, output: string, result: string, storageDeposit: string } };
 
 export type GetContractsQueryVariables = Exact<{
   skip: Scalars['Int'];
@@ -900,46 +861,6 @@ export function useUploadMetadataMutation(baseOptions?: Apollo.MutationHookOptio
 export type UploadMetadataMutationHookResult = ReturnType<typeof useUploadMetadataMutation>;
 export type UploadMetadataMutationResult = Apollo.MutationResult<UploadMetadataMutation>;
 export type UploadMetadataMutationOptions = Apollo.BaseMutationOptions<UploadMetadataMutation, UploadMetadataMutationVariables>;
-export const ExecuteQueryDocument = gql`
-    mutation executeQuery($address: String!, $args: QueryArgs!, $method: String!) {
-  executeQuery(address: $address, args: $args, method: $method) {
-    debugMessage
-    gasConsumed
-    gasRequired
-    output
-    result
-    storageDeposit
-  }
-}
-    `;
-export type ExecuteQueryMutationFn = Apollo.MutationFunction<ExecuteQueryMutation, ExecuteQueryMutationVariables>;
-
-/**
- * __useExecuteQueryMutation__
- *
- * To run a mutation, you first call `useExecuteQueryMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useExecuteQueryMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [executeQueryMutation, { data, loading, error }] = useExecuteQueryMutation({
- *   variables: {
- *      address: // value for 'address'
- *      args: // value for 'args'
- *      method: // value for 'method'
- *   },
- * });
- */
-export function useExecuteQueryMutation(baseOptions?: Apollo.MutationHookOptions<ExecuteQueryMutation, ExecuteQueryMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ExecuteQueryMutation, ExecuteQueryMutationVariables>(ExecuteQueryDocument, options);
-      }
-export type ExecuteQueryMutationHookResult = ReturnType<typeof useExecuteQueryMutation>;
-export type ExecuteQueryMutationResult = Apollo.MutationResult<ExecuteQueryMutation>;
-export type ExecuteQueryMutationOptions = Apollo.BaseMutationOptions<ExecuteQueryMutation, ExecuteQueryMutationVariables>;
 export const GetContractsDocument = gql`
     query getContracts($skip: Int!, $take: Int!) {
   getContracts(skip: $skip, take: $take) {

@@ -192,18 +192,6 @@ export const UPLOAD_ABI_MUTATION = gql`
     uploadMetadata(contractAddress: $contractAddress, metadata: $metadata)
   }
 `
-export const EXECUTE_QUERY_MUTATION = gql`
-  mutation executeQuery($address: String!, $args: QueryArgs!, $method: String!) {
-    executeQuery(address: $address, args: $args, method: $method) {
-      debugMessage
-      gasConsumed
-      gasRequired
-      output
-      result
-      storageDeposit
-    }
-  }
-`
 export const GET_CONTRACTS_QUERY = gql`
   query getContracts($skip: Int!, $take: Int!) {
     getContracts(skip: $skip, take: $take) {
