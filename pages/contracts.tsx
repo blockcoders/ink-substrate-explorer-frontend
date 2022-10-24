@@ -14,12 +14,12 @@ const Contract: NextPage = () => {
 
   const nextPage = () => {
     const { skip, take } = pagination
-    setPagination({ take, skip: skip + 10 })
+    setPagination({ take, skip: skip + take })
   }
 
   const previousPage = () => {
     const { skip, take } = pagination
-    const newSkip = skip - 10
+    const newSkip = skip - take
     setPagination({ skip: newSkip < 0 ? 0 : newSkip, take })
   }
 

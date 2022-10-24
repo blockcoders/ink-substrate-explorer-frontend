@@ -40,7 +40,10 @@ const Event: NextPage = () => {
             </h4>
           </Col>
           <Col className="mb-4" xs="2">
-            <button className="transaction-tabs_buttons transaction-tabs_buttons-btn transaction-tabs_buttons-btn_active text-rigth" onClick={() => decode()}>
+            <button
+              className="transaction-tabs_buttons transaction-tabs_buttons-btn transaction-tabs_buttons-btn_active text-rigth"
+              onClick={() => decode()}
+            >
               Decode Event
             </button>
           </Col>

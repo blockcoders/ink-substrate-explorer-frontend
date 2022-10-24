@@ -2,7 +2,7 @@ import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import { useGetTransactionsByContractQuery, GetTransactionsByContractQuery } from '../../../generated'
 import { formatTimeAgo, showShortHash } from '../../../lib/utils'
@@ -15,8 +15,13 @@ const Transaction: NextPage = () => {
     skip: 0,
     take: 5,
     orderAsc: false,
-    address: address,
+    address,
   })
+
+  useEffect(() => {
+    setPagination({ ...pagination, address })
+  }, [address])
+
   const { data } = useGetTransactionsByContractQuery({ variables: pagination })
   const transactions = get(
     data,
@@ -29,11 +34,12 @@ const Transaction: NextPage = () => {
   }
 
   const nextPage = () => {
-    setPagination({ ...pagination, skip: pagination.skip + 10 })
+    if (transactions.length < pagination.take) return
+    setPagination({ ...pagination, skip: pagination.skip + pagination.take })
   }
 
   const previousPage = () => {
-    const newSkip = pagination.skip - 10
+    const newSkip = pagination.skip - pagination.take
     setPagination({ ...pagination, skip: newSkip < 0 ? 0 : newSkip })
   }
 

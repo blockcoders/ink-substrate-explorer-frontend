@@ -36,12 +36,12 @@ const connect = async (provider: string | string[] | undefined) => {
 const Contract: NextPage = () => {
   const router = useRouter()
   const address = router.query?.address as string
-  const sender = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY' // TODO: get from wallet
 
   const { data } = useGetContractQueriesQuery({ variables: { address } })
   const contract = get(data, 'getContractQueries', []) as GetContractQueriesQuery['getContractQueries']
 
   const [options, setOptions] = useState()
+  const [account, setAccount] = useState('')
   const [results, setResults] = useState<any>()
   const [extensionDapp, setExtensionDapp] = useState<any>()
   const [parameters, setParameters] = useState()
@@ -140,7 +140,7 @@ const Contract: NextPage = () => {
       return
     }
     const accounts = await web3Accounts()
-    console.log(accounts)
+    setAccount(accounts[0].address)
     setExtensionDapp(extension)
   }
 
@@ -167,10 +167,10 @@ const Contract: NextPage = () => {
       let result
       if (query.meta.isMutating) {
         console.log('extensionDapp', extensionDapp)
-        const injector = await extensionDapp.web3FromAddress(sender)
-        result = await tx(options, ...values).signAndSend(sender, { signer: injector?.signer || undefined })
+        const injector = await extensionDapp.web3FromAddress(account)
+        result = await tx(options, ...values).signAndSend(account, { signer: injector?.signer || undefined })
       } else {
-        result = await query(sender, options[method], ...values)
+        result = await query(account, options[method], ...values)
       }
       console.log('RESULT', result)
       setResults({ ...results, [method]: result })

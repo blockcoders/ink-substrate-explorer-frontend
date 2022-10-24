@@ -20,12 +20,12 @@ const Transaction: NextPage = () => {
 
   const nextPage = () => {
     const { skip, take, orderAsc } = pagination
-    setPagination({ skip: skip + 10, take, orderAsc })
+    setPagination({ skip: skip + take, take, orderAsc })
   }
 
   const previousPage = () => {
     const { skip, take, orderAsc } = pagination
-    const newSkip = skip - 10
+    const newSkip = skip - take
     setPagination({ skip: newSkip < 0 ? 0 : newSkip, take, orderAsc })
   }
 

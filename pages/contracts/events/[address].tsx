@@ -26,11 +26,11 @@ const Events: NextPage = () => {
   }
 
   const nextPage = () => {
-    setPagination({ ...pagination, skip: pagination.skip + 10 })
+    setPagination({ ...pagination, skip: pagination.skip + pagination.take })
   }
 
   const previousPage = () => {
-    const newSkip = pagination.skip - 10
+    const newSkip = pagination.skip - pagination.take
     setPagination({ ...pagination, skip: newSkip < 0 ? 0 : newSkip })
   }
 

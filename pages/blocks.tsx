@@ -25,12 +25,12 @@ const Home: NextPage = () => {
   }
   const nextPage = () => {
     const { skip, take, orderAsc, orderByNumber } = pagination
-    setPagination({ skip: skip + 10, take, orderAsc, orderByNumber })
+    setPagination({ skip: skip + take, take, orderAsc, orderByNumber })
   }
 
   const previousPage = () => {
     const { skip, take, orderAsc, orderByNumber } = pagination
-    const newSkip = skip - 10
+    const newSkip = skip - take
     setPagination({ skip: newSkip < 0 ? 0 : newSkip, take, orderAsc, orderByNumber })
   }
 
