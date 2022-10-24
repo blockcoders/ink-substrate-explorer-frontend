@@ -150,7 +150,7 @@ const Contract: NextPage = () => {
       const values = Object.values(parameters[method]) || []
       let result
       if (query.meta.isMutating) {
-        const extensionDapp = (await import('@polkadot/extension-dapp')).default
+        const extensionDapp = await import('@polkadot/extension-dapp')
         console.log('extensionDapp', extensionDapp)
         const injector = await extensionDapp.web3FromAddress(sender)
         result = await tx(options, ...values).signAndSend(sender, { signer: injector?.signer || undefined })
@@ -323,7 +323,7 @@ const Contract: NextPage = () => {
                                   <Row key={i} className="my-3">
                                     <Col xs="12">
                                       <b>
-                                        {result}: {results[query.method][result]}
+                                        {result}: {results[query.method][result].toString()}
                                       </b>
                                     </Col>
                                   </Row>
