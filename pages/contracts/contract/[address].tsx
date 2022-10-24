@@ -1,6 +1,5 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Abi, ContractPromise } from '@polkadot/api-contract'
-import { web3FromAddress } from '@polkadot/extension-dapp'
 import hljs from 'highlight.js'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
@@ -151,7 +150,9 @@ const Contract: NextPage = () => {
       const values = Object.values(parameters[method]) || []
       let result
       if (query.meta.isMutating) {
-        const injector = await web3FromAddress(sender)
+        const extensionDapp = (await import('@polkadot/extension-dapp')).default
+        console.log('extensionDapp', extensionDapp)
+        const injector = await extensionDapp.web3FromAddress(sender)
         result = await tx(options, ...values).signAndSend(sender, { signer: injector?.signer || undefined })
       } else {
         result = await query(sender, options[method], ...values)
