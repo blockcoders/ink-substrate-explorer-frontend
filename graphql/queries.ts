@@ -216,3 +216,8 @@ export const GET_CONTRACTS_QUERY = gql`
     }
   }
 `
+export const DECODE_EVENT_MUTATION = gql`
+  mutation decodeEvent($contractAddress: String!, $id: String!) {
+    decodeEvent(contractAddress: $contractAddress, id: $id)
+  }
+`

@@ -4,24 +4,40 @@ import Image from 'next/future/image'
 import { useRouter } from 'next/router'
 import { Row, Col, Table } from 'react-bootstrap'
 import verifed from '../../../../assets/img/arrow.svg'
-import { GetEventQuery, useGetEventQuery } from '../../../../generated'
+import { GetEventQuery, useDecodeEventMutation, useGetEventQuery } from '../../../../generated'
 import { formatTimeAgo } from '../../../../lib/utils'
 import withApollo from '../../../../lib/withApollo'
 
 const Event: NextPage = () => {
   const router = useRouter()
+  const address = router.query?.address as string
   const eventId = router.query?.eventId as string
   const { data } = useGetEventQuery({ variables: { id: eventId } })
   const event = get(data, 'getEvent', []) as GetEventQuery['getEvent']
+
+  const [decodeEventMutation] = useDecodeEventMutation({
+    variables: { contractAddress: '', id: '' },
+  })
+
+  const decode = async () => {
+    console.log('decode', { contractAddress: address, id: eventId })
+    const { data } = await decodeEventMutation({ variables: { contractAddress: address, id: eventId } })
+    console.log(data)
+  }
 
   return (
     <>
       <>
         <Row>
-          <Col className="mb-4">
+          <Col className="mb-4" xs="10">
             <h4>
               <b>Event Log</b>
             </h4>
+          </Col>
+          <Col className="mb-4" xs="2">
+            <button className="ink-button ink-button_violet mt-3" onClick={() => decode()}>
+              Decode Event
+            </button>
           </Col>
         </Row>
         <Row>

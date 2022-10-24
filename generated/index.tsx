@@ -60,8 +60,25 @@ export type Event = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  decodeEvent: Scalars['String'];
+  decodeEvents: Scalars['String'];
   executeQuery: QueryResult;
   uploadMetadata: Scalars['Boolean'];
+};
+
+
+export type MutationDecodeEventArgs = {
+  contractAddress: Scalars['String'];
+  id: Scalars['String'];
+};
+
+
+export type MutationDecodeEventsArgs = {
+  contract?: InputMaybe<Scalars['String']>;
+  orderAsc?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  transactionHash?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -79,8 +96,6 @@ export type MutationUploadMetadataArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  decodeEvent: Scalars['String'];
-  decodeEvents: Scalars['String'];
   getBlock: Block;
   getBlocks: Array<Block>;
   getContract: Contract;
@@ -93,21 +108,6 @@ export type Query = {
   getTransactionsByContract: Array<Transaction>;
   status: Scalars['String'];
   version: Scalars['String'];
-};
-
-
-export type QueryDecodeEventArgs = {
-  contractAddress: Scalars['String'];
-  id: Scalars['String'];
-};
-
-
-export type QueryDecodeEventsArgs = {
-  contract?: InputMaybe<Scalars['String']>;
-  orderAsc?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
-  transactionHash?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -334,6 +334,14 @@ export type GetContractsQueryVariables = Exact<{
 
 
 export type GetContractsQuery = { __typename?: 'Query', getContracts: Array<{ __typename?: 'Contract', hasMetadata: boolean, address: string, events: Array<{ __typename?: 'Event', id: string, timestamp: number }> }> };
+
+export type DecodeEventMutationVariables = Exact<{
+  contractAddress: Scalars['String'];
+  id: Scalars['String'];
+}>;
+
+
+export type DecodeEventMutation = { __typename?: 'Mutation', decodeEvent: string };
 
 
 export const GetBlocksDocument = gql`
@@ -973,3 +981,35 @@ export function useGetContractsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetContractsQueryHookResult = ReturnType<typeof useGetContractsQuery>;
 export type GetContractsLazyQueryHookResult = ReturnType<typeof useGetContractsLazyQuery>;
 export type GetContractsQueryResult = Apollo.QueryResult<GetContractsQuery, GetContractsQueryVariables>;
+export const DecodeEventDocument = gql`
+    mutation decodeEvent($contractAddress: String!, $id: String!) {
+  decodeEvent(contractAddress: $contractAddress, id: $id)
+}
+    `;
+export type DecodeEventMutationFn = Apollo.MutationFunction<DecodeEventMutation, DecodeEventMutationVariables>;
+
+/**
+ * __useDecodeEventMutation__
+ *
+ * To run a mutation, you first call `useDecodeEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDecodeEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [decodeEventMutation, { data, loading, error }] = useDecodeEventMutation({
+ *   variables: {
+ *      contractAddress: // value for 'contractAddress'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDecodeEventMutation(baseOptions?: Apollo.MutationHookOptions<DecodeEventMutation, DecodeEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DecodeEventMutation, DecodeEventMutationVariables>(DecodeEventDocument, options);
+      }
+export type DecodeEventMutationHookResult = ReturnType<typeof useDecodeEventMutation>;
+export type DecodeEventMutationResult = Apollo.MutationResult<DecodeEventMutation>;
+export type DecodeEventMutationOptions = Apollo.BaseMutationOptions<DecodeEventMutation, DecodeEventMutationVariables>;

@@ -228,7 +228,7 @@ const Contract: NextPage = () => {
             <Tab className="ink-tab_button" eventKey="Read" title="Run contract methods" onClick={() => setDefautls()}>
               <Row>
                 <Col className="my-5">
-                  {contract?.queries ? (
+                  {contract?.queries && contract?.queries.length > 0 ? (
                     <Accordion className="ink-accordion" defaultActiveKey={['0']}>
                       {contract?.queries?.map((query, index) => (
                         <Accordion.Item key={index} eventKey={`${index}`} className="ink-accordion_item">
