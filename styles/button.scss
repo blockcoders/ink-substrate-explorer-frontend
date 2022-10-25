@@ -5,6 +5,10 @@
     border-radius: 16px;
     border: 0;
     font-size: 20px;
+    transition: all 0.3s ease;
+    &:disabled {
+      background-color: $grey-disabled;
+    }
     &_violet {
         background-color: $dark-violet;
         color: #fff;

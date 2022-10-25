@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Row, Col, Table, Button } from 'react-bootstrap'
 import verifed from '../../../assets/img/arrow.svg'
+import { BackButton } from '../../../components/BackButton/BackButton'
 import { useGetTransactionQuery, GetTransactionQuery } from '../../../generated'
 import { formatTimeAgo } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
@@ -47,7 +48,8 @@ const Transaction: NextPage = () => {
       {view === 'Overview' && (
         <>
           <Row>
-            <Col className="mb-4">
+            <Col className="mb-4 d-flex align-items-center gap-2">
+              <BackButton />
               <h4>
                 <b>Summary</b>
               </h4>
@@ -145,7 +147,8 @@ const Transaction: NextPage = () => {
       {view === 'Logs' && (
         <>
           <Row>
-            <Col className="mb-4">
+            <Col className="mb-4 d-flex align-items-center gap-2">
+              <BackButton />
               <h4>
                 <b>Transaction Receipt Event Logs</b>
               </h4>

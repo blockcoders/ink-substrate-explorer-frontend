@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
+import { BackButton } from '../../../components/BackButton/BackButton'
 import {
   useGetBlockQuery,
   GetBlockQuery,
@@ -41,7 +42,8 @@ const Block: NextPage = () => {
   return (
     <>
       <Row>
-        <Col className="mb-4">
+        <Col className="mb-4 d-flex align-items-center">
+          <BackButton />
           <h4>
             <b>Summary</b>
           </h4>

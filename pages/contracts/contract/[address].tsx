@@ -12,6 +12,7 @@ import { Row, Col, Tab, Tabs } from 'react-bootstrap'
 import 'highlight.js/styles/github.css'
 import Accordion from 'react-bootstrap/Accordion'
 import verifed from '../../../assets/img/verifed.svg'
+import LoadingButton from '../../../components/LoadingButton/LoadingButton'
 import { useGetContractQueriesQuery, GetContractQueriesQuery, useUploadMetadataMutation } from '../../../generated'
 import withApollo from '../../../lib/withApollo'
 import { useLoading, useToast } from '../../hooks'
@@ -146,10 +147,9 @@ const Contract: NextPage = () => {
     showLoadingToast()
     try {
       await uploadMetadataMutation({ variables: { contractAddress: address, metadata: base64Abi } })
-      showSuccessToast('Upload successfull')
+      showSuccessToast('Successful upload')
     } catch (error) {
       showErrorToast('Error')
-      // console.log(error)
     } finally {
       endLoading()
       setBase64Abi('')
@@ -160,7 +160,7 @@ const Contract: NextPage = () => {
     const { web3Accounts, web3Enable } = extension
     const extensions = await web3Enable('Ink! Explorer')
     if (extensions.length === 0) {
-      console.log('No extension installed!')
+      showErrorToast('No extension installed!')
       return
     }
     const accounts = await web3Accounts()
@@ -174,6 +174,7 @@ const Contract: NextPage = () => {
     if (!results) return
     if (!contract) return
     if (!extensionDapp) return
+    startLoading()
     try {
       const api = await connect(WS_PROVIDER)
       const { metadata } = contract || {}
@@ -198,8 +199,9 @@ const Contract: NextPage = () => {
         setResults({ ...results, [method]: result })
       }
     } catch (error) {
-      console.log(error)
+      showErrorToast(error as string)
     }
+    endLoading()
   }
 
   return (
@@ -257,14 +259,13 @@ const Contract: NextPage = () => {
                   ></textarea>
                 </Col>
                 <Col className="my-3" xs={12}>
-                  <button
-                    aria-disabled={isLoading}
+                  <LoadingButton
                     disabled={isLoading}
+                    isLoading={isLoading}
                     className="ink-button ink-button_violet mt-3"
-                    onClick={() => uploadAbi()}
-                  >
-                    Upload
-                  </button>
+                    onClick={uploadAbi}
+                    text="Upload"
+                  />
                 </Col>
               </Row>
             </Tab>
@@ -359,7 +360,7 @@ const Contract: NextPage = () => {
                                   <Row key={i} className="my-3">
                                     <Col xs="12">
                                       <b>
-                                        {result}: {results[query.method][result].toString()}
+                                        {result}: {results?.[query.method]?.[result]?.toString() || ''}
                                       </b>
                                     </Col>
                                   </Row>
@@ -367,12 +368,13 @@ const Contract: NextPage = () => {
 
                             <Row className="my-3 d-flex justify-content-end">
                               <Col xs={2}>
-                                <button
+                                <LoadingButton
+                                  disabled={isLoading}
+                                  isLoading={isLoading}
                                   className="ink-button ink-button_violet mt-3"
                                   onClick={() => send(query?.method)}
-                                >
-                                  Send
-                                </button>
+                                  text="Send"
+                                />
                               </Col>
                             </Row>
                           </Accordion.Body>
@@ -382,7 +384,7 @@ const Contract: NextPage = () => {
                   ) : (
                     <>
                       <Row>
-                        <Col xs="12" className="my-3">
+                        <Col xs="12" className="my-3 text-center">
                           <p> No queries found. Try uploading the metadata for this contract.</p>
                         </Col>
                       </Row>
