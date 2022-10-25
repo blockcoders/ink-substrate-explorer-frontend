@@ -9,6 +9,7 @@ import { BackButton } from '../../../../components/BackButton/BackButton'
 import { GetEventQuery, useDecodeEventMutation, useGetEventQuery } from '../../../../generated'
 import { formatTimeAgo } from '../../../../lib/utils'
 import withApollo from '../../../../lib/withApollo'
+import { formatJsonData } from '../../../../utils/json'
 import { useToast } from '../../../hooks'
 
 const Event: NextPage = () => {
@@ -33,8 +34,8 @@ const Event: NextPage = () => {
       const response = JSON.parse(result?.data?.decodeEvent as any)
 
       setEventData({
-        decodedData: JSON.stringify(response?.[0].decodedDat || {}),
-        formattedData: JSON.stringify(response?.[0].formattedData || {}),
+        decodedData: response?.[0].decodedData || {},
+        formattedData: response?.[0].formattedData || {},
       })
     } catch (error: any) {
       showErrorToast(error.message || 'error')
@@ -43,8 +44,8 @@ const Event: NextPage = () => {
   }
   useEffect(() => {
     setEventData(() => ({
-      decodedData: event.decodedData,
-      formattedData: event.formattedData,
+      decodedData: event.decodedData ? JSON.parse(event.decodedData) : {},
+      formattedData: event.formattedData ? JSON.parse(event.formattedData) : {},
     }))
   }, [event?.decodedData])
 
@@ -119,7 +120,7 @@ const Event: NextPage = () => {
                       className="form-control"
                       rows={5}
                       placeholder="Verify that the contract has the metadata uploaded and decode the event"
-                      value={eventData?.formattedData || ''}
+                      value={formatJsonData(eventData?.formattedData || {})}
                     ></textarea>
                   </td>
                 </tr>
@@ -131,7 +132,7 @@ const Event: NextPage = () => {
                       className="form-control"
                       rows={5}
                       placeholder="Verify that the contract has the metadata uploaded and decode the event"
-                      value={eventData?.decodedData || ''}
+                      value={formatJsonData(eventData?.decodedData || {})}
                     ></textarea>
                   </td>
                 </tr>
