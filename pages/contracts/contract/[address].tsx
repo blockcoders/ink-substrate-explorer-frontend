@@ -190,17 +190,8 @@ const Contract: NextPage = () => {
       const values = Object.values(parameters[method]) || []
       let result
       if (query.meta.isMutating) {
-        const v = {
-          gasLimit: new BN(0),
-          storageDepositLimit: undefined,
-          value: undefined,
-        }
-
-        console.log(v)
-        console.log(options)
-
         const injector = await extensionDapp.web3FromAddress(account)
-        result = await tx(v, ...values).signAndSend(account, { signer: injector?.signer || undefined })
+        result = await tx(options, ...values).signAndSend(account, { signer: injector?.signer || undefined })
         setResults({ ...results, [method]: { hash: result.toString() } })
       } else {
         result = await query(account, options[method], ...values)
@@ -374,7 +365,7 @@ const Contract: NextPage = () => {
                                   </Row>
                                 ))}
 
-                            <Row className="my-3">
+                            <Row className="my-3 d-flex justify-content-end">
                               <Col xs={2}>
                                 <button
                                   className="ink-button ink-button_violet mt-3"

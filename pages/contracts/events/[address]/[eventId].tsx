@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Row, Col, Table } from 'react-bootstrap'
 import verifed from '../../../../assets/img/arrow.svg'
+import { BackButton } from '../../../../components/BackButton/BackButton'
 import { GetEventQuery, useDecodeEventMutation, useGetEventQuery } from '../../../../generated'
 import { formatTimeAgo } from '../../../../lib/utils'
 import withApollo from '../../../../lib/withApollo'
@@ -51,7 +52,8 @@ const Event: NextPage = () => {
     <>
       <>
         <Row>
-          <Col className="mb-4" xs="10">
+          <Col className="mb-4 d-flex align-items-center gap-1" xs="10">
+            <BackButton />
             <h4>
               <b>Event Log</b>
             </h4>
