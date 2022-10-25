@@ -26,7 +26,9 @@ const Events: NextPage = () => {
   }
 
   const nextPage = () => {
-    setPagination({ ...pagination, skip: pagination.skip + pagination.take })
+    const { skip, take } = pagination
+    if (events.length < take) return
+    setPagination({ ...pagination, skip: skip + take })
   }
 
   const previousPage = () => {

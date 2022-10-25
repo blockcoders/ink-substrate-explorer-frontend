@@ -14,6 +14,7 @@ const Contract: NextPage = () => {
 
   const nextPage = () => {
     const { skip, take } = pagination
+    if (contracts.length < take) return
     setPagination({ take, skip: skip + take })
   }
 

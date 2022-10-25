@@ -34,8 +34,9 @@ const Transaction: NextPage = () => {
   }
 
   const nextPage = () => {
-    if (transactions.length < pagination.take) return
-    setPagination({ ...pagination, skip: pagination.skip + pagination.take })
+    const { skip, take } = pagination
+    if (transactions.length < take) return
+    setPagination({ ...pagination, skip: skip + take })
   }
 
   const previousPage = () => {

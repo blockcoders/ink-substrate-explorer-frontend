@@ -20,6 +20,7 @@ const Transaction: NextPage = () => {
 
   const nextPage = () => {
     const { skip, take, orderAsc } = pagination
+    if (transactions.length < take) return
     setPagination({ skip: skip + take, take, orderAsc })
   }
 

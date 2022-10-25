@@ -25,6 +25,7 @@ const Home: NextPage = () => {
   }
   const nextPage = () => {
     const { skip, take, orderAsc, orderByNumber } = pagination
+    if (blocks.length < take) return
     setPagination({ skip: skip + take, take, orderAsc, orderByNumber })
   }
 

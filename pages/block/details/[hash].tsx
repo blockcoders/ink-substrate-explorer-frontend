@@ -29,13 +29,14 @@ const Block: NextPage = () => {
   }
 
   const nextPage = () => {
-    const { skip } = pagination
-    setPagination({ ...pagination, skip: skip + 5 })
+    const { skip, take } = pagination
+    if (transactions.length < take) return
+    setPagination({ ...pagination, skip: skip + take })
   }
 
   const previousPage = () => {
-    const { skip } = pagination
-    const newSkip = skip - 5
+    const { skip, take } = pagination
+    const newSkip = skip - take
     setPagination({ ...pagination, skip: newSkip < 0 ? 0 : newSkip })
   }
 

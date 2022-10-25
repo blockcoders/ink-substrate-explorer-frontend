@@ -207,7 +207,6 @@ const Contract: NextPage = () => {
   }
 
   const getResult = (result: string, method: string) => {
-    // {result}: {results?.[query.method]?.[result]?.toString() || ''}
     if (!results) return ''
     if (!result) return ''
     if (!method) return ''
