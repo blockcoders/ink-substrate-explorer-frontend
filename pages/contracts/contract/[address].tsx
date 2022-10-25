@@ -199,8 +199,29 @@ const Contract: NextPage = () => {
       }
     } catch (error) {
       showErrorToast(error as any)
+      if (results[method]) {
+        setResults({ ...results, [method]: {} })
+      }
     }
     endLoading()
+  }
+
+  const getResult = (result: string, method: string) => {
+    // {result}: {results?.[query.method]?.[result]?.toString() || ''}
+    if (!results) return ''
+    if (!result) return ''
+    if (!method) return ''
+    const formatted = `${result}: `
+    const data = results[method][result].toString()
+    if (result === 'hash') {
+      return (
+        <>
+          {formatted}
+          <Link href={`/transactions/details/${data}`}>{data}</Link>
+        </>
+      )
+    }
+    return formatted + data
   }
 
   return (
@@ -358,9 +379,7 @@ const Contract: NextPage = () => {
                                 .map((result, i) => (
                                   <Row key={i} className="my-3">
                                     <Col xs="12">
-                                      <b>
-                                        {result}: {results?.[query.method]?.[result]?.toString() || ''}
-                                      </b>
+                                      <b>{getResult(result, query.method)}</b>
                                     </Col>
                                   </Row>
                                 ))}
