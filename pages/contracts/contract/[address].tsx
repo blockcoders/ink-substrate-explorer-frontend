@@ -191,9 +191,26 @@ const Contract: NextPage = () => {
       let result
       if (query.meta.isMutating) {
         const injector = await extensionDapp.web3FromAddress(account)
-        result = await tx(options[method], ...values).signAndSend(account, {
-          signer: injector?.signer || undefined,
-        })
+        result = await tx(options[method], ...values).signAndSend(
+          account,
+          {
+            signer: injector?.signer || undefined,
+          },
+          ({ events, status, txHash, dispatchError, dispatchInfo, internalError }) => {
+            const result = {
+              status: status.toString(),
+              txHash: txHash.toString() || '',
+              dispatchError: dispatchError?.toString() || '',
+              dispatchInfo: dispatchInfo?.toString() || '',
+              internalError: internalError?.toString() || '',
+              events: events.map((e) => ` ${e.event.method}`).toString() || '',
+            }
+            setResults({
+              ...results,
+              [method]: result,
+            })
+          },
+        )
         setResults({ ...results, [method]: { hash: result.toString() } })
       } else {
         result = await query(account, options[method], ...values)
@@ -214,16 +231,33 @@ const Contract: NextPage = () => {
     if (!result) return ''
     if (!method) return ''
     const formatted = `${result}: `
-    const data = results[method][result].toString()
-    if (result === 'hash') {
+    const data = results[method][result]
+    if (result === 'status') {
+      if (data.startsWith('{')) {
+        const status = JSON.parse(data).inBlock
+        return (
+          <>
+            <b>{formatted}</b>
+            <Link href={`/block/details/${status}`}>{status}</Link>
+          </>
+        )
+      }
+    }
+
+    if (result === 'txHash') {
       return (
         <>
-          {formatted}
+          <b>{formatted}</b>
           <Link href={`/transaction/details/${data}`}>{data}</Link>
         </>
       )
     }
-    return formatted + data
+    return (
+      <>
+        <b>{formatted}</b>
+        {data}
+      </>
+    )
   }
 
   return (
@@ -380,9 +414,7 @@ const Contract: NextPage = () => {
                                 .filter((k) => !k.startsWith('_'))
                                 .map((result, i) => (
                                   <Row key={i} className="my-3">
-                                    <Col xs="12">
-                                      <b>{getResult(result, query.method)}</b>
-                                    </Col>
+                                    <Col xs="12">{getResult(result, query.method)}</Col>
                                   </Row>
                                 ))}
 
