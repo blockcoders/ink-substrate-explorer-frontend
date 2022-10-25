@@ -216,7 +216,7 @@ const Contract: NextPage = () => {
       return (
         <>
           {formatted}
-          <Link href={`/transactions/details/${data}`}>{data}</Link>
+          <Link href={`/transaction/details/${data}`}>{data}</Link>
         </>
       )
     }
