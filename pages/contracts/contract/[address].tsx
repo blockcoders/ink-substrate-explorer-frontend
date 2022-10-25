@@ -1,6 +1,5 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Abi, ContractPromise } from '@polkadot/api-contract'
-import { BN } from 'bn.js'
 import hljs from 'highlight.js'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
@@ -14,8 +13,8 @@ import Accordion from 'react-bootstrap/Accordion'
 import verifed from '../../../assets/img/verifed.svg'
 import LoadingButton from '../../../components/LoadingButton/LoadingButton'
 import { useGetContractQueriesQuery, GetContractQueriesQuery, useUploadMetadataMutation } from '../../../generated'
+import { useLoading, useToast } from '../../../hooks'
 import withApollo from '../../../lib/withApollo'
-import { useLoading, useToast } from '../../hooks'
 
 const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
 const DEFAULT_OPTIONS = { gasLimit: '', storageLimit: '', value: '' }
@@ -199,7 +198,7 @@ const Contract: NextPage = () => {
         setResults({ ...results, [method]: result })
       }
     } catch (error) {
-      showErrorToast(error as string)
+      showErrorToast(error as any)
     }
     endLoading()
   }

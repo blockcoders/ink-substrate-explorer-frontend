@@ -7,10 +7,10 @@ import { Row, Col, Table } from 'react-bootstrap'
 import verifed from '../../../../assets/img/arrow.svg'
 import { BackButton } from '../../../../components/BackButton/BackButton'
 import { GetEventQuery, useDecodeEventMutation, useGetEventQuery } from '../../../../generated'
+import { useToast } from '../../../../hooks'
 import { formatTimeAgo } from '../../../../lib/utils'
 import withApollo from '../../../../lib/withApollo'
 import { formatJsonData } from '../../../../utils/json'
-import { useToast } from '../../../hooks'
 
 const Event: NextPage = () => {
   const router = useRouter()

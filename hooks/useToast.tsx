@@ -18,7 +18,7 @@ export const useToast = () => {
 
   const showErrorToast = (message: string) => {
     toast.dismiss()
-    toast.error(message, {
+    toast.error(String(message), {
       toastId: 'toast-error',
       ...toastCommonProps,
     })
