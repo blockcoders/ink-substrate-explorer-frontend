@@ -17,7 +17,7 @@ import { useLoading, useToast } from '../../../hooks'
 import withApollo from '../../../lib/withApollo'
 
 const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
-const DEFAULT_OPTIONS = { gasLimit: '', storageLimit: '', value: '' }
+const DEFAULT_OPTIONS = { gasLimit: '' }
 
 const getArgName = (arg: string) => {
   const { name } = JSON.parse(arg)
@@ -187,11 +187,13 @@ const Contract: NextPage = () => {
       if (!query || !tx) {
         throw new Error('Query/Transaction method not found')
       }
-      const values = Object.values(parameters[method]) || []
+      const values: string[] = Object.values(parameters[method]) || []
       let result
       if (query.meta.isMutating) {
         const injector = await extensionDapp.web3FromAddress(account)
-        result = await tx(options, ...values).signAndSend(account, { signer: injector?.signer || undefined })
+        result = await tx(options[method], ...values).signAndSend(account, {
+          signer: injector?.signer || undefined,
+        })
         setResults({ ...results, [method]: { hash: result.toString() } })
       } else {
         result = await query(account, options[method], ...values)
@@ -202,8 +204,9 @@ const Contract: NextPage = () => {
       if (results[method]) {
         setResults({ ...results, [method]: {} })
       }
+    } finally {
+      endLoading()
     }
-    endLoading()
   }
 
   const getResult = (result: string, method: string) => {
