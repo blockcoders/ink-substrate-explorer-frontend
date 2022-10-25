@@ -39,7 +39,7 @@ const Transaction: NextPage = () => {
         </Col>
         <Col>
           <Link href="/transactions">
-            <button className="ink-button ink-button_violet">Transaction</button>
+            <button className="ink-button ink-button_violet">Transactions</button>
           </Link>
         </Col>
         <Col>
@@ -53,8 +53,8 @@ const Transaction: NextPage = () => {
           <Table responsive hover className="ink_table">
             <thead>
               <tr>
-                <th>Tx Hash</th>
-                <th>Block</th>
+                <th>Hash</th>
+                <th>Block Hash</th>
                 <th onClick={() => toogleOrder()}>Time</th>
                 <th>Section</th>
                 <th>Method</th>

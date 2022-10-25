@@ -44,7 +44,7 @@ const Home: NextPage = () => {
         </Col>
         <Col>
           <Link href="/transactions">
-            <button className="ink-button ink-button_violetligth">Transaction</button>
+            <button className="ink-button ink-button_violetligth">Transactions</button>
           </Link>
         </Col>
         <Col>
