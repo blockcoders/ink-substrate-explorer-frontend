@@ -10,6 +10,8 @@ import Sidebar from '../components/Sidebar/Sidebar'
 import { getTitle } from '../utils/pagetitile'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/main.scss'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [title, setTitle] = useState('')
@@ -50,6 +52,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <div className="content-page_inside">
                   <Component {...pageProps} />
                 </div>
+                <ToastContainer />
               </Container>
             </Row>
           </div>

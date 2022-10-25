@@ -1,21 +1,26 @@
-import { get } from 'lodash'
+import { get, result } from 'lodash'
 import type { NextPage } from 'next'
 import Image from 'next/future/image'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Row, Col, Table } from 'react-bootstrap'
 import verifed from '../../../../assets/img/arrow.svg'
 import { GetEventQuery, useDecodeEventMutation, useGetEventQuery } from '../../../../generated'
 import { formatTimeAgo } from '../../../../lib/utils'
 import withApollo from '../../../../lib/withApollo'
+import { useToast } from '../../../hooks'
 
 const Event: NextPage = () => {
   const router = useRouter()
   const address = router.query?.address as string
   const eventId = router.query?.eventId as string
+  const { showErrorToast } = useToast()
   const { data } = useGetEventQuery({ variables: { id: eventId } })
   const event = get(data, 'getEvent', []) as GetEventQuery['getEvent']
-  const [formattedData, setFormattedData] = useState<any>(event.formattedData)
+  const [eventData, setEventData] = useState<any>({
+    decodedData: '',
+    formattedData: '',
+  })
 
   const [decodeEventMutation] = useDecodeEventMutation({
     variables: { contractAddress: '', id: '' },
@@ -23,12 +28,24 @@ const Event: NextPage = () => {
 
   const decode = async () => {
     try {
-      await decodeEventMutation({ variables: { contractAddress: address, id: eventId } })
-      setFormattedData(event.formattedData)
+      const result = await decodeEventMutation({ variables: { contractAddress: address, id: eventId } })
+      const response = JSON.parse(result?.data?.decodeEvent as any)
+
+      setEventData({
+        decodedData: JSON.stringify(response?.[0].decodedDat || {}),
+        formattedData: JSON.stringify(response?.[0].formattedData || {}),
+      })
     } catch (error: any) {
-      console.log('ERROR: ', error.message)
+      showErrorToast(error.message || 'error')
+      // console.log('ERROR: ', error.message)
     }
   }
+  useEffect(() => {
+    setEventData(() => ({
+      decodedData: event.decodedData,
+      formattedData: event.formattedData,
+    }))
+  }, [event?.decodedData])
 
   return (
     <>
@@ -100,7 +117,19 @@ const Event: NextPage = () => {
                       className="form-control"
                       rows={5}
                       placeholder="Verify that the contract has the metadata uploaded and decode the event"
-                      value={formattedData}
+                      value={eventData?.formattedData || ''}
+                    ></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="black">Decoded Data:</td>
+                  <td>
+                    <textarea
+                      readOnly
+                      className="form-control"
+                      rows={5}
+                      placeholder="Verify that the contract has the metadata uploaded and decode the event"
+                      value={eventData?.decodedData || ''}
                     ></textarea>
                   </td>
                 </tr>

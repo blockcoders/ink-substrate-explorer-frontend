@@ -1,5 +1,6 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Abi, ContractPromise } from '@polkadot/api-contract'
+import { BN } from 'bn.js'
 import hljs from 'highlight.js'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
@@ -13,6 +14,7 @@ import Accordion from 'react-bootstrap/Accordion'
 import verifed from '../../../assets/img/verifed.svg'
 import { useGetContractQueriesQuery, GetContractQueriesQuery, useUploadMetadataMutation } from '../../../generated'
 import withApollo from '../../../lib/withApollo'
+import { useLoading, useToast } from '../../hooks'
 
 const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
 const DEFAULT_OPTIONS = { gasLimit: '', storageLimit: '', value: '' }
@@ -36,6 +38,8 @@ const connect = async (provider: string | string[] | undefined) => {
 const Contract: NextPage = () => {
   const router = useRouter()
   const address = router.query?.address as string
+  const { isLoading, startLoading, endLoading } = useLoading()
+  const { showErrorToast, showLoadingToast, showSuccessToast } = useToast()
 
   const { data } = useGetContractQueriesQuery({ variables: { address } })
   const contract = get(data, 'getContractQueries', undefined) as GetContractQueriesQuery['getContractQueries']
@@ -138,11 +142,16 @@ const Contract: NextPage = () => {
   })
 
   const uploadAbi = async () => {
+    startLoading()
+    showLoadingToast()
     try {
       await uploadMetadataMutation({ variables: { contractAddress: address, metadata: base64Abi } })
+      showSuccessToast('Upload successfull')
     } catch (error) {
-      console.log(error)
+      showErrorToast('Error')
+      // console.log(error)
     } finally {
+      endLoading()
       setBase64Abi('')
     }
   }
@@ -181,8 +190,17 @@ const Contract: NextPage = () => {
       const values = Object.values(parameters[method]) || []
       let result
       if (query.meta.isMutating) {
+        const v = {
+          gasLimit: new BN(0),
+          storageDepositLimit: undefined,
+          value: undefined,
+        }
+
+        console.log(v)
+        console.log(options)
+
         const injector = await extensionDapp.web3FromAddress(account)
-        result = await tx(options, ...values).signAndSend(account, { signer: injector?.signer || undefined })
+        result = await tx(v, ...values).signAndSend(account, { signer: injector?.signer || undefined })
         setResults({ ...results, [method]: { hash: result.toString() } })
       } else {
         result = await query(account, options[method], ...values)
@@ -244,10 +262,16 @@ const Contract: NextPage = () => {
                     rows={12}
                     placeholder="Plase upload the metadata of the contract in a Base64 encoded format."
                     onChange={(e) => setBase64Abi(e.target.value)}
+                    value={base64Abi || ''}
                   ></textarea>
                 </Col>
                 <Col className="my-3" xs={12}>
-                  <button className="ink-button ink-button_violet mt-3" onClick={() => uploadAbi()}>
+                  <button
+                    aria-disabled={isLoading}
+                    disabled={isLoading}
+                    className="ink-button ink-button_violet mt-3"
+                    onClick={() => uploadAbi()}
+                  >
                     Upload
                   </button>
                 </Col>
