@@ -69,14 +69,14 @@ describe('Block details', () => {
     expect(tbody.children.length).toBe(1)
   })
 
-  // it('should show previous page', async () => {
-  //   const nextBtn = await screen.getByTestId('next-btn')
-  //   await fireEvent.click(nextBtn)
+  it('should show previous page', async () => {
+    const nextBtn = await screen.getByTestId('next-btn')
+    await fireEvent.click(nextBtn)
 
-  //   const prevBtn = await screen.getByTestId('prev-btn')
-  //   await fireEvent.click(prevBtn)
+    const prevBtn = await screen.getByTestId('prev-btn')
+    await fireEvent.click(prevBtn)
 
-  //   const tbody = await screen.getByTestId('tbody-tx')
-  //   expect(tbody.children.length).toBe(5)
-  // })
+    const tbody = await screen.getByTestId('tbody-tx')
+    expect(tbody.children.length).toBe(5)
+  })
 })

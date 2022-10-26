@@ -97,7 +97,7 @@ describe('Home', () => {
   })
 
   it('should order by block number', async () => {
-    const blockNumberHeader = await screen.getByText('Block number')
+    const blockNumberHeader = await screen.getByText('Number')
 
     await fireEvent.click(blockNumberHeader)
 
