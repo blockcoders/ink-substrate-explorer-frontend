@@ -53,7 +53,7 @@ const Block: NextPage = () => {
       <Row>
         <Col>
           <Table className="ink_table">
-            <tbody>
+            <tbody data-testid="tbody-block">
               <tr>
                 <td className="black">Number</td>
                 <td>{block.number}</td>
@@ -99,7 +99,7 @@ const Block: NextPage = () => {
                 <th>Signer</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="tbody-tx">
               {transactions.map((transaction) => (
                 <tr key={transaction.hash}>
                   <td className="black">
@@ -119,11 +119,11 @@ const Block: NextPage = () => {
             </tbody>
           </Table>
         </Col>
-        {transactions.length === 5 && (
+        {transactions.length >= 5 && (
           <Col xs="12" className="d-flex justify-content-center my-4">
             <Pagination>
-              <Pagination.Prev onClick={() => previousPage()} />
-              <Pagination.Next onClick={() => nextPage()} />
+              <Pagination.Prev data-testid="prev-btn" onClick={() => previousPage()} />
+              <Pagination.Next data-testid="next-btn" onClick={() => nextPage()} />
             </Pagination>
           </Col>
         )}

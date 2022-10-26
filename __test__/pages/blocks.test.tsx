@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { blockMocks } from '../_mocks/block-mocks'
-import Blocks from '../pages/blocks'
+import { blockMocks } from '../../_mocks/block-mocks'
+import Blocks from '../../pages/blocks'
 
 userEvent.setup()
 
-jest.mock('../generated', () => ({
+jest.mock('../../generated', () => ({
   useGetBlocksQuery: jest.fn((...params) => {
     const [{ variables }] = params
 

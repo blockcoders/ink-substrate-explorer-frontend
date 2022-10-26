@@ -34,7 +34,7 @@ const Contract: NextPage = () => {
 
   return (
     <>
-      <Row className="mb-5">
+      <Row className="mb-5" data-testid="header-links">
         <Col>
           <Link href="/blocks">
             <button className="ink-button ink-button_violetligth">Blocks</button>
@@ -62,7 +62,7 @@ const Contract: NextPage = () => {
                 <th>Events</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="tbody">
               {contracts.map((contract, index) => (
                 <tr key={contract.address}>
                   <td className="black">
@@ -78,8 +78,8 @@ const Contract: NextPage = () => {
         </Col>
         <Col xs="12" className="d-flex justify-content-center my-4">
           <Pagination>
-            <Pagination.Prev onClick={() => previousPage()} />
-            <Pagination.Next onClick={() => nextPage()} />
+            <Pagination.Prev data-testid="prev-btn" onClick={() => previousPage()} />
+            <Pagination.Next data-testid="next-btn" onClick={() => nextPage()} />
           </Pagination>
         </Col>
       </Row>
