@@ -12,15 +12,15 @@ const Home: NextPage = () => {
   const { data } = useGetBlocksQuery({ variables: pagination })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
 
-  const toogleOrder = () => {
-    const { skip, take, orderByNumber, orderAsc } = pagination
-    const newPagination = { skip, take, orderByNumber, orderAsc: !orderAsc }
+  const toogleOrderByTimestamp = () => {
+    const { skip, take, orderAsc } = pagination
+    const newPagination = { skip, take, orderByNumber: false, orderAsc: !orderAsc }
     setPagination(newPagination)
   }
 
   const toogleOrderByNumber = () => {
-    const { skip, take, orderByNumber, orderAsc } = pagination
-    const newPagination = { skip, take, orderByNumber: !orderByNumber, orderAsc }
+    const { skip, take, orderAsc } = pagination
+    const newPagination = { skip, take, orderByNumber: true, orderAsc: !orderAsc }
     setPagination(newPagination)
   }
   const nextPage = () => {
@@ -59,11 +59,9 @@ const Home: NextPage = () => {
           <Table responsive hover className="ink_table">
             <thead>
               <tr>
-                <th onClick={() => toogleOrderByNumber()}>Block number</th>
-                {/* <---  example de como cambiar entre order by number y timestamp*/}
-                <th>Block Hash</th>
-                <th onClick={() => toogleOrder()}>Time</th>
-                {/* <---  example de como cambiar entre order ASC y DESC (ambos deberian poder cambiar esto )*/}
+                <th onClick={() => toogleOrderByNumber()}>Number</th>
+                <th>Hash</th>
+                <th onClick={() => toogleOrderByTimestamp()}>Time</th>
                 <th>Parent Hash</th>
                 <th>Transactions</th>
                 <th>Size</th>
