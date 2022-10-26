@@ -45,6 +45,7 @@ const Contract: NextPage = () => {
   const contract = get(data, 'getContractQueries', undefined) as GetContractQueriesQuery['getContractQueries']
 
   const [options, setOptions] = useState()
+  const [showOptions, setShowOptions] = useState(false)
   const [account, setAccount] = useState('')
   const [results, setResults] = useState<any>()
   const [extensionDapp, setExtensionDapp] = useState<any>()
@@ -126,14 +127,14 @@ const Contract: NextPage = () => {
     setOptions(op)
   }
 
-  const updateParams = (method: string, arg: string, value: string) => {
+  const updateParams = (method: string, arg: string, argType: string, value: string) => {
     let params
     if (!parameters) {
       params = getDefaultParameters()
     } else {
       params = { ...(parameters as any) }
     }
-    params[method][arg] = value
+    params[method][arg] = argType === 'Balance' ? Number(value) * 10 ** 12 : value
     setParameters(params)
   }
 
@@ -188,10 +189,9 @@ const Contract: NextPage = () => {
         throw new Error('Query/Transaction method not found')
       }
       const values: string[] = Object.values(parameters[method]) || []
-      let result
       if (query.meta.isMutating) {
         const injector = await extensionDapp.web3FromAddress(account)
-        result = await tx(options[method], ...values).signAndSend(
+        await tx(options[method], ...values).signAndSend(
           account,
           {
             signer: injector?.signer || undefined,
@@ -211,9 +211,16 @@ const Contract: NextPage = () => {
             })
           },
         )
-        setResults({ ...results, [method]: { hash: result.toString() } })
       } else {
-        result = await query(account, options[method], ...values)
+        const res = await query(account, options[method], ...values)
+        const result = {
+          debugMessage: res.debugMessage || '',
+          gasConsumed: res.gasConsumed?.toString() || '',
+          gasRequired: res.gasRequired?.toString() || '',
+          output: res.output?.toString() || '',
+          result: res.result?.toString() || '',
+          storageDeposit: res.storageDeposit?.toString() || '',
+        }
         setResults({ ...results, [method]: result })
       }
     } catch (error) {
@@ -232,30 +239,36 @@ const Contract: NextPage = () => {
     if (!method) return ''
     const formatted = `${result}: `
     const data = results[method][result]
-    if (result === 'status') {
-      if (data.startsWith('{')) {
-        const status = JSON.parse(data).inBlock
-        return (
-          <>
-            <b>{formatted}</b>
-            <Link href={`/block/details/${status}`}>{status}</Link>
-          </>
-        )
-      }
-    }
-
-    if (result === 'txHash') {
-      return (
-        <>
-          <b>{formatted}</b>
-          <Link href={`/transaction/details/${data}`}>{data}</Link>
-        </>
-      )
+    let formattedData = data
+    switch (result) {
+      case 'status':
+        if (data.startsWith('{')) {
+          const status = JSON.parse(data).inBlock
+          formattedData = <Link href={`/block/details/${status}`}>{status}</Link>
+        }
+        break
+      case 'txHash':
+        formattedData = <Link href={`/transaction/details/${data}`}>{data}</Link>
+        break
+      case 'output':
+        let output
+        try {
+          output = Number(data)
+          if (output >= 1_000_000_000_000) {
+            output /= 1_000_000_000_000
+          } else {
+            output = 0
+          }
+        } catch (error) {
+          output = null
+        }
+        formattedData = JSON.stringify(output)
+        break
     }
     return (
       <>
         <b>{formatted}</b>
-        {data}
+        {formattedData}
       </>
     )
   }
@@ -347,60 +360,68 @@ const Contract: NextPage = () => {
                                 <Col xs="12">
                                   <b>{getArgName(arg)}</b>
                                   <input
-                                    type="text"
+                                    type={getArgType(arg) === 'Balance' ? 'number' : 'text'}
+                                    min={0}
                                     className="form-control ink_searchbar-input"
                                     placeholder={getArgType(arg)}
                                     onChange={(e) => {
                                       const { method } = query
                                       const { value } = e.target
-                                      updateParams(method, getArgName(arg), value)
+                                      updateParams(method, getArgName(arg), getArgType(arg), value)
                                     }}
                                   />
                                 </Col>
                               </Row>
                             ))}
                             <Row className="my-3">
-                              <Col xs="12">
-                                <b>Options</b>
+                              <Col xs="2">
+                                <button className="ink-button" onClick={() => setShowOptions(!showOptions)}>
+                                  {showOptions ? 'Hide Options' : 'Show Options'}
+                                </button>
                               </Col>
                             </Row>
-                            <Row key={`gasLimit-${index}`} className="my-3">
-                              <Col xs="12">
-                                <b>gasLimit</b>
-                                <input
-                                  type="text"
-                                  className="form-control ink_searchbar-input"
-                                  placeholder="200000000000"
-                                  onChange={(e) => {
-                                    updateOptions(query.method, 'gasLimit', e.target.value)
-                                  }}
-                                />
-                              </Col>
-                            </Row>
-                            <Row key={`storageLimit-${index}`} className="my-3">
-                              <Col xs="12">
-                                <b>storageLimit</b>
-                                <input
-                                  type="text"
-                                  className="form-control ink_searchbar-input"
-                                  onChange={(e) => {
-                                    updateOptions(query.method, 'storageLimit', e.target.value)
-                                  }}
-                                />
-                              </Col>
-                            </Row>
-                            <Row key={`value-${index}`} className="my-3">
-                              <Col xs="12">
-                                <b>value</b>
-                                <input
-                                  type="text"
-                                  className="form-control ink_searchbar-input"
-                                  onChange={(e) => {
-                                    updateOptions(query.method, 'value', e.target.value)
-                                  }}
-                                />
-                              </Col>
-                            </Row>
+                            {showOptions && (
+                              <>
+                                <Row key={`gasLimit-${index}`} className="my-3">
+                                  <Col xs="12">
+                                    <b>gasLimit</b>
+                                    <input
+                                      type="text"
+                                      className="form-control ink_searchbar-input"
+                                      placeholder=""
+                                      onChange={(e) => {
+                                        updateOptions(query.method, 'gasLimit', e.target.value)
+                                      }}
+                                    />
+                                  </Col>
+                                </Row>
+                                <Row key={`storageLimit-${index}`} className="my-3">
+                                  <Col xs="12">
+                                    <b>storageLimit</b>
+                                    <input
+                                      type="text"
+                                      className="form-control ink_searchbar-input"
+                                      onChange={(e) => {
+                                        updateOptions(query.method, 'storageLimit', e.target.value)
+                                      }}
+                                    />
+                                  </Col>
+                                </Row>
+                                <Row key={`value-${index}`} className="my-3">
+                                  <Col xs="12">
+                                    <b>value</b>
+                                    <input
+                                      type="text"
+                                      className="form-control ink_searchbar-input"
+                                      onChange={(e) => {
+                                        updateOptions(query.method, 'value', e.target.value)
+                                      }}
+                                    />
+                                  </Col>
+                                </Row>
+                              </>
+                            )}
+
                             {results && results[query?.method] && (
                               <Row className="my-3">
                                 <Col xs="12">
