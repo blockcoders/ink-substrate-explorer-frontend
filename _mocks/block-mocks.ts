@@ -5,16 +5,7 @@ export const blockMocks = [
     parentHash: '0x55a8f1510352a37a11e0bb96402082c9b5049e6bc9ee3421fd9cd6ea76a385d5',
     timestamp: 1666780366049,
     encodedLength: 318,
-    transactions: [
-      {
-        hash: '0x4b01597892440ce17767239f2c3b270556ec80cec04f77cb6b5ab775d49c0de4',
-        __typename: 'Transaction',
-      },
-      {
-        hash: '0x623293c514d015b63de80d271484497175b1603623ba3e903cc917171a3d0b33',
-        __typename: 'Transaction',
-      },
-    ],
+    transactions: [],
     __typename: 'Block',
   },
   {
@@ -181,9 +172,9 @@ export const blockMocks = [
   },
   {
     hash: '0xd2b785d1b2f22c5bf5db68eae1d53a40f1f80a74811cc3067161328ecc8ed811',
-    number: 76,
+    number: 100,
     parentHash: '0x68e483cfc25d0eaaf5e456b1f834a7896ec12cae5b0781ced51e7c87010ef31e',
-    timestamp: 1666735318004,
+    timestamp: 1866735318004,
     encodedLength: 309,
     transactions: [
       {

@@ -4,10 +4,28 @@ import userEvent from '@testing-library/user-event'
 import { blockMocks } from '../_mocks/block-mocks'
 import Blocks from '../pages/blocks'
 
-const user = userEvent.setup()
+userEvent.setup()
 
-jest.mock('lodash', () => ({
-  get: jest.fn(() => blockMocks.slice(0, 10)),
+jest.mock('../generated', () => ({
+  useGetBlocksQuery: jest.fn((...params) => {
+    const [{ variables }] = params
+
+    let getBlocks = [...blockMocks]
+
+    if (variables.orderAsc) {
+      getBlocks = getBlocks.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
+    }
+
+    if (variables.orderByNumber) {
+      getBlocks = getBlocks.sort((a, b) => (a.number < b.number ? 1 : -1))
+    }
+
+    return {
+      data: {
+        getBlocks: getBlocks.slice(variables?.skip || 0, variables?.skip + variables?.take || 10),
+      },
+    }
+  }),
 }))
 
 describe('Home', () => {
@@ -18,7 +36,7 @@ describe('Home', () => {
     container = r.container
   })
 
-  it('Should render 10 block rows', async () => {
+  it('should render 10 block rows', async () => {
     const tbody = await screen.getByTestId('tbody')
 
     expect(tbody.children.length).toBe(10)
@@ -34,6 +52,13 @@ describe('Home', () => {
     expect(tbody.children[9].innerHTML).toContain(blockMocks[9].hash)
   })
 
+  it('should show 0 transactions', async () => {
+    const tbody = await screen.getByTestId('tbody')
+
+    const firstRow = tbody.children[0]
+    expect(firstRow.children[firstRow.children.length - 2].innerHTML).toContain('0')
+  })
+
   it('should render header link buttons', async () => {
     const headerLinks = await screen.getByTestId('header-links')
 
@@ -43,13 +68,41 @@ describe('Home', () => {
     expect(headerLinks.children[2].children[0].textContent).toBe('Contracts')
   })
 
-  it('show show next page', async () => {
-    // const nextPageFunc = jest.fn()
-    // jest.spyOn(container, 'nextPage')
-    // const prevBtn = await screen.getByTestId('prev-btn')
-    // const nextBtn = await screen.getByTestId('next-btn')
-    // await fireEvent.click(nextBtn)
-    // const tbody = await screen.getByTestId('tbody')
-    // expect(tbody.children.length).toBe(1)
+  it('should show next page', async () => {
+    const nextBtn = await screen.getByTestId('next-btn')
+    await fireEvent.click(nextBtn)
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children.length).toBe(1)
+  })
+
+  it('should show previous page', async () => {
+    const nextBtn = await screen.getByTestId('next-btn')
+    await fireEvent.click(nextBtn)
+
+    const prevBtn = await screen.getByTestId('prev-btn')
+    await fireEvent.click(prevBtn)
+
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children.length).toBe(10)
+  })
+
+  it('should order by timestap', async () => {
+    const timeHeader = await screen.getByText('Time')
+
+    await fireEvent.click(timeHeader)
+
+    const tbody = await screen.getByTestId('tbody')
+
+    expect(tbody.children[0].innerHTML).toContain(blockMocks[10].hash)
+  })
+
+  it('should order by block number', async () => {
+    const blockNumberHeader = await screen.getByText('Block number')
+
+    await fireEvent.click(blockNumberHeader)
+
+    const tbody = await screen.getByTestId('tbody')
+
+    expect(tbody.children[0].innerHTML).toContain(blockMocks[10].hash)
   })
 })
