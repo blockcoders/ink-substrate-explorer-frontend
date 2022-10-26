@@ -37,7 +37,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Row className="mb-5">
+      <Row className="mb-5" data-testid="header-links">
         <Col>
           <Link href="/blocks">
             <button className="ink-button ink-button_violet">Blocks</button>
@@ -69,7 +69,7 @@ const Home: NextPage = () => {
                 <th>Size</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="tbody">
               {blocks.map((block) => (
                 <tr key={block.hash}>
                   <td className="black">{block.number}</td>
@@ -93,8 +93,8 @@ const Home: NextPage = () => {
         </Col>
         <Col xs="12" className="d-flex justify-content-center my-4">
           <Pagination>
-            <Pagination.Prev onClick={() => previousPage()} />
-            <Pagination.Next onClick={() => nextPage()} />
+            <Pagination.Prev data-testid="prev-btn" onClick={() => previousPage()} />
+            <Pagination.Next data-testid="next-btn" onClick={() => nextPage()} />
           </Pagination>
         </Col>
       </Row>
