@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import ContractDetails from '../../pages/contracts/contract/[address]'
+import React from 'react'
 import { contractBase64Metada, contractDetailsMock } from '../../_mocks/contracts-mocks'
+import ContractDetails from '../../pages/contracts/contract/[address]'
 
 userEvent.setup()
 
@@ -107,5 +108,43 @@ describe('Contract Details', () => {
     expect(inputElements[0].value).toContain('80000000000000')
     expect(inputElements[1].value).toContain('100000')
     expect(inputElements[2].value).toContain('100')
+  })
+
+  it('should show results', () => {
+    React.useState = jest
+      .fn()
+      .mockImplementationOnce(() => [undefined, () => ''])
+      .mockImplementationOnce(() => [false, () => false])
+      .mockImplementationOnce(() => ['', () => ''])
+      .mockImplementationOnce(() => [
+        {
+          totalSupply: {
+            debugMessage: '',
+            gasConsumed: '0',
+            gasRequired: '0',
+            output: '',
+            result: '{"err":{"module":{"index":7,"error":"0x06000000"}}}',
+            storageDeposit: '{"charge":0}',
+          },
+          balanceOf: {},
+          allowance: {},
+          transfer: {},
+          approve: {},
+          transferFrom: {},
+        },
+        () => '',
+      ])
+
+    const el = element.getElementsByClassName('ink-tab_button')[2]
+    fireEvent.click(el)
+
+    const txResult = el.getElementsByClassName('tx-result')[0]
+
+    expect(txResult.children[0].innerHTML).toContain('debugMessage: ')
+    expect(txResult.children[1].innerHTML).toContain('0') //gasConsumed
+    expect(txResult.children[2].innerHTML).toContain('0') // gasRequired
+    expect(txResult.children[3].innerHTML).toContain('0') // output
+    expect(txResult.children[4].innerHTML).toContain('{"err":{"module":{"index":7,"error":"0x06000000"}}}') // result
+    expect(txResult.children[5].innerHTML).toContain('{"charge":0}') // storageDeposit
   })
 })
