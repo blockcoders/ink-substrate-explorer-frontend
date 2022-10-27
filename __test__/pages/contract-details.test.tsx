@@ -111,11 +111,14 @@ describe('Contract Details', () => {
   })
 
   it('should show results', () => {
-    React.useState = jest
-      .fn()
-      .mockImplementationOnce(() => [undefined, () => ''])
-      .mockImplementationOnce(() => [false, () => false])
-      .mockImplementationOnce(() => ['', () => ''])
+    jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn()())
+
+    jest
+      .spyOn(React, 'useState')
+      .mockImplementationOnce(() => [1, jest.fn()])
+      .mockImplementationOnce(() => [2, jest.fn()])
+      .mockImplementationOnce(() => [3, jest.fn()])
+      .mockImplementationOnce(() => [4, jest.fn()])
       .mockImplementationOnce(() => [
         {
           totalSupply: {
@@ -132,13 +135,15 @@ describe('Contract Details', () => {
           approve: {},
           transferFrom: {},
         },
-        () => '',
+        jest.fn(),
       ])
 
-    const el = element.getElementsByClassName('ink-tab_button')[2]
+    const { container } = render(<ContractDetails />)
+
+    const el = container.getElementsByClassName('ink-tab_button')[2]
     fireEvent.click(el)
 
-    const txResult = el.getElementsByClassName('tx-result')[0]
+    const txResult = container.getElementsByClassName('tx-result')[0]
 
     expect(txResult.children[0].innerHTML).toContain('debugMessage: ')
     expect(txResult.children[1].innerHTML).toContain('0') //gasConsumed
