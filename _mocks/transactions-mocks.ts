@@ -178,3 +178,42 @@ export const transactionsMocks = [
     tip: 0,
   },
 ]
+
+export const oneTransactionMck = {
+  __typename: 'Transaction',
+  args: '{"dest":{"id":"5HF9XTESJXdSEqi5NHzLtD1EQuRoHZiFNNHyz7k1fvHFx6gi"},"value":0,"gas_limit":10000000000,"storage_deposit_limit":null,"data":"0xcfdd9aa203000000"}',
+  blockHash: '0xd32aa79d58862e0b140799439040ca38763ca114d6d0609f10373c2811bfcd73',
+  callIndex: '40,0',
+  decimals: '12',
+  encodedLength: 157,
+  era: '{"mortalEra":"0xf400"}',
+  hash: '0x66e4c2b682b99807ebaadfd1bd0bd53f77d5bb685bb513badd05ceaf61fc1191',
+  method: 'call',
+  nonce: 0,
+  section: 'contracts',
+  signature:
+    '0xe88abec7fbee824700b8aaf8ab87ee4afacd9fc4e7a010d64f9d0f1b43453a03b1b9b74670eb15668feb4173ba4ff38f3a7862a36d95cbe5f0fe6c8b9716dd05',
+  signer: '5Dgq6qWKHiMWyam1jpyfasLkWssYiWLoYZGmqe2zsBytNSx1',
+  ss58: '42',
+  timestamp: 1665241056112,
+  tip: 0,
+  tokens: 'ROC',
+  type: 4,
+  version: 132,
+  events: [
+    {
+      __typename: 'Event',
+      data: '["5HF9XTESJXdSEqi5NHzLtD1EQuRoHZiFNNHyz7k1fvHFx6gi","0x000100000000000000000000000000000000000000000000000000000000000000000147c9745605c223942b2e5f946b37b6b77a66b0ba3d8e1be755f827c367f0213e03000000"]',
+      decodedData: '{}',
+      formattedData: '{}',
+      id: '2fa32be8-e44c-5f2c-a6b5-c82e2d9090ec',
+      index: '0x2803',
+      method: 'ContractEmitted',
+      section: 'contracts',
+      timestamp: 1665241056112,
+      topics:
+        '[0x004572633732313a3a5472616e73666572000000000000000000000000000000, 0x2faea117a5c79cb7b4f224b6f46bae8e9f366988ebf317b29175a3ca645df285, 0x504572633732313a3a5472616e736665723a3a69640300000000000000000000, 0xe67880f2a4622de2c8e304accfede44a69bda4ddfe56898dc881b49946240f41]',
+      transactionHash: '0x66e4c2b682b99807ebaadfd1bd0bd53f77d5bb685bb513badd05ceaf61fc1191',
+    },
+  ],
+}

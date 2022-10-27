@@ -17,13 +17,15 @@
             padding-bottom: 20px;
             padding-top: 20px;
             font-size: 12px;
-            word-break: break-word;
         }
         tr {
             border-bottom: 1px solid #ECE8ED;
         }
         tr:last-child {
             border: 0;
+        }
+        td.black {
+          word-break: keep-all;
         }
     }
     &-number {

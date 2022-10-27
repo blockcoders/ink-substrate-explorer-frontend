@@ -1,8 +1,10 @@
 import { get } from 'lodash'
 import type { NextPage } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
+import sortIcon from '../assets/img/sort.svg'
 import { useGetTransactionsQuery, GetTransactionsQuery } from '../generated'
 import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
@@ -56,7 +58,10 @@ const Transaction: NextPage = () => {
               <tr>
                 <th>Hash</th>
                 <th>Block Hash</th>
-                <th onClick={() => toogleOrder()}>Time</th>
+                <th onClick={() => toogleOrder()} role="button" className="d-flex align-center gap-1">
+                  <Image src={sortIcon} width={20} height={20} />
+                  Time
+                </th>
                 <th>Section</th>
                 <th>Method</th>
                 <th>Signer</th>

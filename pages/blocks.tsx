@@ -1,8 +1,10 @@
 import { get } from 'lodash'
 import type { NextPage } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
+import sortIcon from '../assets/img/sort.svg'
 import { GetBlocksQuery, useGetBlocksQuery } from '../generated'
 import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
@@ -59,9 +61,15 @@ const Home: NextPage = () => {
           <Table responsive hover className="ink_table">
             <thead>
               <tr>
-                <th onClick={() => toogleOrderByNumber()}>Number</th>
+                <th onClick={() => toogleOrderByNumber()} role="button" className="d-flex align-center gap-1">
+                  <Image src={sortIcon} width={20} height={20} />
+                  Number
+                </th>
                 <th>Hash</th>
-                <th onClick={() => toogleOrderByTimestamp()}>Time</th>
+                <th onClick={() => toogleOrderByTimestamp()} role="button" className="d-flex align-center gap-1">
+                  <Image src={sortIcon} width={20} height={20} />
+                  Time
+                </th>
                 <th>Parent Hash</th>
                 <th>Transactions</th>
                 <th>Size</th>

@@ -1,9 +1,11 @@
 import { get } from 'lodash'
 import type { NextPage } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
+import sortIcon from '../../../assets/img/sort.svg'
 import { BackButton } from '../../../components/BackButton/BackButton'
 import {
   useGetBlockQuery,
@@ -93,7 +95,10 @@ const Block: NextPage = () => {
               <tr>
                 <th>Tx Hash</th>
                 <th>Block</th>
-                <th onClick={() => toogleOrder()}>Time</th>
+                <th onClick={() => toogleOrder()} role="button" className="d-flex align-center gap-1">
+                  <Image src={sortIcon} width={20} height={20} />
+                  Time
+                </th>
                 <th>Method</th>
                 <th>Section</th>
                 <th>Signer</th>

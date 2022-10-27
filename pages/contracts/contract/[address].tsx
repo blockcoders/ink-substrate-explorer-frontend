@@ -374,8 +374,11 @@ const Contract: NextPage = () => {
                               </Row>
                             ))}
                             <Row className="my-3">
-                              <Col xs="2">
-                                <button className="ink-button" onClick={() => setShowOptions(!showOptions)}>
+                              <Col xs="3">
+                                <button
+                                  className="ink-button ink-button_small"
+                                  onClick={() => setShowOptions(!showOptions)}
+                                >
                                   {showOptions ? 'Hide Options' : 'Show Options'}
                                 </button>
                               </Col>
@@ -422,22 +425,33 @@ const Contract: NextPage = () => {
                               </>
                             )}
 
-                            {results && results[query?.method] && (
-                              <Row className="my-3">
-                                <Col xs="12">
-                                  <b>Result</b>
-                                </Col>
-                              </Row>
-                            )}
                             {results &&
                               results[query?.method] &&
-                              Object.keys(results[query?.method])
-                                .filter((k) => !k.startsWith('_'))
-                                .map((result, i) => (
-                                  <Row key={i} className="my-3">
-                                    <Col xs="12">{getResult(result, query.method)}</Col>
-                                  </Row>
-                                ))}
+                              (() => {
+                                const resultsToShow = Object.keys(results[query?.method]).filter(
+                                  (k) => !k.startsWith('_'),
+                                )
+
+                                return (
+                                  <>
+                                    <Row className="my-3">
+                                      <Col xs="12">
+                                        <b>Result</b>
+                                      </Col>
+                                    </Row>
+
+                                    {resultsToShow.length > 0 && (
+                                      <div className="tx-result">
+                                        {resultsToShow.map((result, i) => (
+                                          <Row key={i} className="my-3">
+                                            <Col xs="12">{getResult(result, query.method)}</Col>
+                                          </Row>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </>
+                                )
+                              })()}
 
                             <Row className="my-3 d-flex justify-content-end">
                               <Col xs={2}>

@@ -58,7 +58,7 @@ const Transaction: NextPage = () => {
           <Row>
             <Col>
               <Table className="ink_table">
-                <tbody>
+                <tbody data-testid="tbody">
                   <tr>
                     <td className="black">Tx Hash</td>
                     <td>{hash}</td>

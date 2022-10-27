@@ -10,8 +10,8 @@
       background-color: $grey-disabled;
     }
     &_violet {
-        background-color: $dark-violet;
-        color: #fff;
+        background-color: $dark-violet !important;
+        color: #fff !important;
         font-weight: 600;
     }
     &_violetligth {
@@ -31,5 +31,11 @@
             color: $black;
             font-weight: 600;
         }
+    }
+    &_small {
+      padding: 8px 8px !important;
+      font-size: 15px !important;
+      border: none !important;
+      height: auto;
     }
 }
