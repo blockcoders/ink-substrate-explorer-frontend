@@ -1,4 +1,4 @@
-import { get, result } from 'lodash'
+import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Image from 'next/future/image'
 import { useRouter } from 'next/router'
@@ -39,7 +39,6 @@ const Event: NextPage = () => {
       })
     } catch (error: any) {
       showErrorToast(error.message || 'error')
-      // console.log('ERROR: ', error.message)
     }
   }
   useEffect(() => {

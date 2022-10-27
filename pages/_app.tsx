@@ -4,6 +4,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Row, Container, Col } from 'react-bootstrap'
+import { ToastContainer } from 'react-toastify'
 import InfoCard from '../components/InfoCard/InfoCard'
 import SearchBar from '../components/SearchBar/SearchBar'
 import Sidebar from '../components/Sidebar/Sidebar'
@@ -11,7 +12,6 @@ import { getTitle } from '../utils/pagetitile'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/main.scss'
 import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer } from 'react-toastify'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [title, setTitle] = useState('')
