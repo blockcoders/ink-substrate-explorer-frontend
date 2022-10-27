@@ -73,7 +73,7 @@ const Events: NextPage = () => {
                 <th>More</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody data-testid="tbody">
               {events.map((event) => (
                 <tr key={event.id}>
                   <td className="black">{event.index}</td>
@@ -95,8 +95,8 @@ const Events: NextPage = () => {
         </Col>
         <Col xs="12" className="d-flex justify-content-center my-4">
           <Pagination>
-            <Pagination.Prev onClick={() => previousPage()} />
-            <Pagination.Next onClick={() => nextPage()} />
+            <Pagination.Prev data-testid="prev-btn" onClick={() => previousPage()} />
+            <Pagination.Next data-testid="next-btn" onClick={() => nextPage()} />
           </Pagination>
         </Col>
       </Row>

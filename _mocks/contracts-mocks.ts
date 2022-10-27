@@ -290,3 +290,183 @@ export const contractsMocks = [
     events: [],
   },
 ]
+
+export const contractTransactionsMocks = [
+  {
+    __typename: 'Transaction',
+    blockHash: '0xc5f8b840411a92e67eebd33a730f68282f47448312934a5846a9c8627da89bb6',
+    events: [
+      {
+        __typename: 'Event',
+        method: 'ContractEmitted',
+        section: 'contracts',
+      },
+    ],
+    hash: '0x3f55c7f70416228882b8f98c157ed56efe2f72fa094d3d4d7886ce68c8f3b8a9',
+    method: 'call',
+    nonce: 16,
+    section: 'contracts',
+    signature:
+      '0x8c816bc1b4a2452d135c55dc28380798120b79cfb82cab01571279ad15191d70288cc62ca0dd46f055a61999c6ce1bb4b31c6cb2e12d9c85018e1f6dbc8f5d89',
+    signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    timestamp: 1666731123738,
+    tip: 0,
+  },
+  {
+    __typename: 'Transaction',
+    blockHash: '0x8dd1b7a1c47e3ea6cf0b1a338ee067c9a4d1568f94199ac25fba0501d71d4306',
+    events: [
+      {
+        __typename: 'Event',
+        method: 'ContractEmitted',
+        section: 'contracts',
+      },
+    ],
+    hash: '0xed4e56f0f7c9924308ee29b476c822ba27ab3257c16539aafbc6b4169bdc18a5',
+    method: 'call',
+    nonce: 15,
+    section: 'contracts',
+    signature:
+      '0xb4520619a7a044d12873105f2ee0f646e66c48cbd955b95ac9e231fa6bab5c56216372cb8604089c6713d90c79540aeb3728c1499cffb295d63ac5ea7d277b8d',
+    signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    timestamp: 1666731041644,
+    tip: 0,
+  },
+  {
+    __typename: 'Transaction',
+    blockHash: '0xcc20faede6ae2ded273217cd758a6eb4eaedd5e80eeabc9e13142e3f24f709b1',
+    events: [
+      {
+        __typename: 'Event',
+        method: 'ContractEmitted',
+        section: 'contracts',
+      },
+    ],
+    hash: '0x33ad1ae7ee816505835b8dba9557ec9d96584ebaaec6bcc3f47d4ab940bb6656',
+    method: 'call',
+    nonce: 14,
+    section: 'contracts',
+    signature:
+      '0xae4ce6936b134815f20a8b5063d45afcb4c37e56510fa68eadb86987540d271a572cab5427985cc74688d8e7722ef00a8c52f76a98cdb4366e7d5e93e64c9689',
+    signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    timestamp: 1666729881046,
+    tip: 0,
+  },
+  {
+    __typename: 'Transaction',
+    blockHash: '0x50f32cbe715c8e05d453fc2e7ba121f4eb2a88969c421ee6a8e614726fc68320',
+    events: [
+      {
+        __typename: 'Event',
+        method: 'ContractEmitted',
+        section: 'contracts',
+      },
+    ],
+    hash: '0x074bb91be57dde7628e4f05adfb233945938728884a8b4b5a283d9cc3a187db2',
+    method: 'call',
+    nonce: 13,
+    section: 'contracts',
+    signature:
+      '0x945a1cd7502bccfaf95b4c7c50860249da519f4cba64d69080a1e7419336f2085bd57543b142f937719c0199f2743712baabdedd54f59ad51cc2709551e56689',
+    signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    timestamp: 1666729109034,
+    tip: 0,
+  },
+  {
+    __typename: 'Transaction',
+    blockHash: '0x59c4680a3412cfc26c440f89cdc57243642073acda83ce4d7a153ec962cc11ab',
+    events: [
+      {
+        __typename: 'Event',
+        method: 'ContractEmitted',
+        section: 'contracts',
+      },
+    ],
+    hash: '0xbc039158cecf64733e6ce8849ab7a9a6c744c41b33759d891ee3b37bbbe60aee',
+    method: 'call',
+    nonce: 10,
+    section: 'contracts',
+    signature:
+      '0xd2d226a12f533d87d18817b6bb8fb923bb4608d8b631942d789fe0fb94d3ae51f420bf51ed48a761535af7b844c6058413e47fffe2d20fb079ddad3ba2df998d',
+    signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    timestamp: 1666728777909,
+    tip: 0,
+  },
+  {
+    __typename: 'Transaction',
+    blockHash: '0x59c4680a3412cfc26c440f89cdc57243642073acda83ce4d7a153ec962cc11ab',
+    events: [
+      {
+        __typename: 'Event',
+        method: 'ContractEmitted',
+        section: 'contracts',
+      },
+    ],
+    hash: '0xbc039158cecf64733e6ce8849ab7a9a6c744c41b33759d891ee3b37bbbe60azz',
+    method: 'call',
+    nonce: 10,
+    section: 'contracts',
+    signature:
+      '0xd2d226a12f533d87d18817b6bb8fb923bb4608d8b631942d789fe0fb94d3ae51f420bf51ed48a761535af7b844c6058413e47fffe2d20fb079ddad3ba2df998d',
+    signer: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    timestamp: 2666728777909,
+    tip: 0,
+  },
+]
+
+export const contractEventsMocks = [
+  {
+    __typename: 'Event',
+    id: '43968a46-71e6-5aa8-bb30-41c3c17d53a1',
+    index: '0x0703',
+    method: 'ContractEmitted',
+    section: 'contracts',
+    timestamp: 1666731123738,
+    transactionHash: '0x3f55c7f70416228882b8f98c157ed56efe2f72fa094d3d4d7886ce68c8f3b8a9',
+  },
+  {
+    __typename: 'Event',
+    id: '476330e1-8114-5ef3-97f5-eba313578ded',
+    index: '0x0703',
+    method: 'ContractEmitted',
+    section: 'contracts',
+    timestamp: 1666731041644,
+    transactionHash: '0xed4e56f0f7c9924308ee29b476c822ba27ab3257c16539aafbc6b4169bdc18a5',
+  },
+  {
+    __typename: 'Event',
+    id: 'b23cbcc2-8dd0-5293-8c58-158d1d5e60fd',
+    index: '0x0703',
+    method: 'ContractEmitted',
+    section: 'contracts',
+    timestamp: 1666729881046,
+    transactionHash: '0x33ad1ae7ee816505835b8dba9557ec9d96584ebaaec6bcc3f47d4ab940bb6656',
+  },
+  {
+    __typename: 'Event',
+    id: 'ed5e7ead-230d-568c-a002-6a5765110f29',
+    index: '0x0703',
+    method: 'ContractEmitted',
+    section: 'contracts',
+    timestamp: 1666729109034,
+    transactionHash: '0x074bb91be57dde7628e4f05adfb233945938728884a8b4b5a283d9cc3a187db2',
+  },
+  {
+    __typename: 'Event',
+    id: '3aa89d6c-37a6-56fe-be8d-a1c78a637a5b',
+    index: '0x0703',
+    method: 'ContractEmitted',
+    section: 'contracts',
+    timestamp: 1666728777909,
+    transactionHash: '0xbc039158cecf64733e6ce8849ab7a9a6c744c41b33759d891ee3b37bbbe60aee',
+  },
+  {
+    __typename: 'Event',
+    id: 'f7802a93-13d3-5f22-9c41-be9535811b0c',
+    index: '0x0703',
+    method: 'ContractEmitted',
+    section: 'contracts',
+    timestamp: 2666728463109,
+    transactionHash: '0x243d9a266ccbe42083bf83bb36bc92303bbc3a6297396124bcbb373947483a98',
+  },
+]
