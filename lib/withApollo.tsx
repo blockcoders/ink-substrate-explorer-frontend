@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client'
 import nextWithApollo from 'next-with-apollo'
 import { useRouter } from 'next/router'
-const SCHEMA_URL = process.env.SCHEMA_URL || 'http://localhost:5000/graphql'
+const SCHEMA_URL = process.env.SCHEMA_URL || 'http://localhost:8080/graphql'
 
 const withApollo = nextWithApollo(
   ({ initialState, headers }) => {

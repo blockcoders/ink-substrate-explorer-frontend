@@ -18,7 +18,9 @@ function Navbar() {
   return (
     <>
       <div>
-        <Image src={logo} alt="Logo" className="ink_sidebar-logo" />
+        <Link href={'/blocks'}>
+          <Image src={logo} alt="Logo" className="ink_sidebar-logo" />
+        </Link>
         <Nav activeKey={router.pathname} className="flex-column">
           {dataJson.map((item, index) => (
             <>

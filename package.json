@@ -1,11 +1,11 @@
 {
   "name": "ink-substrate-explorer-frontend",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start:dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start:prod": "next start",
     "lint": "eslint \"{pages,components,tests}/**/*.{ts,tsx}\" --fix",
     "test": "jest --watch",
     "test:cov": "jest --coverage",

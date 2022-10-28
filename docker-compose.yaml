@@ -1,0 +1,67 @@
+version: '3.7'
+networks:
+  ink-explorer-network:
+    name: ink-explorer-network
+  default:
+    driver: ink-explorer-network
+
+services:
+  frontend:
+    #image: blockcoders/ink-substrate-explorer-frontend:latest
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/dist
+    environment:
+      - SCHEMA_URL=http://localhost:8080/graphql
+    networks:
+      ink-explorer-network:
+        aliases:
+          - "frontend"
+  backend:
+    image: ink-substrate-explorer-api_beta_1.0.1:latest
+    restart: on-failure
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    networks:
+      ink-explorer-network:
+        aliases:
+          - "backend"
+  postgres:
+    image: postgres:14.4
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=ink
+    networks:
+      ink-explorer-network:
+        aliases:
+          - "postgres"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
+    networks:
+      ink-explorer-network:
+        aliases:
+          - "pgadmin"

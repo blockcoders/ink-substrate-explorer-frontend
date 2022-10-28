@@ -33,10 +33,7 @@ COPY package.json ./
 # Copy node_modules from builder. This will contains only production dependencies
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 
-# Copy the built /dist folder from the builder image.
-# This way we are only getting the /dist directory, without the devDependencies,
-# installed in our final image.
-COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/.next ./.next
 
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
