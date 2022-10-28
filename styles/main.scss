@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;600&display=swap');
+@import "./variables.scss";
+@import "./content.scss";
+@import "./button.scss";
+@import "./table.scss";
+@import "./tabs.scss";
+@import "./accordion.scss";
+@import "./details.scss";
+@import "../components/Sidebar/Sidebar.scss";
+@import "../components/SearchBar/SearchBar.scss";
+@import "../components/InfoCard/InfoCard.scss";
+@import "../components/BackButton/BackButton.scss";
+@import "../components/LoadingButton/LoadingButton.scss";
+
+.ink_dashboard {
+    display: flex;
+    flex-direction: column;
+}
+
+.ink_maincontainer {
+    width: 100%;
+    height: auto;
+    background-color: $grey;
+    padding: 30px;
+    border-radius: 30px;
+    &-title {
+        font-size: 25px;
+        margin: 0;
+        color: $black;
+        font-weight: 600;
+    }
+}

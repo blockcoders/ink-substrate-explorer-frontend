@@ -1,0 +1,43 @@
+.ink_table {
+    word-break: break-all;
+    thead tr {
+        border: 0;
+    }
+    thead tr th {
+        padding-bottom: 20px;
+        border: 0;
+        font-size: 15px;
+    }
+    tbody {
+        padding-bottom: 20px;
+        box-shadow: 0 0 0 1px #ECE8ED;
+        border-radius: 10px;
+        tr td {
+            border: 0;
+            padding-bottom: 20px;
+            padding-top: 20px;
+            font-size: 12px;
+        }
+        tr {
+            border-bottom: 1px solid #ECE8ED;
+        }
+        tr:last-child {
+            border: 0;
+        }
+        td.black {
+          word-break: keep-all;
+        }
+    }
+    &-number {
+        background-color: $light-blue;
+        color: $blue;
+        border: 1px solid $blue;
+        margin-top: 8px;
+        margin-left: 8px;
+        border-radius: 10px;
+        padding: 1px 7px;
+        display: inline-block;
+        font-weight: 600;
+    }
+}
+

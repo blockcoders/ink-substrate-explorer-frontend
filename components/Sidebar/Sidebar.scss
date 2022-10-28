@@ -1,0 +1,54 @@
+.ink_sidebar {
+    width: 290px;
+    min-width: 290px;
+    z-index: 1000;
+    background: var(--ct-bg-leftbar-gradient);
+    bottom: 0;
+    position: fixed;
+    top: 0;
+    padding-top: 40px;
+    padding-right: 30px;
+    padding-left: 30px;
+    -webkit-box-shadow: var(--ct-box-shadow);
+    box-shadow: var(--ct-box-shadow);
+    &-logo {
+        max-width: 140px;
+        margin-bottom: 40px;
+        padding-left: 20px;
+        @media (max-width: 780px) {
+          display: none;
+        }
+    }
+    &-item {
+        padding: 15px 20px;
+        color: $grey-text;
+        margin-bottom: 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        &:hover {
+            color: $dark-violet;
+            background-color: white;
+            border-radius: 20px;
+        }
+        &_active {
+            color: $dark-violet;
+            background-color: white;
+            border-radius: 20px;
+        }
+        @media (max-width: 780px) {
+            span {
+                display: none;
+            }
+            width: 65px;
+        }
+    }
+    @media (max-width: 1195px) {
+        width: 230px;
+        min-width: 230px;
+    }
+    @media (max-width: 780px) {
+        width: 160px;
+        min-width: 160px;
+    }   
+
+}

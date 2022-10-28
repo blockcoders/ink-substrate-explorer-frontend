@@ -1,0 +1,41 @@
+.ink-button {
+    width: 100%;
+    padding: 10px 10px;
+    height: 55px;
+    border-radius: 16px;
+    border: 0;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    &:disabled {
+      background-color: $grey-disabled;
+    }
+    &_violet {
+        background-color: $dark-violet !important;
+        color: #fff !important;
+        font-weight: 600;
+    }
+    &_violetligth {
+        background-color: $light-violet;
+        color: $black;
+        font-weight: 600;
+    }
+    &_showmore {
+        background-color: #eae4ed;
+        width: 110px;
+        display: inline-block;
+        text-align: center;
+        padding: 5px 5px;
+        border-radius: 10px;
+        a {
+            text-decoration: none;
+            color: $black;
+            font-weight: 600;
+        }
+    }
+    &_small {
+      padding: 8px 8px !important;
+      font-size: 15px !important;
+      border: none !important;
+      height: auto;
+    }
+}

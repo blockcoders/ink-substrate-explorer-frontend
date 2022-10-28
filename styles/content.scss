@@ -1,0 +1,38 @@
+body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 0 !important;
+    font-family: 'Poppins', sans-serif;
+    background-color: $light-violet;
+}
+
+.wrapper {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+}
+
+.content-page {
+    margin-left: 290px;
+    overflow: hidden;
+    min-height: 100vh;
+    padding: 40px 30px 65px;
+
+    &_inside {
+        position: relative;
+        padding: 20px;
+        background-color: $ligth-grey;
+        border: 2px solid #FFFFFF;
+        border-radius: 20px;
+        margin-top: 25px;
+        min-height: 70vh;
+    }
+
+    @media (max-width: 1195px) {
+        margin-left: 190px;
+    }
+
+    @media (max-width: 780px) {
+        margin-left: 90px;
+    }
+}

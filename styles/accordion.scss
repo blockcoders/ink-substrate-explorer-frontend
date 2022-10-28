@@ -1,0 +1,28 @@
+.ink-accordion {
+   border: 0;
+   border-radius: 0 !important;
+   &_item {
+      margin-bottom: 15px;
+      border-radius: 20px !important;
+
+      button {
+         border-radius: 15px !important;
+         background-color: $wierd-violet;
+         color: $grey-text;
+      }
+   }
+}
+
+//Fix
+
+.accordion-button:focus {
+   background-color: $wierd-violet;
+   color: $grey-text;
+   border: 0;
+   box-shadow: none;
+}
+
+.accordion-button:not(.collapsed) {
+   background-color: $wierd-violet;
+   color: $grey-text;
+}

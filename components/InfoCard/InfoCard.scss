@@ -1,0 +1,54 @@
+.ink_infocard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    height: 50px;
+    background-color: $pink;
+    border: 2px solid #FFFFFF;
+    border-radius: 14px;
+    max-width: 650px;
+    min-width: 650px;
+    padding: .4em 1em;
+    font-size: 13px;
+    &-dot {
+        padding-left: 5px;
+        padding-right: 5px;
+        width: 35%;
+    }
+    &-last {
+        padding-left: 5px;
+        padding-right: 5px;
+        width: 50%;
+    }
+    &-sdk {
+        padding-left: 5px;
+        padding-right: 5px;
+        width: 15%;
+    }
+    &-contractinfo {
+        min-width: 100%;
+        max-width: inherit;
+        min-height: 200px;
+        align-items: flex-start;
+        padding-top: 25px;
+        padding-bottom: 25px;
+        justify-content: initial;
+        img {
+            margin-right: 5px;
+        }
+        h5 {
+            margin-bottom: 0;
+            font-size: 18px;
+            color: $black;
+            font-weight: 600;
+        }
+        td {
+            border: 0;
+        }
+    }
+    @media (max-width: 1195px) {
+        max-width: 520px;
+        min-width: 520px;
+    }
+}

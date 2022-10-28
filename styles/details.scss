@@ -1,0 +1,46 @@
+.transaction-tabs {
+    &_buttons {
+        padding: 10px 20px;
+        margin-left: 10px;
+        border-radius: 14px;
+        min-width: 130px;
+        font-weight: 600;
+        &-btn {
+            background-color: $grey;
+            color: $blue;
+            border: 1px solid $blue;
+            &_active {
+                background-color: $blue !important;
+                color: #fff !important;
+                border: 1px solid $blue !important;
+            }
+        }
+    }
+}
+
+.transactions-logs {
+    &-row {
+        display: flex;
+        flex: 0 0 100%;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+    &-number{
+        background-color: $grey;
+        padding: 3px 5px;
+        border-radius: 10px;
+        margin-right: 10px;
+        width: 25px;
+        height: 25px;
+        text-align: center;
+    }
+    &-arrow {
+        margin-right: 10px;
+    }
+}
+
+.tx-result {
+  background-color: $pink;
+  padding: 0.3rem 1rem;
+  border-radius: 0.375rem;
+}
