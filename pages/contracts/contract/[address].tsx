@@ -1,5 +1,4 @@
-import { ApiPromise, WsProvider } from '@polkadot/api'
-import { Abi, ContractPromise } from '@polkadot/api-contract'
+import { Abi } from '@polkadot/api-contract'
 import hljs from 'highlight.js'
 import { get } from 'lodash'
 import type { NextPage } from 'next'
@@ -14,6 +13,7 @@ import verifed from '../../../assets/img/verifed.svg'
 import LoadingButton from '../../../components/LoadingButton/LoadingButton'
 import { useGetContractQueriesQuery, GetContractQueriesQuery, useUploadMetadataMutation } from '../../../generated'
 import { useLoading, useToast } from '../../../hooks'
+import { useSendingTx } from '../../../hooks/useSendingTx'
 import withApollo from '../../../lib/withApollo'
 
 const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
@@ -31,10 +31,6 @@ const getArgType = (arg: string) => {
   return type
 }
 
-const connect = async (provider: string | string[] | undefined) => {
-  return ApiPromise.create({ provider: new WsProvider(provider) })
-}
-
 const Contract: NextPage = () => {
   const router = useRouter()
   const address = router.query?.address as string
@@ -43,6 +39,8 @@ const Contract: NextPage = () => {
 
   const { data } = useGetContractQueriesQuery({ variables: { address } })
   const contract = get(data, 'getContractQueries', undefined) as GetContractQueriesQuery['getContractQueries']
+
+  const { connect, getContractInstance } = useSendingTx()
 
   const [options, setOptions] = useState()
   const [showOptions, setShowOptions] = useState(false)
@@ -107,8 +105,8 @@ const Contract: NextPage = () => {
     setDefaultOptions()
     setDefaultParameters()
     setDefaultResults()
-    const edapp = await import('@polkadot/extension-dapp')
-    extensionSetup(edapp)
+    const { web3FromAddress, web3Accounts, web3Enable } = await import('@polkadot/extension-dapp')
+    extensionSetup({ web3FromAddress, web3Accounts, web3Enable })
   }
 
   useEffect(() => {
@@ -148,16 +146,16 @@ const Contract: NextPage = () => {
     try {
       await uploadMetadataMutation({ variables: { contractAddress: address, metadata: base64Abi } })
       showSuccessToast('Successful upload')
+      setBase64Abi('')
     } catch (error) {
       showErrorToast('Error')
     } finally {
       endLoading()
-      setBase64Abi('')
     }
   }
 
   const extensionSetup = async (extension: any) => {
-    const { web3Accounts, web3Enable } = extension
+    const { web3Accounts, web3Enable, web3FromAddress } = extension
     const extensions = await web3Enable('Ink! Explorer')
     if (extensions.length === 0) {
       showErrorToast('No extension installed!')
@@ -165,7 +163,7 @@ const Contract: NextPage = () => {
     }
     const accounts = await web3Accounts()
     setAccount(accounts[0].address)
-    setExtensionDapp(extension)
+    setExtensionDapp({ web3Accounts, web3Enable, web3FromAddress })
   }
 
   const send = async (method: string) => {
@@ -174,22 +172,20 @@ const Contract: NextPage = () => {
     if (!results) return
     if (!contract) return
     if (!extensionDapp) return
-    startLoading()
     try {
+      startLoading()
       const api = await connect(WS_PROVIDER)
       const { metadata } = contract || {}
       if (!metadata) {
         throw new Error('Contract metadata not found')
       }
       const abi = new Abi(metadata)
-      const contractPromise = new ContractPromise(api, abi, address)
-      const query = contractPromise.query[method]
-      const tx = contractPromise.tx[method]
+      const { query, tx } = getContractInstance(api, abi, address, method)
       if (!query || !tx) {
         throw new Error('Query/Transaction method not found')
       }
       const values: string[] = Object.values(parameters[method]) || []
-      if (query.meta.isMutating) {
+      if (query?.meta?.isMutating) {
         const injector = await extensionDapp.web3FromAddress(account)
         await tx(options[method], ...values).signAndSend(
           account,
@@ -441,7 +437,7 @@ const Contract: NextPage = () => {
                                     </Row>
 
                                     {resultsToShow.length > 0 && (
-                                      <div className="tx-result">
+                                      <div className="tx-result" data-testid="result-wrapper">
                                         {resultsToShow.map((result, i) => (
                                           <Row key={i} className="my-3">
                                             <Col xs="12">{getResult(result, query.method)}</Col>

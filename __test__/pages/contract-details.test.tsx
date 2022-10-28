@@ -1,8 +1,12 @@
 import '@testing-library/jest-dom'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+// import * as A from '@polkadot/api-contract'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { contractBase64Metada, contractDetailsMock } from '../../_mocks/contracts-mocks'
+import * as generated from '../../generated'
+import * as hook from '../../hooks/useSendingTx'
+import * as useLoadingHooks from '../../hooks/useLoading'
 import ContractDetails from '../../pages/contracts/contract/[address]'
 
 userEvent.setup()
@@ -26,11 +30,101 @@ jest.mock('../../generated', () => ({
   useUploadMetadataMutation: jest.fn(() => [jest.fn()]),
 }))
 
+jest.mock('../../hooks/useSendingTx')
+
+jest.mock('@polkadot/extension-dapp', () => ({
+  web3FromAddress: jest.fn().mockResolvedValue({}),
+  web3Accounts: jest.fn(() => [{ address: '1234' }]),
+  web3Enable: jest.fn(() => [{ address: '1234' }]),
+}))
+
 describe('Contract Details', () => {
   let element: HTMLElement
   beforeEach(() => {
     const { container } = render(<ContractDetails />)
     element = container
+  })
+
+  beforeAll(() => {
+    ;(hook.useSendingTx as jest.Mock) = jest.fn().mockImplementation(() => ({
+      connect: jest.fn().mockImplementation(() => ({})),
+      getContractInstance: jest.fn(() => ({
+        tx: {},
+        query: jest.fn().mockResolvedValueOnce(() => ({
+          debugMessage: '',
+          gasConsumed: '0',
+          gasRequired: '0',
+          output: '',
+          result: '{"err":{"module":{"index":7,"error":"0x06000000"}}}',
+          storageDeposit: '{"charge":0}',
+        })),
+      })),
+    }))
+  })
+
+  describe('send method by query', () => {
+    it('should send query', async () => {
+      await act(() => {
+        render(<ContractDetails />)
+      })
+
+      const el = element.getElementsByClassName('ink-tab_button')[2]
+      fireEvent.click(el)
+
+      await act(() => {
+        const sendBtn = screen.getAllByText('Send')[0]
+
+        fireEvent.click(sendBtn)
+      })
+
+      expect(await screen.findByTestId('result-wrapper')).toBeInTheDocument()
+    })
+  })
+
+  describe('send method by tx', () => {
+    it('should send tx', async () => {
+      ;(hook.useSendingTx as jest.Mock) = jest.fn().mockImplementation(() => ({
+        connect: jest.fn().mockImplementation(() => ({})),
+        getContractInstance: jest.fn(() => ({
+          tx: jest.fn(() => ({
+            signAndSend: jest.fn((account: any, signer: any, cb) =>
+              cb({
+                status: '1',
+                txHash: '0x',
+                dispatchError: '{',
+                dispatchInfo: '1',
+                internalError: '2',
+                events: [
+                  {
+                    event: {
+                      method: '',
+                    },
+                  },
+                ],
+              }),
+            ),
+          })),
+          query: {
+            meta: {
+              isMutating: true,
+            },
+          },
+        })),
+      }))
+      await act(() => {
+        render(<ContractDetails />)
+      })
+
+      const el = element.getElementsByClassName('ink-tab_button')[2]
+      fireEvent.click(el)
+
+      await act(() => {
+        const sendBtn = screen.getAllByText('Send')[0]
+
+        fireEvent.click(sendBtn)
+      })
+      expect(1).toBe(1)
+    })
   })
 
   it('should render contract ABI verified', async () => {
@@ -45,35 +139,68 @@ describe('Contract Details', () => {
     await waitFor(() => expect(el.textContent).toContain(contractDetailsMock.metadata))
   })
 
-  it('should show upload ABI textarea', () => {
-    const el = element.getElementsByClassName('ink-tab_button')[1]
+  describe('Upload ABI', () => {
+    it('should show upload ABI textarea', async () => {
+      const el = element.getElementsByClassName('ink-tab_button')[1]
 
-    fireEvent.click(el)
+      fireEvent.click(el)
 
-    const textAreaEl = screen.getByPlaceholderText(
-      'Plase upload the metadata of the contract in a Base64 encoded format.',
-    )
+      const textAreaEl = await screen.getByPlaceholderText(
+        'Plase upload the metadata of the contract in a Base64 encoded format.',
+      )
 
-    expect(textAreaEl).toBeInTheDocument()
-  })
+      expect(textAreaEl).toBeInTheDocument()
+    })
 
-  it('should upload metadata', async () => {
-    const el = element.getElementsByClassName('ink-tab_button')[1]
+    it('should upload metadata', async () => {
+      const el = element.getElementsByClassName('ink-tab_button')[1]
 
-    fireEvent.click(el)
+      fireEvent.click(el)
 
-    const textAreaEl = screen.getByPlaceholderText(
-      'Plase upload the metadata of the contract in a Base64 encoded format.',
-    )
+      const textAreaEl = screen.getByPlaceholderText(
+        'Plase upload the metadata of the contract in a Base64 encoded format.',
+      )
 
-    fireEvent.change(textAreaEl, { target: { value: contractBase64Metada } })
-    expect(textAreaEl.value).toBe(contractBase64Metada)
+      fireEvent.change(textAreaEl, { target: { value: contractBase64Metada } })
+      expect(textAreaEl.value).toBe(contractBase64Metada)
 
-    const uploadBtn = screen.getByText('Upload')
+      const uploadBtn = screen.getByText('Upload')
 
-    fireEvent.click(uploadBtn)
+      fireEvent.click(uploadBtn)
 
-    await waitFor(() => expect(textAreaEl.value).toBe(''))
+      await waitFor(() => expect(textAreaEl.value).toBe(''))
+    })
+
+    it.skip('should show upload error message', async () => {
+      ;(generated.useUploadMetadataMutation as jest.Mock) = jest
+        .fn()
+        .mockResolvedValue(() => Promise.reject('Uploading error'))
+
+      const showError = jest.fn()
+
+      useLoadingHooks.useLoading = jest.fn().mockImplementation(() => ({
+        showSuccessToast: jest.fn(),
+        showErrorToast: showError,
+      }))
+
+      const el = element.getElementsByClassName('ink-tab_button')[1]
+
+      fireEvent.click(el)
+
+      const textAreaEl = screen.getByPlaceholderText(
+        'Plase upload the metadata of the contract in a Base64 encoded format.',
+      )
+
+      fireEvent.change(textAreaEl, { target: { value: contractBase64Metada } })
+      expect(textAreaEl.value).toBe(contractBase64Metada)
+
+      const uploadBtn = screen.getByText('Upload')
+
+      fireEvent.click(uploadBtn)
+
+      expect(textAreaEl.value).toBe(contractBase64Metada)
+      expect(showError).toBeCalled()
+    })
   })
 
   it('should render contract methods accordion', () => {
@@ -110,7 +237,7 @@ describe('Contract Details', () => {
     expect(inputElements[2].value).toContain('100')
   })
 
-  it('should show results', () => {
+  it('should show results', async () => {
     jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn()())
 
     jest
@@ -138,7 +265,12 @@ describe('Contract Details', () => {
         jest.fn(),
       ])
 
-    const { container } = render(<ContractDetails />)
+    let container: any
+
+    await act(() => {
+      const { container: c } = render(<ContractDetails />)
+      container = c
+    })
 
     const el = container.getElementsByClassName('ink-tab_button')[2]
     fireEvent.click(el)
