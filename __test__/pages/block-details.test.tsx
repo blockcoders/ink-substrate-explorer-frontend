@@ -55,6 +55,12 @@ describe('Block details', () => {
     expect(blockInfo.children[4].children[1].innerHTML).toContain(`${oneBlockMock.encodedLength} bytes`)
   })
 
+  it('should show a empty hash', async () => {
+    const tbody = await screen.getByTestId('tbody-tx')
+
+    expect(tbody.children[0].innerHTML).toContain('...')
+  })
+
   it('should render pagintion buttons', async () => {
     const prevBtn = await screen.getByTestId('prev-btn')
     const nextBtn = await screen.getByTestId('prev-btn')
@@ -78,5 +84,33 @@ describe('Block details', () => {
 
     const tbody = await screen.getByTestId('tbody-tx')
     expect(tbody.children.length).toBe(5)
+  })
+
+  it('should show first page after click previoues', async () => {
+    const prevBtn = await screen.getByTestId('prev-btn')
+    await fireEvent.click(prevBtn)
+
+    const tbody = await screen.getByTestId('tbody-tx')
+    expect(tbody.children.length).toBe(5)
+  })
+
+  it('should show first an empty page', async () => {
+    const nextBtn = await screen.getByTestId('next-btn')
+    await fireEvent.click(nextBtn)
+    await fireEvent.click(nextBtn)
+    await fireEvent.click(nextBtn)
+
+    const tbody = await screen.getByTestId('tbody-tx')
+    expect(tbody.children.length).toBe(1)
+  })
+
+  it('should order by timestap', async () => {
+    const timeHeader = await screen.getByText('Time')
+
+    await fireEvent.click(timeHeader)
+
+    const tbody = await screen.getByTestId('tbody-tx')
+
+    expect(tbody.children[0].innerHTML).toContain(oneBlockMock.fetchedTx[5].hash)
   })
 })

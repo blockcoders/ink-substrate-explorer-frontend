@@ -292,7 +292,7 @@ export const oneBlockMock = {
   fetchedTx: [
     {
       __typename: 'Transaction',
-      blockHash: '0x82f037f8b09bf1e0b726ceb95afda141df6cdc86ed440a226fa3b8bcf6f15675',
+      blockHash: '',
       events: [
         {
           __typename: 'Event',
@@ -377,7 +377,7 @@ export const oneBlockMock = {
       signature:
         '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
       signer: '5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM',
-      timestamp: 1666780366077,
+      timestamp: 1866780366077,
       tip: 0,
     },
   ],

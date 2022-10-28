@@ -54,7 +54,7 @@ describe('useSendingTx', () => {
     expect(r.isReady).toBe(true)
   })
 
-  it('should retur tx and query of a contract', async () => {
+  it('should return tx and query of a contract', async () => {
     const { result } = renderHook(() => useSendingTx())
 
     const r = await result.current.connect(WS_PROVIDER)

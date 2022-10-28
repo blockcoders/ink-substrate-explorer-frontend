@@ -5,8 +5,8 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { contractBase64Metada, contractDetailsMock } from '../../_mocks/contracts-mocks'
 import * as generated from '../../generated'
-import * as hook from '../../hooks/useSendingTx'
 import * as useLoadingHooks from '../../hooks/useLoading'
+import * as hook from '../../hooks/useSendingTx'
 import ContractDetails from '../../pages/contracts/contract/[address]'
 
 userEvent.setup()
@@ -169,37 +169,6 @@ describe('Contract Details', () => {
       fireEvent.click(uploadBtn)
 
       await waitFor(() => expect(textAreaEl.value).toBe(''))
-    })
-
-    it.skip('should show upload error message', async () => {
-      ;(generated.useUploadMetadataMutation as jest.Mock) = jest
-        .fn()
-        .mockResolvedValue(() => Promise.reject('Uploading error'))
-
-      const showError = jest.fn()
-
-      useLoadingHooks.useLoading = jest.fn().mockImplementation(() => ({
-        showSuccessToast: jest.fn(),
-        showErrorToast: showError,
-      }))
-
-      const el = element.getElementsByClassName('ink-tab_button')[1]
-
-      fireEvent.click(el)
-
-      const textAreaEl = screen.getByPlaceholderText(
-        'Plase upload the metadata of the contract in a Base64 encoded format.',
-      )
-
-      fireEvent.change(textAreaEl, { target: { value: contractBase64Metada } })
-      expect(textAreaEl.value).toBe(contractBase64Metada)
-
-      const uploadBtn = screen.getByText('Upload')
-
-      fireEvent.click(uploadBtn)
-
-      expect(textAreaEl.value).toBe(contractBase64Metada)
-      expect(showError).toBeCalled()
     })
   })
 

@@ -55,6 +55,14 @@ describe('Contract Events', () => {
     expect(tbody.children.length).toBe(1)
   })
 
+  it('should show next page', async () => {
+    const nextBtn = await screen.getByTestId('next-btn')
+    await fireEvent.click(nextBtn)
+
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children.length).toBe(1)
+  })
+
   it('should show previous page', async () => {
     const nextBtn = await screen.getByTestId('next-btn')
     await fireEvent.click(nextBtn)
@@ -64,6 +72,23 @@ describe('Contract Events', () => {
 
     const tbody = await screen.getByTestId('tbody')
     expect(tbody.children.length).toBe(5)
+  })
+
+  it('should show first page', async () => {
+    const nextBtn = await screen.getByTestId('prev-btn')
+    await fireEvent.click(nextBtn)
+
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children.length).toBe(5)
+  })
+
+  it('should show last page', async () => {
+    const nextBtn = await screen.getByTestId('next-btn')
+    await fireEvent.click(nextBtn)
+    await fireEvent.click(nextBtn)
+
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children.length).toBe(1)
   })
 
   it('should order by timestap', async () => {

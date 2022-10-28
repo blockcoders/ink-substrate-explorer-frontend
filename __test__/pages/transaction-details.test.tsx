@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { oneTransactionMck } from '../../_mocks/transactions-mocks'
-import TransactionDetails from '../../pages/transaction/details/[hash]'
 import { formatTimeAgo } from '../../lib/utils'
+import TransactionDetails from '../../pages/transaction/details/[hash]'
 
 userEvent.setup()
 
@@ -26,8 +26,11 @@ jest.mock('../../generated', () => ({
 }))
 
 describe('Transaction details', () => {
+  let element: HTMLElement
+
   beforeEach(() => {
-    render(<TransactionDetails />)
+    const { container } = render(<TransactionDetails />)
+    element = container
   })
 
   it('should show transaction info', async () => {
@@ -44,7 +47,7 @@ describe('Transaction details', () => {
     expect(txInfo.children[8].children[1].innerHTML).toContain(`${oneTransactionMck.encodedLength} bytes`)
   })
 
-  it('shoyld show more information', async () => {
+  it('should show more information', async () => {
     const showMoreBtn = await screen.getByText('Show more')
 
     fireEvent.click(showMoreBtn)
@@ -59,5 +62,15 @@ describe('Transaction details', () => {
     expect(txInfo.children[15].children[1].innerHTML).toContain(oneTransactionMck.tokens.toString())
     expect(txInfo.children[16].children[1].innerHTML).toContain(oneTransactionMck.type.toString())
     expect(txInfo.children[17].children[1].innerHTML).toContain(oneTransactionMck.version.toString())
+  })
+
+  it('should show Logs view', async () => {
+    const logBtn = element.getElementsByClassName('transaction-tabs_buttons')[1]
+
+    await act(() => {
+      fireEvent.click(logBtn)
+    })
+
+    expect(element.innerHTML).toContain('Transaction Receipt Event Logs')
   })
 })

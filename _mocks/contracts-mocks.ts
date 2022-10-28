@@ -294,7 +294,7 @@ export const contractsMocks = [
 export const contractTransactionsMocks = [
   {
     __typename: 'Transaction',
-    blockHash: '0xc5f8b840411a92e67eebd33a730f68282f47448312934a5846a9c8627da89bb6',
+    blockHash: '',
     events: [
       {
         __typename: 'Event',

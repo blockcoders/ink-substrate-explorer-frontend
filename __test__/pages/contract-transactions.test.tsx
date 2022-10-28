@@ -51,9 +51,23 @@ describe('Contract transactions', () => {
     expect(tbody.children[4].innerHTML).toContain(contractTransactionsMocks[4].hash)
   })
 
+  it('should show an empty block hash', async () => {
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children[0].innerHTML).toContain('...')
+  })
+
   it('should show next page', async () => {
     const nextBtn = await screen.getByTestId('next-btn')
     await fireEvent.click(nextBtn)
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children.length).toBe(1)
+  })
+
+  it('should show last page', async () => {
+    const nextBtn = await screen.getByTestId('next-btn')
+    await fireEvent.click(nextBtn)
+    await fireEvent.click(nextBtn)
+
     const tbody = await screen.getByTestId('tbody')
     expect(tbody.children.length).toBe(1)
   })

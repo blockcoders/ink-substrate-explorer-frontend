@@ -75,11 +75,29 @@ describe('Home', () => {
     expect(tbody.children.length).toBe(1)
   })
 
+  it('should show last page', async () => {
+    const nextBtn = await screen.getByTestId('next-btn')
+    await fireEvent.click(nextBtn)
+    await fireEvent.click(nextBtn)
+
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children.length).toBe(1)
+  })
+
   it('should show previous page', async () => {
     const nextBtn = await screen.getByTestId('next-btn')
     await fireEvent.click(nextBtn)
 
     const prevBtn = await screen.getByTestId('prev-btn')
+    await fireEvent.click(prevBtn)
+
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children.length).toBe(10)
+  })
+
+  it('should show first page', async () => {
+    const prevBtn = await screen.getByTestId('prev-btn')
+    await fireEvent.click(prevBtn)
     await fireEvent.click(prevBtn)
 
     const tbody = await screen.getByTestId('tbody')
