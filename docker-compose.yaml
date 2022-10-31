@@ -27,7 +27,7 @@ services:
         aliases:
           - "frontend"
   backend:
-    image: ink-substrate-explorer-api_beta_1.0.1:latest
+    image: blockcoders/ink-substrate-explorer-api:latest
     restart: on-failure
     depends_on:
       - postgres
