@@ -6,38 +6,38 @@
 
 ## **About the explorer**
 
-Ink Explorer is an application that provides Ink contracts related information on Substrate based blockchains. It subscribes to blockchain and Ink modules events and store the information on its own PostgreSQL database. The backend exposes an API that can interact with the DB and run fast queries to get specific information in a short time.
+Ink Explorer es una aplicacion que provee informacion relativa a los contratos que utilizan Ink! en blockchains basadas en Substrate. Se suscribe a la blockchain y a los eventos emitidos por los modulos de Ink! y guarda la informacion en su propia base de datos PostgreSQL. El back-end expone una API que puede interactuar con la base de datos y ejecutar consultas rapidas para obtener informacion especifica en poco tiempo.
 
-The idea of this project is to provide a tool that allows developers of Ink! explore and analyze the contracts found on the blockchain. This tool can be used to analyze the contracts found on Substrate based blockchains that are using Ink! modules. It can also be used to analyze contracts that are on a local blockchain.
+La idea de este proyecto es brindar una herramienta que permita a los desarrolladores de Ink! explorar y analizar los contratos que se encuentran en blockchain. Esta herramienta se puede utilizar para analizar los contratos que se encuentran en blockchains basadas en Substrate que utilizan módulos Ink!. También se puede usar para analizar contratos que están en una blockchain local.
 
-This project serves useful information that is not available anywhere else. Since the back end is in charge of obtaining information related to the balances, transactions and more, of the contracts that use Ink modules. Ink Explorer uses polkadot.js to communicate with the Substrate / Polkadot networks. It is safe to say that this project is a must.
+Este proyecto ofrece información útil que no está disponible en ningún otro lugar. Ya que el back end se encarga de obtener información relacionada con los saldos, transacciones y más, de los contratos que utilizan módulos Ink!. El explorador utiliza polkadot.js para comunicarse con las redes Substrate/Polkadot. Es seguro decir que este proyecto es imprescindible.
 
-## **Get Started**
+## **Introduccion**
 
-## Running the service locally
+## Levantando el servicio localmente
 
-### Environment setup
+### Configuracion del entorno
 
-- Install [Node.js](https://nodejs.org/)
-  - Recommended method is by using [NVM](https://github.com/creationix/nvm)
-  - Recommendeded Node.js version is v16.13
-- Install [Docker](https://docs.docker.com/get-docker/)
+- Instalar [Node.js](https://nodejs.org/)
+  - El metodo recomentado es utilizando [NVM](https://github.com/creationix/nvm)
+  - La verision de Node.js recomendada es v16.13
+- Instalar [Docker](https://docs.docker.com/get-docker/)
 
-### Install all the dependencies
+### Instalar todas las dependencias
 
 ```sh
 pnpm i --frozen-lockfile
 ```
 
-### Configure the environment variables
+### Configurar las variables de entorno
 
-**Note**: The .env file has the configuration for GraphQL, the PostgreSQL database, Node and the RPC url of the Substrate Blockchain.
+**Nota**: El archivo .env tiene la configuracion para GraphQL, la base de datos PostgreSQL, Node y la url del RPC de la blockchain basada en Substrate.
 
 ```sh
 cp .env.sample .env
 ```
 
-#### Service configurations
+#### Configuraciones del servicio
 
 ```sh
 NODE_ENV=development
@@ -46,7 +46,7 @@ LOG_NAME=ink-substrate-explorer-api
 LOG_LEVEL=debug
 ```
 
-#### GraphQL configurations
+#### Configuraciones de GraphQL
 
 ```sh
 GRAPHQL_DEBUG=true
@@ -55,7 +55,7 @@ GRAPHQL_SORT_SCHEMA=true
 GRAPHQL_INTROSPECTION=true
 ```
 
-#### Database configurations
+#### Configuraciones de la base de datos
 
 ```sh
 DATABASE_HOST=postgres
@@ -66,55 +66,54 @@ DATABASE_RETRY_ATTEMPTS=5
 DATABASE_RETRY_DELAY=3000
 ```
 
-#### Blockchain and Sync configurations
+#### Configuraciones de la blockchain y la sincronizacion de datos
 
 ```sh
 WS_PROVIDER=wss://rococo-contracts-rpc.polkadot.io
-# Set to true to process every block from FIRST_BLOCK_TO_LOAD to the current block. Set to false to only start processing blocks from the last existing block in the database.
+# Asignar el valor _true_ para procesar cada bloque desde FIRST_BLOCK_TO_LOAD hasta el ultimo bloque de la cadena. Asignar el valor _false_ para solo comenzar a procesar los bloques desde el ultimo bloque existente en la base de datos.
 LOAD_ALL_BLOCKS=false
-# Block number from which the service will start to process blocks. (Can be genesis or some other block. For example, the first block supporting contracts)
+# Número de bloque a partir del cual el servicio comenzará a procesar bloques. (Puede ser génesis o algún otro bloque. Por ejemplo, el primer bloque admite contratos)
 FIRST_BLOCK_TO_LOAD=0
-# Number of blocks to process concurrently. This can speed up or down the syncing process.
+# Número de bloques a procesar simultáneamente. Esto puede acelerar o retrasar el proceso de sincronización.
 BLOCK_CONCURRENCY=1000
 ```
 
-## **Starting the project (DEV)**
+## **Levantando el servicio (DEV)**
 
-To run in dev mode the backend is still needed. For that, the **docker-compose.yaml** file already has all the required services.
+Para ejecutar en modo dev, aún se necesita el backend. Para eso, el archivo **docker-compose.yaml** ya cuenta con todos los servicios necesarios.
 
-Running this command will also start a container for the frontend (wo don't want to do this in DEV mode). To avoid this, comment the 'frontend' service. Then run the command:
+Ejecutar este comando también iniciará un contenedor para la interfaz (no querrás hacer esto en modo DEV). Para evitar esto, comente el servicio 'frontend'. Luego ejecute el comando
 
 ```sh
 docker-compose up -d
 ```
 
-
-Once the service is running, pgAdmin can be accessed following the link that is shown in the terminal (In this case localhost:80).
+Una vez que el servicio se está ejecutando, se puede acceder a pgAdmin siguiendo el enlace que se muestra en la terminal (en este caso localhost:80)
 
 ![pgAdmin](/.images/pg_admin_up.png)
 
-The credentials to access pgAdmin are (set in the docker-compose file):
+Las credenciales para acceder a pgAdmin son (establecidas en el archivo docker-compose):
 
 - PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
 - PGADMIN_DEFAULT_PASSWORD: "admin"
 
-Register a new server in pgAdmin and set the credentials for the PostgreSQL DB:
+Registre un nuevo servidor en pgAdmin y establezca las credenciales para la base de datos PostgreSQL:
 
-Right click on 'Servers' and select "Register" -> "Server"
+Click derecho en 'Servers' y seleccione "Register" -> "Server"
 
 ![pgAdmin](/.images/pg_admin_select_server.png)
 
-Set a name for the server (In this example "Docker")
+Elija un nombre para el servidor (por ejemplo, "Docker")
 
 ![pgAdmin](/.images/pg_admin_server_name.png)
 
-Set the credentials for the PostgreSQL DB (this can be found in the docker-compose file):
+Establezca las credenciales para la base de datos PostgreSQL (esto se puede encontrar en el archivo docker-compose):
 
 ![pgAdmin](/.images/pg_admin_connection.png)
 
-### Start a local Substrate Node (optional)
+### Instanciar un nodo local de Substrate (opcional)
 
-To run a local substrate node add to the **docker-compose.yaml** file the following service:
+Para ejecutar un nodo de Substrate localmente, agregue al archivo **docker-compose.yaml** el siguiente servicio:
 
 ```
   substrate:
@@ -129,13 +128,13 @@ To run a local substrate node add to the **docker-compose.yaml** file the follow
           - "substrate"
 ```
 
-This will start a new container with a local substrate node. 
+Esto iniciará un nuevo contenedor con un nodo local de Substrate.
 
-Another way to run a local node is with [this paritytech guide](https://github.com/paritytech/substrate-contracts-node).
+Otra forma de ejecutar un nodo local es con [esta guía de paritytech] (https://github.com/paritytech/substrate-contracts-node).
 
-**Note**: Change the WS_PROVIDER var in the **.env** file to be `ws://127.0.0.1:9944`
+**Nota**: cambie la variable WS_PROVIDER en el archivo **.env** para que sea `ws://127.0.0.1:9944`
 
-### Start the service
+### Levantando el servicio
 
 To run the frontend service in DEV mode run: 
 
@@ -147,13 +146,13 @@ The service will reload if you make edits.
 
 ## **Starting the project (PROD)**
 
-To start both the Back-end and the Front-end services run:
+Para iniciar los servicios de back-end y front-end, ejecute:
 
 - ### `docker-compose up -d`
 
-## Running the Front-end service Docker image
+## Ejecutar la imagen de Docker del servicio front-end
 
-### Download the image from DockerHub
+### Descarga la imagen de DockerHub
 
 ```sh
 docker pull blockcoders/ink-substrate-explorer-frontend:latest
@@ -162,20 +161,20 @@ docker pull blockcoders/ink-substrate-explorer-frontend:latest
 ### Run
 
 ```sh
-# Create a docker network
+# Crear la red de docker
 docker network create ink-explorer-network
 
-# Run the service
+# Correr servicio
 docker run -it -p 3000:3000 --network ink-explorer-network blockcoders/ink-substrate-explorer-frontend:latest
 ```
 
-#### Verify the image started running
+#### Verifique que la imagen comenzó a ejecutarse
 
 ```sh
 docker ps
 ```
 
-The result should look like this:
+El resultado debería verse así:
 
 ```sh
 CONTAINER ID   IMAGE                                    COMMAND                  CREATED          STATUS          PORTS                                       NAMES
@@ -184,36 +183,35 @@ f31a7d0fd6c8   blockcoders/ink-substrate-explorer-frontend   "docker-entrypoint.
 
 ## **Testing**
 
-Running the unit tests.
+Ejecución de las pruebas unitarias.
 
 ```sh
 pnpm test
 ```
 
-Running the test coverage.
+Ejecución de la cobertura de pruebas.
 
 ```sh
 pnpm test:cov
 ```
 
-Testing the GraphQL queries.
+Probando las consultas de GraphQL.
 
 ```sh
 {"level":30,"time":1664298430389,"pid":1388770,"hostname":"username","name":"ink-substrate-explorer-api","msg":"App listening on http://0.0.0.0:8080"}
 ```
 
-Once the back-end service is running, the GraphQL Playground can be accessed at http://localhost:8080/graphql
+Una vez que el servicio back-end se está ejecutando, se puede acceder a GraphQL Playground en http://localhost:8080/graphql
 
 ![backend](/.images/graphql_example.png)
 
+## **Definicion de la API**
 
-## **API Definition**
+Una vez que el servicio esta levantado y corriendo correctamente se provee una API que puede utilizarse enviado consultas de GraphQL.
 
-With the service up and running an API is provided by using GraphQL queries.
+### **Consultas**
 
-### **Queries**
-
-<span style="color:#2a98db"> **Status**: Retrieves the status of the application</span>
+<span style="color:#2a98db"> **Status**: Recupera el estado de la aplicación</span>
 
 ```graphql
 query {
@@ -221,7 +219,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -231,7 +229,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **Version**: Retrieves the version of the application</span>
+<span style="color:#2a98db"> **Version**: Recupera la version de la aplicación</span>
 
 ```graphql
 query {
@@ -239,7 +237,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -249,7 +247,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getBlock**: Retrieves the block by hash </span>
+<span style="color:#2a98db"> **getBlock**: Recupera el bloque por hash </span>
 
 ```graphql
 query {
@@ -266,7 +264,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -290,7 +288,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getBlocks**: Retrieves blocks. Use 'skip' and 'take' to paginate. Use 'orderByNumber: false' to order by timestamp instead and 'orderAsc: true' to see older blocks first.</span>
+<span style="color:#2a98db"> **getBlocks**: Recupera bloques. Use 'skip' y 'take' para paginar. Use 'orderByNumber: false' para ordenar por tiempo y 'orderAsc: true' para ver primero los bloques más antiguos.</span>
 
 ```graphql
 query {
@@ -307,7 +305,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -333,7 +331,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getTransaction**: Retrieves a single transaction by hash </span>
+<span style="color:#2a98db"> **getTransaction**: Recupera una sola transacción por hash</span>
 
 ```graphql
 query {
@@ -363,7 +361,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -397,7 +395,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getTransactionsByContract**: Retrieves a list of transactions of a contract.</span>
+<span style="color:#2a98db"> **getTransactionsByContract**: Recupera una lista de transacciones de un contrato.</span>
 
 ```graphql
 query {
@@ -432,7 +430,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -468,7 +466,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getTransactions**: Retrieves transactions by block hash (use 'skip' and 'take' to paginate. use 'orderAsc' to see older or newer first)</span>
+<span style="color:#2a98db"> **getTransactions**: Recupera transacciones por hash de bloque (use 'skip' y 'take' para paginar. use 'orderAsc' para ver primero las más antiguas o las más nuevas)</span>
 
 ```graphql
 query {
@@ -498,7 +496,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -530,7 +528,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getEvent**: Retrieves an event by id</span>
+<span style="color:#2a98db"> **getEvent**: Recupera un evento por su id</span>
 
 ```graphql
 query {
@@ -549,7 +547,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -570,7 +568,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getEvents**: Retrieves events by contract address or transaction hash (use 'skip' and 'take' to paginate, 'orderAsc' to see older or newer first)</span>
+<span style="color:#2a98db"> **getEvents**: Recupera eventos por dirección de contrato o hash de transacción (use 'skip' y 'take' para paginar, 'orderAsc' para ver primero los más antiguos o los más nuevos)</span>
 
 ```graphql
 query {
@@ -589,7 +587,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -612,7 +610,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getContract**: Retrieves a contract by address</span>
+<span style="color:#2a98db"> **getContract**: Recupera un contrato por address</span>
 
 ```graphql
 query {
@@ -624,7 +622,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -638,7 +636,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getContracts**: Retrieves a list of contracts</span>
+<span style="color:#2a98db"> **getContracts**: Recupera una lista de contratos</span>
 
 ```graphql
 query {
@@ -653,7 +651,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -674,7 +672,7 @@ query {
 }
 ```
 
-<span style="color:#2a98db"> **getContractQueries**: Retrieves a contract. If this contract has uploaded metadata it will also retrieve the queries and transaction methods that can be executed.</span>
+<span style="color:#2a98db"> **getContractQueries**: Recupera un contrato. Si este contrato ha cargado metadatos, también recuperará las consultas y los métodos de transacción que se pueden ejecutar.</span>
 
 ```graphql
 query {
@@ -691,7 +689,7 @@ query {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -732,9 +730,9 @@ query {
 }
 ```
 
-### **Mutations**
+### **Mutaciones**
 
-<span style="color:#2a98db"> **decodeEvent**: Decodes the event data for a specific event. Requires that the contract's metadata was already uploaded using the mutation **uploadMetadata**</span>
+<span style="color:#2a98db"> **decodeEvent**: Decodifica los datos del evento para un evento específico. Requiere que los metadatos del contrato ya se hayan subido usando la mutación **uploadMetadata**</span>
 
 ```graphql
 mutation {
@@ -745,7 +743,7 @@ mutation {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -755,7 +753,7 @@ mutation {
 }
 ```
 
-<span style="color:#2a98db"> **decodeEvents**: Decodes the events data for a specific contract (use 'skip' and 'take' to select the events and 'orderAsc' to order by timestamp). Requires that the contract's metadata was already uploaded using the mutation **uploadMetadata**</span>
+<span style="color:#2a98db"> **decodeEvents**: Decodifica los datos de eventos para un contrato específico (use 'skip' y 'take' para seleccionar los eventos y 'orderAsc' para ordenar por tiempo). Requiere que los metadatos del contrato ya se hayan subido usando la mutación **uploadMetadata**</span>
 
 ```graphql
 mutation {
@@ -763,7 +761,7 @@ mutation {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -773,7 +771,7 @@ mutation {
 }
 ```
 
-<span style="color:#2a98db"> **uploadMetadata**: To decode events it is necessary to upload the contract's ABI. Passing a base64 string ABI to this mutation will save that to DB. After that run a **decodeEvents** query to see the decoded data on the events.</span>
+<span style="color:#2a98db"> **uploadMetadata**: Para decodificar eventos es necesario cargar el ABI del contrato. Pasar un ABI en base64 a esta mutación lo guardará en la base de datos. Después de eso, ejecute una consulta **decodeEvents** para ver los datos decodificados en los eventos.</span>
 
 ```graphql
 mutation Upload {
@@ -784,7 +782,7 @@ mutation Upload {
 }
 ```
 
-<span style="color:#5EBA7D"> Response: </span>
+<span style="color:#5EBA7D"> Respuesta: </span>
 
 ```graphql
 {
@@ -794,11 +792,11 @@ mutation Upload {
 }
 ```
 
-### **About decoding events**
+### **Acerca de la decodificación de eventos**
 
-To see the decoded data of the events there is one requirement, the contract metadata needs to uploaded at least once.
+Para ver los datos decodificados de los eventos, hay un requisito: los metadatos del contrato deben cargarse al menos una vez.
 
-Example of an ERC20 contract metadata:
+Ejemplo de metadatos de un contrato ERC20:
 
 ```json
 {
@@ -926,48 +924,50 @@ Example of an ERC20 contract metadata:
       ...
 ```
 
-Once it is uploaded the events can be decoded using the _decodeEvent_ or _decodeEvents_ mutation that can be found on section **Mutations**.
+Una vez cargado, los eventos se pueden decodificar mediante las mutaciones _decodeEvent_ o _decodeEvents_ que se encuentran en la sección **Mutaciones**.
 
-**Note**: The metadata should be uploaded as a **base64** string.
+**Nota**: Los metadatos deben cargarse como un texto (string) en **base64**.
 
-For more on uploading the metadata go to the **Mutations** section a search for _uploadMetadata_.
+Para obtener más información sobre la carga de metadatos, vaya a la sección **Mutaciones** y busque _uploadMetadata_.
 
-## **Subscriptions**
+## **Suscripciones**
 
-The first time the node is started, it may need to start from the block 0 and load all blocks (LOAD_ALL_BLOCKS env var should be set to true). If you want to start from a specific block, you can use the FIRST_BLOCK_TO_LOAD env var to start from another block.
+La primera vez que se inicia el nodo, es posible que deba comenzar desde el bloque 0 y cargar todos los bloques (LOAD_ALL_BLOCKS env var debe establecerse en verdadero). Si desea comenzar desde un bloque específico, puede usar FIRST_BLOCK_TO_LOAD env var para comenzar desde otro bloque.
 
-In case of a downtime of the node, the subscriptions will be reconnected automatically recovering all new blocks from the last block that was processed.
+En caso de un tiempo de inactividad del nodo, las suscripciones se reconectarán automáticamente recuperando todos los bloques nuevos desde el último bloque que se procesó.
 
-**Note**: Load all blocks may take a long time depending on the number of blocks that need to be loaded. It is recommended to use a node with a fast internet connection. The node will be able to process all blocks in a few hours. 
+**Nota**: Cargar todos los bloques puede llevar mucho tiempo dependiendo de la cantidad de bloques que deban cargarse. Se recomienda utilizar un nodo con una conexión rápida a Internet. El nodo podrá procesar todos los bloques en unas pocas horas.
 
-### Some benchmarks
+### Algunos puntos de referencia
 
-#### Using BLOCK_CONCURRENCY = 100
-- 100     blocks ~ 6 seconds
-- 1000    blocks ~ 30.5 seconds
-- 10000   blocks ~ 4:24 minutes
-- 100000  blocks ~ 39.57 minutes
+#### Utilizando BLOCK_CONCURRENCY = 100
 
-#### Using BLOCK_CONCURRENCY = 1000
-- 100     blocks ~ 0.5 seconds
-- 1000    blocks ~ 5 seconds
-- 10000   blocks ~ 3 minutes
-- 100000  blocks ~ 24 minutes
+- 100 bloques en ~ 6 segundos
+- 1000 bloques en ~ 30.5 segundos
+- 10000 bloques en ~ 4:24 minutos
+- 100000 bloques en ~ 39.57 minutos
 
-## Change Log
+#### Utilizando BLOCK_CONCURRENCY = 1000
 
-See [Changelog](CHANGELOG.md) for more information.
+- 100 bloques en ~ 0.5 segundos
+- 1000 bloques en ~ 5 segundos
+- 10000 bloques en ~ 3 minutos
+- 100000 bloques en ~ 24 minutos
 
-## Contributing
+## Registro de cambios
 
-Contributions welcome! See [Contributing](CONTRIBUTING.md).
+Consulte [Changelog](CHANGELOG.md) para más información.
 
-## Collaborators
+## Contribuye
+
+¡Las contribuciones son bienvenidas! Consulte [Contributing](CONTRIBUTING.md).
+
+## Colaboradores
 
 - [**Jose Ramirez**](https://github.com/0xslipk)
 - [**Fernando Sirni**](https://github.com/fersirni)
 - [**Ruben Gutierrez**](https://github.com/RubenGutierrezC)
 
-## License
+## Licencia
 
-Licensed under the Apache 2.0 - see the [LICENSE](LICENSE) file for details.
+Con licencia de Apache 2.0 - consulte el archivo [LICENSE](LICENSE) para obtener más información.
