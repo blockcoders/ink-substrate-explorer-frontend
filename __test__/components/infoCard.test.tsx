@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
+import { render, waitFor } from '@testing-library/react'
 import { blockMocks } from '../../_mocks/block-mocks'
 import InfoCard from '../../components/InfoCard/InfoCard'
-import { render, waitFor } from '@testing-library/react'
 import { getTimeAgo } from '../../lib/utils'
 
 const price = 30

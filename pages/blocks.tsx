@@ -2,17 +2,21 @@ import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import sortIcon from '../assets/img/sort.svg'
+import { Loading } from '../components/Loading/Loading'
 import { GetBlocksQuery, useGetBlocksQuery } from '../generated'
+import { useToast } from '../hooks'
 import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
 
 const Home: NextPage = () => {
   const [pagination, setPagination] = useState({ skip: 0, take: 10, orderByNumber: false, orderAsc: false })
-  const { data } = useGetBlocksQuery({ variables: pagination })
+  const { data, loading, error } = useGetBlocksQuery({ variables: pagination })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
+
+  const { showErrorToast } = useToast()
 
   const toogleOrderByTimestamp = () => {
     const { skip, take, orderAsc } = pagination
@@ -36,6 +40,10 @@ const Home: NextPage = () => {
     const newSkip = skip - take
     setPagination({ skip: newSkip < 0 ? 0 : newSkip, take, orderAsc, orderByNumber })
   }
+
+  useEffect(() => {
+    if (!!error) showErrorToast(String(error))
+  }, [error])
 
   return (
     <>
@@ -96,6 +104,7 @@ const Home: NextPage = () => {
               ))}
             </tbody>
           </Table>
+          {loading && <Loading />}
         </Col>
         <Col xs="12" className="d-flex justify-content-center my-4">
           <Pagination>

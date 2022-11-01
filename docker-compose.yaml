@@ -21,7 +21,8 @@ services:
       - /usr/src/app/node_modules
       - /usr/src/app/dist
     environment:
-      - SCHEMA_URL=http://localhost:8080/graphql
+      SCHEMA_URL: "http://localhost:8080/graphql"
+      WS_PROVIDER: "wss://rococo-contracts-rpc.polkadot.io"
     networks:
       ink-explorer-network:
         aliases:

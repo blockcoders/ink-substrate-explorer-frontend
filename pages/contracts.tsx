@@ -1,16 +1,20 @@
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
+import { Loading } from '../components/Loading/Loading'
 import { useGetContractsQuery, GetContractsQuery } from '../generated'
+import { useToast } from '../hooks'
 import { formatTimeAgo } from '../lib/utils'
 import withApollo from '../lib/withApollo'
 
 const Contract: NextPage = () => {
   const [pagination, setPagination] = useState({ skip: 0, take: 10 })
-  const { data } = useGetContractsQuery({ variables: pagination })
+  const { data, loading, error } = useGetContractsQuery({ variables: pagination })
   const contracts = get(data, 'getContracts', []) as GetContractsQuery['getContracts']
+
+  const { showErrorToast } = useToast()
 
   const nextPage = () => {
     const { skip, take } = pagination
@@ -31,6 +35,10 @@ const Contract: NextPage = () => {
     }
     return 'No events'
   }
+
+  useEffect(() => {
+    if (!!error) showErrorToast(String(error))
+  }, [error])
 
   return (
     <>
@@ -75,6 +83,7 @@ const Contract: NextPage = () => {
               ))}
             </tbody>
           </Table>
+          {loading && <Loading />}
         </Col>
         <Col xs="12" className="d-flex justify-content-center my-4">
           <Pagination>

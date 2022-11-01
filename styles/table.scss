@@ -1,5 +1,4 @@
 .ink_table {
-    word-break: break-all;
     thead tr {
         border: 0;
     }
@@ -17,6 +16,7 @@
             padding-bottom: 20px;
             padding-top: 20px;
             font-size: 12px;
+            word-break: break-all;
         }
         tr {
             border-bottom: 1px solid #ECE8ED;

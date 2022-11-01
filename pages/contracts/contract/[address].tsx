@@ -37,7 +37,7 @@ const Contract: NextPage = () => {
   const { isLoading, startLoading, endLoading } = useLoading()
   const { showErrorToast, showLoadingToast, showSuccessToast } = useToast()
 
-  const { data } = useGetContractQueriesQuery({ variables: { address } })
+  const { data, error, refetch } = useGetContractQueriesQuery({ variables: { address } })
   const contract = get(data, 'getContractQueries', undefined) as GetContractQueriesQuery['getContractQueries']
 
   const { connect, getContractInstance } = useSendingTx()
@@ -147,6 +147,7 @@ const Contract: NextPage = () => {
       await uploadMetadataMutation({ variables: { contractAddress: address, metadata: base64Abi } })
       showSuccessToast('Successful upload')
       setBase64Abi('')
+      refetch()
     } catch (error) {
       showErrorToast('Error')
     } finally {
@@ -268,6 +269,10 @@ const Contract: NextPage = () => {
       </>
     )
   }
+
+  useEffect(() => {
+    if (!!error) showErrorToast(String(error))
+  }, [error])
 
   return (
     <>
