@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react'
 import { Row, Col, Table } from 'react-bootstrap'
 import verifed from '../../../../assets/img/arrow.svg'
 import { BackButton } from '../../../../components/BackButton/BackButton'
+import { Loading } from '../../../../components/Loading/Loading'
+import LoadingButton from '../../../../components/LoadingButton/LoadingButton'
 import { GetEventQuery, useDecodeEventMutation, useGetEventQuery } from '../../../../generated'
-import { useToast } from '../../../../hooks'
+import { useLoading, useToast } from '../../../../hooks'
 import { formatTimeAgo } from '../../../../lib/utils'
 import withApollo from '../../../../lib/withApollo'
 import { formatJsonData } from '../../../../utils/json'
@@ -16,8 +18,9 @@ const Event: NextPage = () => {
   const router = useRouter()
   const address = router.query?.address as string
   const eventId = router.query?.eventId as string
+  const { endLoading, isLoading, startLoading } = useLoading()
   const { showErrorToast } = useToast()
-  const { data } = useGetEventQuery({ variables: { id: eventId } })
+  const { data, loading, error } = useGetEventQuery({ variables: { id: eventId } })
   const event = get(data, 'getEvent', []) as GetEventQuery['getEvent']
   const [eventData, setEventData] = useState<any>({
     decodedData: '',
@@ -29,6 +32,7 @@ const Event: NextPage = () => {
   })
 
   const decode = async () => {
+    startLoading()
     try {
       const result = await decodeEventMutation({ variables: { contractAddress: address, id: eventId } })
       const response = JSON.parse(result?.data?.decodeEvent as any)
@@ -40,6 +44,7 @@ const Event: NextPage = () => {
     } catch (error: any) {
       showErrorToast(error.message || 'error')
     }
+    endLoading()
   }
   useEffect(() => {
     setEventData(() => ({
@@ -48,23 +53,29 @@ const Event: NextPage = () => {
     }))
   }, [event?.decodedData])
 
+  useEffect(() => {
+    if (!!error) showErrorToast(String(error))
+  }, [error])
+
   return (
     <>
       <>
         <Row>
           <Col className="mb-4 d-flex align-items-center gap-1" xs="10">
             <BackButton />
-            <h4>
+            <h4 className="d-flex align-items-center gap-3">
               <b>Event Log</b>
+              {loading && <Loading />}
             </h4>
           </Col>
           <Col className="mb-4" xs="2">
-            <button
+            <LoadingButton
+              disabled={isLoading}
+              isLoading={isLoading}
               className="transaction-tabs_buttons transaction-tabs_buttons-btn transaction-tabs_buttons-btn_active text-rigth"
-              onClick={() => decode()}
-            >
-              Decode Event
-            </button>
+              text=" Decode Event"
+              onClick={decode}
+            />
           </Col>
         </Row>
         <Row>

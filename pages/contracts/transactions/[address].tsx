@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import sortIcon from '../../../assets/img/sort.svg'
 import { useGetTransactionsByContractQuery, GetTransactionsByContractQuery } from '../../../generated'
+import { useToast } from '../../../hooks'
 import { formatTimeAgo, showShortHash } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
 
@@ -24,12 +25,14 @@ const Transaction: NextPage = () => {
     setPagination({ ...pagination, address })
   }, [address])
 
-  const { data } = useGetTransactionsByContractQuery({ variables: pagination })
+  const { data, error } = useGetTransactionsByContractQuery({ variables: pagination })
   const transactions = get(
     data,
     'getTransactionsByContract',
     [],
   ) as GetTransactionsByContractQuery['getTransactionsByContract']
+
+  const { showErrorToast } = useToast()
 
   const toogleOrder = () => {
     setPagination({ ...pagination, orderAsc: !pagination.orderAsc })
@@ -45,6 +48,10 @@ const Transaction: NextPage = () => {
     const newSkip = pagination.skip - pagination.take
     setPagination({ ...pagination, skip: newSkip < 0 ? 0 : newSkip })
   }
+
+  useEffect(() => {
+    if (!!error) showErrorToast(String(error))
+  }, [error])
 
   return (
     <>

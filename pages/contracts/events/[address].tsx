@@ -3,10 +3,12 @@ import type { NextPage } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import sortIcon from '../../../assets/img/sort.svg'
+import { Loading } from '../../../components/Loading/Loading'
 import { GetEventsQuery, useGetEventsQuery } from '../../../generated'
+import { useToast } from '../../../hooks'
 import { formatTimeAgo } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
 
@@ -20,8 +22,10 @@ const Events: NextPage = () => {
     contract: address,
   })
 
-  const { data } = useGetEventsQuery({ variables: pagination })
+  const { data, loading, error } = useGetEventsQuery({ variables: pagination })
   const events = get(data, 'getEvents', []) as GetEventsQuery['getEvents']
+
+  const { showErrorToast } = useToast()
 
   const toogleOrder = () => {
     setPagination({ ...pagination, orderAsc: !pagination.orderAsc })
@@ -37,6 +41,10 @@ const Events: NextPage = () => {
     const newSkip = pagination.skip - pagination.take
     setPagination({ ...pagination, skip: newSkip < 0 ? 0 : newSkip })
   }
+
+  useEffect(() => {
+    if (!!error) showErrorToast(String(error))
+  }, [error])
 
   return (
     <>
@@ -92,6 +100,7 @@ const Events: NextPage = () => {
               ))}
             </tbody>
           </Table>
+          {loading && <Loading />}
         </Col>
         <Col xs="12" className="d-flex justify-content-center my-4">
           <Pagination>

@@ -2,11 +2,13 @@ import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Image from 'next/future/image'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Row, Col, Table, Button } from 'react-bootstrap'
 import verifed from '../../../assets/img/arrow.svg'
 import { BackButton } from '../../../components/BackButton/BackButton'
+import { Loading } from '../../../components/Loading/Loading'
 import { useGetTransactionQuery, GetTransactionQuery } from '../../../generated'
+import { useToast } from '../../../hooks'
 import { formatTimeAgo } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
 
@@ -16,8 +18,14 @@ const Transaction: NextPage = () => {
   const [open, setOpen] = useState(false)
   const [view, setView] = useState('Overview')
 
-  const { data } = useGetTransactionQuery({ variables: { hash } })
+  const { showErrorToast } = useToast()
+
+  const { data, loading, error } = useGetTransactionQuery({ variables: { hash } })
   const transaction = get(data, 'getTransaction', []) as GetTransactionQuery['getTransaction']
+
+  useEffect(() => {
+    if (!!error) showErrorToast(String(error))
+  }, [error])
 
   return (
     <>
@@ -154,6 +162,10 @@ const Transaction: NextPage = () => {
               </h4>
             </Col>
           </Row>
+          {loading && <Loading />}
+
+          {!loading && transaction?.events?.length === 0 && <p className="text-center py-2">No Logs to show</p>}
+
           {transaction?.events?.map((event, index) => (
             <Row key={index}>
               <Col>

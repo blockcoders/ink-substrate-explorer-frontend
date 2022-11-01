@@ -3,28 +3,32 @@ import type { NextPage } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import sortIcon from '../../../assets/img/sort.svg'
 import { BackButton } from '../../../components/BackButton/BackButton'
+import { Loading } from '../../../components/Loading/Loading'
 import {
   useGetBlockQuery,
   GetBlockQuery,
   GetTransactionsByBlockQuery,
   useGetTransactionsByBlockQuery,
 } from '../../../generated'
+import { useToast } from '../../../hooks'
 import { formatTimeAgo, showShortHash } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
 
 const Block: NextPage = () => {
   const router = useRouter()
   const hash = router.query?.hash as string
-  const { data } = useGetBlockQuery({ variables: { hash } })
+  const { data, loading, error } = useGetBlockQuery({ variables: { hash } })
   const block = get(data, 'getBlock', []) as GetBlockQuery['getBlock']
 
   const [pagination, setPagination] = useState({ skip: 0, take: 5, orderAsc: false, blockHash: block.hash || hash })
-  const { data: txData } = useGetTransactionsByBlockQuery({ variables: pagination })
+  const { data: txData, loading: txLoading, error: txError } = useGetTransactionsByBlockQuery({ variables: pagination })
   const transactions = get(txData, 'getTransactions', []) as GetTransactionsByBlockQuery['getTransactions']
+
+  const { showErrorToast } = useToast()
 
   const toogleOrder = () => {
     setPagination({ ...pagination, orderAsc: !pagination.orderAsc })
@@ -42,13 +46,18 @@ const Block: NextPage = () => {
     setPagination({ ...pagination, skip: newSkip < 0 ? 0 : newSkip })
   }
 
+  useEffect(() => {
+    if (!!error || !!txError) showErrorToast(String(error))
+  }, [error])
+
   return (
     <>
       <Row>
         <Col className="mb-4 d-flex align-items-center">
           <BackButton />
-          <h4>
+          <h4 className="d-flex gap-4 align-items-center">
             <b>Summary</b>
+            {loading && <Loading />}
           </h4>
         </Col>
       </Row>
@@ -123,6 +132,7 @@ const Block: NextPage = () => {
               ))}
             </tbody>
           </Table>
+          {txLoading && <Loading />}
         </Col>
         <Col xs="12" className="d-flex justify-content-center my-4">
           <Pagination>
