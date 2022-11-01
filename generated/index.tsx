@@ -50,6 +50,7 @@ export type Event = {
   decodedData?: Maybe<Scalars['String']>;
   formattedData: Scalars['String'];
   id: Scalars['String'];
+  identifier?: Maybe<Scalars['String']>;
   index: Scalars['String'];
   method: Scalars['String'];
   section: Scalars['String'];
@@ -258,7 +259,7 @@ export type GetEventQueryVariables = Exact<{
 }>;
 
 
-export type GetEventQuery = { __typename?: 'Query', getEvent: { __typename?: 'Event', id: string, data?: string | null, decodedData?: string | null, formattedData: string, index: string, method: string, section: string, timestamp: number, topics: string, transactionHash?: string | null } };
+export type GetEventQuery = { __typename?: 'Query', getEvent: { __typename?: 'Event', id: string, data?: string | null, decodedData?: string | null, formattedData: string, index: string, method: string, section: string, timestamp: number, topics: string, transactionHash?: string | null, identifier?: string | null } };
 
 export type GetLastBlockQueryVariables = Exact<{
   skip: Scalars['Int'];
@@ -687,6 +688,7 @@ export const GetEventDocument = gql`
     timestamp
     topics
     transactionHash
+    identifier
   }
 }
     `;

@@ -23,6 +23,7 @@ const Event: NextPage = () => {
   const { data, loading, error } = useGetEventQuery({ variables: { id: eventId } })
   const event = get(data, 'getEvent', []) as GetEventQuery['getEvent']
   const [eventData, setEventData] = useState<any>({
+    identifier: '',
     decodedData: '',
     formattedData: '',
   })
@@ -36,10 +37,10 @@ const Event: NextPage = () => {
     try {
       const result = await decodeEventMutation({ variables: { contractAddress: address, id: eventId } })
       const response = JSON.parse(result?.data?.decodeEvent as any)
-
       setEventData({
-        decodedData: response?.[0].decodedData || {},
-        formattedData: response?.[0].formattedData || {},
+        identifier: response?.identifier,
+        decodedData: response?.decodedData || {},
+        formattedData: response?.formattedData || {},
       })
     } catch (error: any) {
       showErrorToast(error.message || 'error')
@@ -48,6 +49,7 @@ const Event: NextPage = () => {
   }
   useEffect(() => {
     setEventData(() => ({
+      identifier: event.identifier || '',
       decodedData: event.decodedData ? JSON.parse(event.decodedData) : {},
       formattedData: event.formattedData ? JSON.parse(event.formattedData) : {},
     }))
@@ -90,6 +92,10 @@ const Event: NextPage = () => {
                 <tr>
                   <td className="black">Time:</td>
                   <td>{formatTimeAgo(event.timestamp)}</td>
+                </tr>
+                <tr>
+                  <td className="black">Identifier:</td>
+                  <td>{eventData?.identifier}</td>
                 </tr>
                 <tr>
                   <td className="black">Method:</td>

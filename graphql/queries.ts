@@ -156,6 +156,7 @@ export const EVENT_QUERY = gql`
       timestamp
       topics
       transactionHash
+      identifier
     }
   }
 `
