@@ -188,26 +188,30 @@ const Contract: NextPage = () => {
       const values: string[] = Object.values(parameters[method]) || []
       if (query?.meta?.isMutating) {
         const injector = await extensionDapp.web3FromAddress(account)
-        await tx(options[method], ...values).signAndSend(
-          account,
-          {
-            signer: injector?.signer || undefined,
-          },
-          ({ events, status, txHash, dispatchError, dispatchInfo, internalError }) => {
-            const result = {
-              status: status.toString(),
-              txHash: txHash.toString() || '',
-              dispatchError: dispatchError?.toString() || '',
-              dispatchInfo: dispatchInfo?.toString() || '',
-              internalError: internalError?.toString() || '',
-              events: events.map((e) => ` ${e.event.method}`).toString() || '',
-            }
-            setResults({
-              ...results,
-              [method]: result,
-            })
-          },
-        )
+        try {
+          await tx(options[method], ...values).signAndSend(
+            account,
+            {
+              signer: injector?.signer || undefined,
+            },
+            ({ events, status, txHash, dispatchError, dispatchInfo, internalError }) => {
+              const result = {
+                status: status.toString(),
+                txHash: txHash.toString() || '',
+                dispatchError: dispatchError?.toString() || '',
+                dispatchInfo: dispatchInfo?.toString() || '',
+                internalError: internalError?.toString() || '',
+                events: events.map((e) => ` ${e.event.method}`).toString() || '',
+              }
+              setResults({
+                ...results,
+                [method]: result,
+              })
+            },
+          )
+        } catch (error) {
+          console.log('Error: ', error)
+        }
       } else {
         const res = await query(account, options[method], ...values)
         const result = {
@@ -238,14 +242,8 @@ const Contract: NextPage = () => {
     const data = results[method][result]
     let formattedData = data
     switch (result) {
-      case 'status':
-        if (data.startsWith('{')) {
-          const status = JSON.parse(data).inBlock
-          formattedData = <Link href={`/block/details/${status}`}>{status}</Link>
-        }
-        break
       case 'txHash':
-        formattedData = <Link href={`/transaction/details/${data}`}>{data}</Link>
+        formattedData = <Link href={`/transaction/details/${data}`}>{`Tx: ${data}`}</Link>
         break
       case 'output':
         let output
@@ -445,7 +443,9 @@ const Contract: NextPage = () => {
                                       <div className="tx-result" data-testid="result-wrapper">
                                         {resultsToShow.map((result, i) => (
                                           <Row key={i} className="my-3">
-                                            <Col xs="12">{getResult(result, query.method)}</Col>
+                                            <Col className="text-break" xs="12">
+                                              {getResult(result, query.method)}
+                                            </Col>
                                           </Row>
                                         ))}
                                       </div>
