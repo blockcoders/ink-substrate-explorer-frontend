@@ -167,11 +167,15 @@ const Transaction: NextPage = () => {
           {!loading && transaction?.events?.length === 0 && <p className="text-center py-2">No Logs to show</p>}
 
           {transaction?.events?.map((event, index) => (
-            <Row key={index}>
+            <Row key={index.toString()}>
               <Col>
                 <Table className="ink_table">
                   <tbody>
-                    <span className="ink_table-number">{event.index}</span>
+                    <tr className="ink_table-row-wrapper">
+                      <td>
+                        <span className="ink_table-number">{event.index}</span>
+                      </td>
+                    </tr>
                     <tr>
                       <td className="black">Transaction Hash</td>
                       <td>{event.transactionHash}</td>
@@ -196,7 +200,7 @@ const Transaction: NextPage = () => {
                             .slice(1, -1)
                             .split(',')
                             .map((topic: any, index: number) => (
-                              <div className="transactions-logs-row">
+                              <div key={index.toString()} className="transactions-logs-row">
                                 <div className="transactions-logs-number">{index}</div>
                                 <div className="transactions-logs-arrow">
                                   <Image src={verifed} alt="Icon" />
