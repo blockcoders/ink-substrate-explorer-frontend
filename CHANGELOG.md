@@ -1,0 +1,8 @@
+# Changelog
+
+## 1.0.0
+Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/09**
+- [#4](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/4) updating docs
+- [#3](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/3) Loaders and identifier
+- [#2](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/2) Documentation Updates
+- [#1](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/1) Milestone 2 Ink Explorer

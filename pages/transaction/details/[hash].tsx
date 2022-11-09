@@ -196,7 +196,7 @@ const Transaction: NextPage = () => {
                             .slice(1, -1)
                             .split(',')
                             .map((topic: any, index: number) => (
-                              <div className="transactions-logs-row">
+                              <div key={index} className="transactions-logs-row">
                                 <div className="transactions-logs-number">{index}</div>
                                 <div className="transactions-logs-arrow">
                                   <Image src={verifed} alt="Icon" />

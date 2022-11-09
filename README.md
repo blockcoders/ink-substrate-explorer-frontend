@@ -42,7 +42,7 @@ cp .env.sample .env
 ```sh
 NODE_ENV=development
 PORT=8080
-LOG_NAME=ink-substrate-explorer-api
+LOG_NAME=ink-substrate-explorer-frontend
 LOG_LEVEL=debug
 ```
 
