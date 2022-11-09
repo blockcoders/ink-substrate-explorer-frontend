@@ -30,10 +30,9 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 
-# Copy node_modules from builder. This will contains only production dependencies
 COPY --from=builder /usr/src/app/node_modules ./node_modules
-
 COPY --from=builder /usr/src/app/.next ./.next
+COPY --from=builder /usr/src/app/public ./public
 
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
