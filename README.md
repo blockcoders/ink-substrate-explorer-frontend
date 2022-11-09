@@ -1,8 +1,12 @@
-# Ink! Explorer
+Ink! Explorer Frontend
+======================
 
-[![App Build](https://github.com/blockcoders/ink-substrate-explorer-frontend/actions/workflows/pr.yaml/badge.svg)](https://github.com/blockcoders/ink-substrate-explorer-frontend/actions/workflows/pr.yaml)
-[![Coverage Status](https://coveralls.io/repos/github/blockcoders/ink-substrate-explorer-api/badge.svg?branch=main)](https://coveralls.io/github/blockcoders/ink-substrate-explorer-frontend?branch=main)
-[![Known Vulnerabilities](https://snyk.io/test/github/blockcoders/ink-substrate-explorer-frontend/badge.svg)](https://snyk.io/test/github/blockcoders/ink-substrate-explorer-frontend)
+[![App Build](https://img.shields.io/github/workflow/status/blockcoders/ink-substrate-explorer-frontend/Pulll%20Request%20App%20Build/main?logo=github)](https://github.com/blockcoders/ink-substrate-explorer-frontend/actions/workflows/pr.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/blockcoders/ink-substrate-explorer-frontend/badge.svg?branch=main)](https://coveralls.io/github/blockcoders/ink-substrate-explorer-frontend?branch=main)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ddc46036fbbb4c0dba055def4dc21cf8)](https://www.codacy.com/gh/blockcoders/ink-substrate-explorer-frontend/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=blockcoders/ink-substrate-explorer-frontend&amp;utm_campaign=Badge_Grade)
+[![Docker Image Version](https://img.shields.io/docker/v/blockcoders/ink-substrate-explorer-frontend?logo=docker&logoColor=white)](https://hub.docker.com/repository/docker/blockcoders/ink-substrate-explorer-frontend/general)
+[![Docker Image Size](https://img.shields.io/docker/image-size/blockcoders/ink-substrate-explorer-frontend?logo=docker&logoColor=white)](https://hub.docker.com/repository/docker/blockcoders/ink-substrate-explorer-frontend/general)
+[![License](https://img.shields.io/badge/license-MIT%20License-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 ## **About the explorer**
 
@@ -44,6 +48,7 @@ NODE_ENV=development
 PORT=8080
 LOG_NAME=ink-substrate-explorer-frontend
 LOG_LEVEL=debug
+SCHEMA_URL=https://ink-explorer-api.blockcoders.io/graphql
 ```
 
 #### GraphQL configurations
