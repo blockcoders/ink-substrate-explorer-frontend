@@ -4,8 +4,6 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { contractBase64Metada, contractDetailsMock } from '../../_mocks/contracts-mocks'
-import * as generated from '../../generated'
-import * as useLoadingHooks from '../../hooks/useLoading'
 import * as hook from '../../hooks/useSendingTx'
 import ContractDetails from '../../pages/contracts/contract/[address]'
 
@@ -40,9 +38,11 @@ jest.mock('@polkadot/extension-dapp', () => ({
 
 describe('Contract Details', () => {
   let element: HTMLElement
-  beforeEach(() => {
-    const { container } = render(<ContractDetails />)
-    element = container
+  beforeEach(async () => {
+    await act(() => {
+      const { container } = render(<ContractDetails />)
+      element = container
+    })
   })
 
   beforeAll(() => {
@@ -71,9 +71,9 @@ describe('Contract Details', () => {
       const el = element.getElementsByClassName('ink-tab_button')[2]
       fireEvent.click(el)
 
-      await act(() => {
-        const sendBtn = screen.getAllByText('Send')[0]
+      const sendBtn = screen.getAllByText('Send')[0]
 
+      await act(() => {
         fireEvent.click(sendBtn)
       })
 
@@ -117,10 +117,9 @@ describe('Contract Details', () => {
 
       const el = element.getElementsByClassName('ink-tab_button')[2]
       fireEvent.click(el)
+      const sendBtn = screen.getAllByText('Send')[0]
 
       await act(() => {
-        const sendBtn = screen.getAllByText('Send')[0]
-
         fireEvent.click(sendBtn)
       })
       expect(1).toBe(1)
@@ -130,7 +129,7 @@ describe('Contract Details', () => {
   it('should render contract ABI verified', async () => {
     const el = element.getElementsByClassName('ink-tab_button')[0]
 
-    await waitFor(() => expect(el.innerHTML).toContain('Contract ABI Verified'))
+    expect(el.innerHTML).toContain('Contract ABI Verified')
   })
 
   it('should render contract ABI data', async () => {

@@ -27,6 +27,11 @@
         td.black {
           word-break: keep-all;
         }
+
+    }
+    &-row-wrapper {
+      font-size: 16px !important;
+      border-bottom: none !important;
     }
     &-number {
         background-color: $light-blue;
@@ -38,6 +43,7 @@
         padding: 1px 7px;
         display: inline-block;
         font-weight: 600;
+        font-size: 16px;
     }
 }
 
