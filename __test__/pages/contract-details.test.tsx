@@ -223,6 +223,8 @@ describe('Contract Details', () => {
             output: '',
             result: '{"err":{"module":{"index":7,"error":"0x06000000"}}}',
             storageDeposit: '{"charge":0}',
+            txHash: '0x123',
+            status: '{"extrinsciSuccess": true, "inBlock": "0x123"}',
           },
           balanceOf: {},
           allowance: {},
@@ -251,5 +253,7 @@ describe('Contract Details', () => {
     expect(txResult.children[3].innerHTML).toContain('0') // output
     expect(txResult.children[4].innerHTML).toContain('{"err":{"module":{"index":7,"error":"0x06000000"}}}') // result
     expect(txResult.children[5].innerHTML).toContain('{"charge":0}') // storageDeposit
+    expect(txResult.children[6].innerHTML).toContain('0x123') // txHash
+    expect(txResult.children[7].innerHTML).toContain('0x123') // status
   })
 })
