@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/17**
+- [#6](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/6) Fix dependencies
+- [#5](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/5) linter
+
 ## 1.0.0
 Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/09**
 - [#4](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/4) updating docs
