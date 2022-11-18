@@ -3,8 +3,10 @@ import Image from 'next/future/image'
 import React, { useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import icon from '../../assets/img/search-icon.svg'
+import { useFormatIntl } from '../../hooks/useFormatIntl'
 
 function Searchbar() {
+  const { format } = useFormatIntl()
   const [selectedType, setSelectedType] = useState('type')
   const [search, setSearch] = useState('')
   const router = useRouter()
@@ -47,16 +49,16 @@ function Searchbar() {
                   value={selectedType}
                   onChange={change}
                 >
-                  <option value={'type'}>Search by...</option>
-                  <option value="transaction">Transaction Hash</option>
-                  <option value="block">Block Hash</option>
-                  <option value="contracts/transactions">Contract Address</option>
+                  <option value={'type'}>{format('search_by')}</option>
+                  <option value="transaction">{format('transaction_hash')}</option>
+                  <option value="block">{format('block_hash')}</option>
+                  <option value="contracts/transactions">{format('contract_address')}</option>
                 </select>
               </span>
               <input
                 type="text"
                 className="form-control ink_searchbar-input"
-                placeholder="Contract Address, Tx Hash, Block Hash"
+                placeholder={format('search_placeholder')}
                 onKeyPress={handleKeyPress}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

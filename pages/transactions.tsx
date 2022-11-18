@@ -10,8 +10,10 @@ import { useGetTransactionsQuery, GetTransactionsQuery } from '../generated'
 import { useToast } from '../hooks'
 import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
+import { useFormatIntl } from '../hooks/useFormatIntl'
 
 const Transaction: NextPage = () => {
+  const { format } = useFormatIntl()
   const [pagination, setPagination] = useState({ skip: 0, take: 10, orderAsc: false })
   const { data, loading, error } = useGetTransactionsQuery({ variables: pagination })
   const transactions = get(data, 'getTransactions', []) as GetTransactionsQuery['getTransactions']
@@ -45,17 +47,17 @@ const Transaction: NextPage = () => {
       <Row className="mb-5" data-testid="header-links">
         <Col>
           <Link href="/blocks">
-            <button className="ink-button ink-button_violetligth">Blocks</button>
+            <button className="ink-button ink-button_violetligth">{format('blocks')}</button>
           </Link>
         </Col>
         <Col>
           <Link href="/transactions">
-            <button className="ink-button ink-button_violet">Transactions</button>
+            <button className="ink-button ink-button_violet">{format('transactions')}</button>
           </Link>
         </Col>
         <Col>
           <Link href="/contracts">
-            <button className="ink-button ink-button_violetligth">Contracts</button>
+            <button className="ink-button ink-button_violetligth">{format('contracts')}</button>
           </Link>
         </Col>
       </Row>
@@ -64,15 +66,15 @@ const Transaction: NextPage = () => {
           <Table responsive hover className="ink_table">
             <thead>
               <tr>
-                <th>Hash</th>
-                <th>Block Hash</th>
+                <th>{format('header_hash')}</th>
+                <th>{format('header_block_hash')}</th>
                 <th onClick={() => toogleOrder()} role="button" className="d-flex align-center gap-1">
                   <Image src={sortIcon} width={20} height={20} />
-                  Time
+                  {format('header_time')}
                 </th>
-                <th>Section</th>
-                <th>Method</th>
-                <th>Signer</th>
+                <th>{format('header_section')}</th>
+                <th>{format('header_method')}</th>
+                <th>{format('header_signer')}</th>
               </tr>
             </thead>
             <tbody data-testid="tbody">

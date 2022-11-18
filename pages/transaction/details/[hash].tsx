@@ -11,8 +11,10 @@ import { useGetTransactionQuery, GetTransactionQuery } from '../../../generated'
 import { useToast } from '../../../hooks'
 import { formatTimeAgo } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
+import { useFormatIntl } from '../../../hooks/useFormatIntl'
 
 const Transaction: NextPage = () => {
+  const { format } = useFormatIntl()
   const router = useRouter()
   const hash = router.query?.hash as string
   const [open, setOpen] = useState(false)
@@ -39,7 +41,7 @@ const Transaction: NextPage = () => {
             }
             onClick={() => setView('Overview')}
           >
-            Overview
+            {format('overview')}
           </Button>
           <Button
             variant="primary"
@@ -49,7 +51,7 @@ const Transaction: NextPage = () => {
             }
             onClick={() => setView('Logs')}
           >
-            Logs
+            {format('logs')}
           </Button>
         </Col>
       </Row>
@@ -59,7 +61,7 @@ const Transaction: NextPage = () => {
             <Col className="mb-4 d-flex align-items-center gap-2">
               <BackButton />
               <h4>
-                <b>Summary</b>
+                <b>{format('summary')}</b>
               </h4>
             </Col>
           </Row>
@@ -68,77 +70,77 @@ const Transaction: NextPage = () => {
               <Table className="ink_table">
                 <tbody data-testid="tbody">
                   <tr>
-                    <td className="black">Tx Hash</td>
+                    <td className="black">{format('header_tx_hash')}</td>
                     <td>{hash}</td>
                   </tr>
                   <tr>
-                    <td className="black">Block</td>
+                    <td className="black">{format('header_block')}</td>
                     <td>{transaction.blockHash}</td>
                   </tr>
                   <tr>
-                    <td className="black">Timestamp</td>
+                    <td className="black">{format('header_timestamp')}</td>
                     <td>{formatTimeAgo(transaction.timestamp)}</td>
                   </tr>
                   <tr>
-                    <td className="black">Section</td>
+                    <td className="black">{format('header_section')}</td>
                     <td>{transaction.section}</td>
                   </tr>
                   <tr>
-                    <td className="black">Method</td>
+                    <td className="black">{format('header_method')}</td>
                     <td>{transaction.method}</td>
                   </tr>
                   <tr>
-                    <td className="black">Signer</td>
+                    <td className="black">{format('header_signer')}</td>
                     <td>{transaction.signer}</td>
                   </tr>
                   <tr>
-                    <td className="black">Signature</td>
+                    <td className="black">{format('header_signature')}</td>
                     <td>{transaction.signature}</td>
                   </tr>
                   <tr>
-                    <td className="black">Nonce</td>
+                    <td className="black">{format('header_nonce')}</td>
                     <td>{transaction.nonce}</td>
                   </tr>
                   <tr>
-                    <td className="black">Encoded Length</td>
+                    <td className="black">{format('header_encoded_length')}</td>
                     <td>{transaction.encodedLength} bytes</td>
                   </tr>
                   {open && (
                     <>
                       <tr>
-                        <td className="black">Tip</td>
+                        <td className="black">{format('header_tip')}</td>
                         <td>{transaction.tip}</td>
                       </tr>
                       <tr>
-                        <td className="black">Era</td>
+                        <td className="black">{format('header_era')}</td>
                         <td>{transaction.era}</td>
                       </tr>
                       <tr>
-                        <td className="black">Args</td>
+                        <td className="black">{format('header_args')}</td>
                         <td>{transaction.args}</td>
                       </tr>
                       <tr>
-                        <td className="black">callIndex</td>
+                        <td className="black">{format('header_callindex')}</td>
                         <td>{transaction.callIndex}</td>
                       </tr>
                       <tr>
-                        <td className="black">Decimals</td>
+                        <td className="black">{format('header_decimals')}</td>
                         <td>{transaction.decimals}</td>
                       </tr>
                       <tr>
-                        <td className="black">ss58</td>
+                        <td className="black">{format('header_ss58')}</td>
                         <td>{transaction.ss58}</td>
                       </tr>
                       <tr>
-                        <td className="black">Tokens</td>
+                        <td className="black">{format('header_tokens')}</td>
                         <td>{transaction.tokens}</td>
                       </tr>
                       <tr>
-                        <td className="black">Type</td>
+                        <td className="black">{format('header_type')}</td>
                         <td>{transaction.type}</td>
                       </tr>
                       <tr>
-                        <td className="black">Version</td>
+                        <td className="black">{format('header_version')}</td>
                         <td>{transaction.version}</td>
                       </tr>
                     </>
@@ -148,7 +150,7 @@ const Transaction: NextPage = () => {
             </Col>
           </Row>
           <Button onClick={() => setOpen(!open)} aria-expanded={open}>
-            {open ? 'Show less' : 'Show more'}
+            {open ? format('show_less') : format('show_more')}
           </Button>
         </>
       )}
@@ -158,13 +160,15 @@ const Transaction: NextPage = () => {
             <Col className="mb-4 d-flex align-items-center gap-2">
               <BackButton />
               <h4>
-                <b>Transaction Receipt Event Logs</b>
+                <b>{format('transaction_receipt_event_logs')}</b>
               </h4>
             </Col>
           </Row>
           {loading && <Loading />}
 
-          {!loading && transaction?.events?.length === 0 && <p className="text-center py-2">No Logs to show</p>}
+          {!loading && transaction?.events?.length === 0 && (
+            <p className="text-center py-2">{format('no_logs_to_show')}</p>
+          )}
 
           {transaction?.events?.map((event, index) => (
             <Row key={index.toString()}>
@@ -177,23 +181,23 @@ const Transaction: NextPage = () => {
                       </td>
                     </tr>
                     <tr>
-                      <td className="black">Transaction Hash</td>
+                      <td className="black">{format('header_transaction_hash')}</td>
                       <td>{event.transactionHash}</td>
                     </tr>
                     <tr>
-                      <td className="black">Time:</td>
+                      <td className="black">{format('header_timestamp')}:</td>
                       <td>{formatTimeAgo(event.timestamp)}</td>
                     </tr>
                     <tr>
-                      <td className="black">Method:</td>
+                      <td className="black">{format('header_method')}:</td>
                       <td>{event.method}</td>
                     </tr>
                     <tr>
-                      <td className="black">Section:</td>
+                      <td className="black">{format('header_section')}:</td>
                       <td>{event.section}</td>
                     </tr>
                     <tr>
-                      <td className="black">Topics:</td>
+                      <td className="black">{format('header_topics')}:</td>
                       <td>
                         <div className="transactions-logs">
                           {event.topics
@@ -212,7 +216,7 @@ const Transaction: NextPage = () => {
                       </td>
                     </tr>
                     <tr>
-                      <td className="black">Data:</td>
+                      <td className="black">{format('header_data')}:</td>
                       <td>{event.data}</td>
                     </tr>
                   </tbody>

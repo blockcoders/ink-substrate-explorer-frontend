@@ -8,10 +8,12 @@ import sortIcon from '../assets/img/sort.svg'
 import { Loading } from '../components/Loading/Loading'
 import { GetBlocksQuery, useGetBlocksQuery } from '../generated'
 import { useToast } from '../hooks'
+import { useFormatIntl } from '../hooks/useFormatIntl'
 import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
 
 const Home: NextPage = () => {
+  const { format } = useFormatIntl()
   const [pagination, setPagination] = useState({ skip: 0, take: 10, orderByNumber: false, orderAsc: false })
   const { data, loading, error } = useGetBlocksQuery({ variables: pagination })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
@@ -50,17 +52,17 @@ const Home: NextPage = () => {
       <Row className="mb-5" data-testid="header-links">
         <Col>
           <Link href="/blocks">
-            <button className="ink-button ink-button_violet">Blocks</button>
+            <button className="ink-button ink-button_violet">{format('blocks')}</button>
           </Link>
         </Col>
         <Col>
           <Link href="/transactions">
-            <button className="ink-button ink-button_violetligth">Transactions</button>
+            <button className="ink-button ink-button_violetligth">{format('transactions')}</button>
           </Link>
         </Col>
         <Col>
           <Link href="/contracts">
-            <button className="ink-button ink-button_violetligth">Contracts</button>
+            <button className="ink-button ink-button_violetligth">{format('contracts')}</button>
           </Link>
         </Col>
       </Row>
@@ -71,16 +73,16 @@ const Home: NextPage = () => {
               <tr>
                 <th onClick={() => toogleOrderByNumber()} role="button" className="d-flex align-center gap-1">
                   <Image src={sortIcon} width={20} height={20} />
-                  Number
+                  {format('header_number')}
                 </th>
-                <th>Hash</th>
+                <th>{format('header_hash')}</th>
                 <th onClick={() => toogleOrderByTimestamp()} role="button" className="d-flex align-center gap-1">
                   <Image src={sortIcon} width={20} height={20} />
-                  Time
+                  {format('header_time')}
                 </th>
-                <th>Parent Hash</th>
-                <th>Transactions</th>
-                <th>Size</th>
+                <th>{format('header_parent_hash')}</th>
+                <th>{format('header_transactions')}</th>
+                <th>{format('header_size')}</th>
               </tr>
             </thead>
             <tbody data-testid="tbody">
