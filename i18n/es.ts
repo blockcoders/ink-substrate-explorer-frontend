@@ -1,7 +1,7 @@
 export const es = {
-  blocks: 'Blocks',
-  transactions: 'Transactions',
-  contracts: 'Contracts',
+  blocks: 'Bloques',
+  transactions: 'Transacciones',
+  contracts: 'Contratos',
   search_by: 'Search by...',
   transaction_hash: 'Transaction Hash',
   block_hash: 'Block Hash',

@@ -1,10 +1,13 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Dropdown, DropdownButton, InputGroup, Row } from 'react-bootstrap'
 import { useFormatIntl } from '../../hooks/useFormatIntl'
 import { getTitle } from '../../utils/pagetitile'
 import InfoCard from '../InfoCard/InfoCard'
 import Searchbar from '../SearchBar/SearchBar'
+import LanguageIcon from '../../assets/img/language.svg'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export const Header = () => {
   const { format } = useFormatIntl()
@@ -17,8 +20,26 @@ export const Header = () => {
 
   return (
     <>
-      <div className="">
+      <div className="mb-2 d-flex justify-content-between">
         <Searchbar />
+        <InputGroup className="w-auto">
+          <DropdownButton
+            variant="outline-secondary"
+            title={<Image src={LanguageIcon} alt="language icon" width={20} height={20} />}
+            id="input-group-dropdown-1"
+          >
+            <Dropdown.Item>
+              <Link href={router.asPath} locale="en">
+                {format('english')}
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item>
+              <Link href={router.asPath} locale="es">
+                {format('spanish')}
+              </Link>
+            </Dropdown.Item>
+          </DropdownButton>
+        </InputGroup>
       </div>
       <Col xs="12">
         <Row>

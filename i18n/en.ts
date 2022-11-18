@@ -87,4 +87,7 @@ export const en = {
   no_extension_installed: 'No extension installed!',
   contract_metadata_not_found: 'Contract metadata not found',
   query_not_found: 'Query/Transaction method not found',
+
+  english: 'English',
+  spanish: 'Spanish',
 }
