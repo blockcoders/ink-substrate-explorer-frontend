@@ -8,11 +8,13 @@ interface LoadingButtonProps {
   className?: string
   onClick?: () => void
   text: string
+  id?: string
 }
 
-function LoadingButton({ isLoading, disabled, className, onClick, text }: LoadingButtonProps) {
+function LoadingButton({ isLoading, disabled, className, onClick, text, id }: LoadingButtonProps) {
   return (
     <button
+      id={id}
       aria-disabled={isLoading || disabled}
       disabled={isLoading || disabled}
       className={className}

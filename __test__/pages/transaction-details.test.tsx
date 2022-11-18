@@ -47,6 +47,16 @@ describe('Transaction details', () => {
     expect(txInfo.children[8].children[1].innerHTML).toContain(`${oneTransactionMck.encodedLength} bytes`)
   })
 
+  it('should show summay information', async () => {
+    const logBtn = element.getElementsByClassName('transaction-tabs_buttons')[0]
+
+    await act(() => {
+      fireEvent.click(logBtn)
+    })
+
+    expect(element.innerHTML).toContain('Summary')
+  })
+
   it('should show more information', async () => {
     const showMoreBtn = await screen.getByText('Show more')
 
