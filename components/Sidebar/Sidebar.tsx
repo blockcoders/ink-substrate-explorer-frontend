@@ -6,8 +6,10 @@ import { Nav } from 'react-bootstrap'
 import logo from '../../assets/img/logo.svg'
 import { Sidebar } from '../../interfaces/sidebar'
 import Menu from '../../json/Sidebar.json'
+import { useFormatIntl } from '../../hooks/useFormatIntl'
 
 function Navbar() {
+  const { format } = useFormatIntl()
   const [dataJson, setMenu] = useState<Sidebar[]>([])
   const router = useRouter()
 
@@ -35,7 +37,7 @@ function Navbar() {
                     alt={item.label}
                     className="ink_sidebar-icon"
                   />{' '}
-                  <span>{item.label}</span>
+                  <span>{item.label ? format(item.label?.toLowerCase()) : ''}</span>
                 </Nav>
               </Link>
             </>

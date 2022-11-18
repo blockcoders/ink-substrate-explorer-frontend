@@ -147,7 +147,7 @@ const Contract: NextPage = () => {
     showLoadingToast()
     try {
       await uploadMetadataMutation({ variables: { contractAddress: address, metadata: base64Abi } })
-      showSuccessToast('Successful upload')
+      showSuccessToast(format('successful_upload'))
       setBase64Abi('')
       refetch()
     } catch (error) {
@@ -161,7 +161,7 @@ const Contract: NextPage = () => {
     const { web3Accounts, web3Enable, web3FromAddress } = extension
     const extensions = await web3Enable('Ink! Explorer')
     if (extensions?.length === 0) {
-      showErrorToast('No extension installed!')
+      showErrorToast(format('no_extension_installed'))
       return
     }
     const accounts = await web3Accounts()
@@ -180,12 +180,12 @@ const Contract: NextPage = () => {
       const api = await connect(WS_PROVIDER)
       const { metadata } = contract || {}
       if (!metadata) {
-        throw new Error('Contract metadata not found')
+        throw new Error(format('contract_metadata_not_found'))
       }
       const abi = new Abi(metadata)
       const { query, tx } = getContractInstance(api, abi, address, method)
       if (!query || !tx) {
-        throw new Error('Query/Transaction method not found')
+        throw new Error(format('query_not_found'))
       }
       const values: string[] = Object.values(parameters[method]) || []
       if (query?.meta?.isMutating) {
@@ -296,7 +296,7 @@ const Contract: NextPage = () => {
       <Row>
         <Col>
           <Tabs className="mb-3 ink-tab" defaultActiveKey="contractAbi">
-            <Tab className="ink-tab_button" eventKey="contractAbi" title="Contract ABI">
+            <Tab className="ink-tab_button" eventKey="contractAbi" title={format('contract_abi')}>
               <Row>
                 <Col className="my-3" xs={12}>
                   {contract?.metadata && (
@@ -311,13 +311,13 @@ const Contract: NextPage = () => {
                     className="form-control"
                     rows={15}
                     placeholder="No metadata found. Upload your contract metadata to verify your contract."
-                    value={contract?.metadata || 'Not found'}
+                    value={contract?.metadata || format('not_found')}
                     readOnly
                   ></textarea>
                 </Col>
               </Row>
             </Tab>
-            <Tab className="ink-tab_button" eventKey="uploadAbi" title="Upload ABI">
+            <Tab className="ink-tab_button" eventKey="uploadAbi" title={format('upload_abi')}>
               <Row>
                 <Col xs="12" className="mt-3">
                   <textarea
@@ -334,12 +334,12 @@ const Contract: NextPage = () => {
                     isLoading={isLoading}
                     className="ink-button ink-button_violet mt-3"
                     onClick={uploadAbi}
-                    text="Upload"
+                    text={format('upload')}
                   />
                 </Col>
               </Row>
             </Tab>
-            <Tab className="ink-tab_button" eventKey="Read" title="Run contract methods">
+            <Tab className="ink-tab_button" eventKey="Read" title={format('run_contract_methods')}>
               <Row>
                 <Col className="my-5">
                   {contract?.queries && contract?.queries?.length > 0 ? (

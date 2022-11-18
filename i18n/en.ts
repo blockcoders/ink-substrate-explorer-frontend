@@ -39,8 +39,8 @@ export const en = {
   header_tokens: 'Tokens',
   header_type: 'Type',
   header_version: 'Version',
-  header_more: 'Version',
-  header_topics: 'Version',
+  header_more: 'More',
+  header_topics: 'Topics',
   header_data: 'Data',
 
   overview: 'Overview',
@@ -61,7 +61,6 @@ export const en = {
 
   contract_abi_verified: 'Contract ABI Verified',
 
-  methos_arguments: 'Method Arguments',
   show_options: 'Show Options',
   hide_options: 'Hide options',
   gast_limit: 'gasLimit',
