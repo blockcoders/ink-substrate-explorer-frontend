@@ -8,6 +8,7 @@ export const es = {
   contract_address: 'Dirección del contrato',
   search_placeholder: 'Dirección, Hash',
   lastest_block: 'Ultimo bloque',
+  transaction: 'Transacción',
 
   header_number: 'Número',
   header_hash: 'Hash',
@@ -39,9 +40,16 @@ export const es = {
   header_tokens: 'Tokens',
   header_type: 'Tipo',
   header_version: 'Versión',
-  header_more: 'More',
+  header_more: 'Más',
   header_topics: 'Tópicos',
   header_data: 'Data',
+  header_index: 'Indice',
+  header_identifier: 'Identificador',
+
+  event_log: 'Registro del evento',
+  decode_event: 'Decodificar evento',
+  formatted_data: 'Data formateada',
+  decoded_data: 'Data decodificada',
 
   overview: 'Resumen',
   logs: 'Registros',

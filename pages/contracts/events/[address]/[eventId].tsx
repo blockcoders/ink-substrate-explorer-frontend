@@ -13,8 +13,10 @@ import { useLoading, useToast } from '../../../../hooks'
 import { formatTimeAgo } from '../../../../lib/utils'
 import withApollo from '../../../../lib/withApollo'
 import { formatJsonData } from '../../../../utils/json'
+import { useFormatIntl } from '../../../../hooks/useFormatIntl'
 
 const Event: NextPage = () => {
+  const { format } = useFormatIntl()
   const router = useRouter()
   const address = router.query?.address as string
   const eventId = router.query?.eventId as string
@@ -66,7 +68,7 @@ const Event: NextPage = () => {
           <Col className="mb-4 d-flex align-items-center gap-1" xs="10">
             <BackButton />
             <h4 className="d-flex align-items-center gap-3">
-              <b>Event Log</b>
+              <b>{format('event_log')}</b>
               {loading && <Loading />}
             </h4>
           </Col>
@@ -75,7 +77,7 @@ const Event: NextPage = () => {
               disabled={isLoading}
               isLoading={isLoading}
               className="transaction-tabs_buttons transaction-tabs_buttons-btn transaction-tabs_buttons-btn_active text-rigth"
-              text=" Decode Event"
+              text={format('decode_event')}
               onClick={decode}
             />
           </Col>
@@ -86,27 +88,27 @@ const Event: NextPage = () => {
               <tbody>
                 <span className="ink_table-number">{event.index}</span>
                 <tr>
-                  <td className="black">Transaction Hash</td>
+                  <td className="black">{format('header_tx_hash')}</td>
                   <td>{event.transactionHash}</td>
                 </tr>
                 <tr>
-                  <td className="black">Time:</td>
+                  <td className="black">{format('header_time')}:</td>
                   <td>{formatTimeAgo(event.timestamp, router.locale)}</td>
                 </tr>
                 <tr>
-                  <td className="black">Identifier:</td>
+                  <td className="black">{format('header_identifier')}:</td>
                   <td>{eventData?.identifier}</td>
                 </tr>
                 <tr>
-                  <td className="black">Method:</td>
+                  <td className="black">{format('header_method')}:</td>
                   <td>{event.method}</td>
                 </tr>
                 <tr>
-                  <td className="black">Section:</td>
+                  <td className="black">{format('header_section')}:</td>
                   <td>{event.section}</td>
                 </tr>
                 <tr>
-                  <td className="black">Topics:</td>
+                  <td className="black">{format('header_topics')}:</td>
                   <td>
                     <div className="transactions-logs">
                       {event.topics
@@ -125,11 +127,11 @@ const Event: NextPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="black">Data:</td>
+                  <td className="black">{format('header_data')}:</td>
                   <td>{event.data}</td>
                 </tr>
                 <tr>
-                  <td className="black">Formatted Data:</td>
+                  <td className="black">{format('formatted_data')}:</td>
                   <td>
                     <textarea
                       readOnly
@@ -141,7 +143,7 @@ const Event: NextPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="black">Decoded Data:</td>
+                  <td className="black">{format('decoded_data')}:</td>
                   <td>
                     <textarea
                       readOnly

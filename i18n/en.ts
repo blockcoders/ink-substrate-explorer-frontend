@@ -8,6 +8,7 @@ export const en = {
   contract_address: 'Contract Address',
   search_placeholder: 'Contract Address, Tx Hash, Block Hash',
   lastest_block: 'Lastest Block',
+  transaction: 'Transaction',
 
   header_number: 'Number',
   header_hash: 'Hash',
@@ -42,6 +43,13 @@ export const en = {
   header_more: 'More',
   header_topics: 'Topics',
   header_data: 'Data',
+  header_index: 'Index',
+  header_identifier: 'Identifier',
+
+  event_log: 'Event Log',
+  decode_event: 'Decode Event',
+  formatted_data: 'Formatted Data',
+  decoded_data: 'Decoded Data',
 
   overview: 'Overview',
   logs: 'Logs',
