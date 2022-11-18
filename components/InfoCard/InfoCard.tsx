@@ -8,9 +8,11 @@ import { useGetLastBlockQuery, GetLastBlockQuery, useVersionQuery, VersionQuery 
 import { getTimeAgo } from '../../lib/utils'
 import withApollo from '../../lib/withApollo'
 import { useFormatIntl } from '../../hooks/useFormatIntl'
+import { useRouter } from 'next/router'
 
 function InfoCard() {
   const { format } = useFormatIntl()
+  const { locale } = useRouter()
   const [price, setPrice] = useState(0)
   const { data } = useGetLastBlockQuery({ variables: { skip: 0, take: 1 } })
   const blocks = get(data, 'getBlocks', []) as GetLastBlockQuery['getBlocks']
@@ -38,7 +40,7 @@ function InfoCard() {
         </div>
         <div className="ink_infocard-last">
           <Image src={time} alt="Icon" /> {format('lastest_block')}: {blocks[0]?.number} (
-          {getTimeAgo(blocks[0]?.timestamp)})
+          {getTimeAgo(blocks[0]?.timestamp, locale)})
         </div>
         <div className="ink_infocard-sdk">SDK: {version}</div>
       </div>

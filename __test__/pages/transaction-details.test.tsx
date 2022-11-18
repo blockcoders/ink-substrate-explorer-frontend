@@ -38,7 +38,7 @@ describe('Transaction details', () => {
 
     expect(txInfo.children[0].children[1].innerHTML).toContain(oneTransactionMck.hash)
     expect(txInfo.children[1].children[1].innerHTML).toContain(oneTransactionMck.blockHash)
-    expect(txInfo.children[2].children[1].innerHTML).toContain(formatTimeAgo(oneTransactionMck.timestamp))
+    expect(txInfo.children[2].children[1].innerHTML).toContain(formatTimeAgo(oneTransactionMck.timestamp, 'en'))
     expect(txInfo.children[3].children[1].innerHTML).toContain(oneTransactionMck.section)
     expect(txInfo.children[4].children[1].innerHTML).toContain(oneTransactionMck.method)
     expect(txInfo.children[5].children[1].innerHTML).toContain(oneTransactionMck.signer)

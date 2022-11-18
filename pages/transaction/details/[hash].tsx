@@ -79,7 +79,7 @@ const Transaction: NextPage = () => {
                   </tr>
                   <tr>
                     <td className="black">{format('header_timestamp')}</td>
-                    <td>{formatTimeAgo(transaction.timestamp)}</td>
+                    <td>{formatTimeAgo(transaction.timestamp, router.locale)}</td>
                   </tr>
                   <tr>
                     <td className="black">{format('header_section')}</td>
@@ -186,7 +186,7 @@ const Transaction: NextPage = () => {
                     </tr>
                     <tr>
                       <td className="black">{format('header_timestamp')}:</td>
-                      <td>{formatTimeAgo(event.timestamp)}</td>
+                      <td>{formatTimeAgo(event.timestamp, router.locale)}</td>
                     </tr>
                     <tr>
                       <td className="black">{format('header_method')}:</td>

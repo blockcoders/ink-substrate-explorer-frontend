@@ -1,6 +1,7 @@
 import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import { Loading } from '../components/Loading/Loading'
@@ -11,6 +12,8 @@ import { formatTimeAgo } from '../lib/utils'
 import withApollo from '../lib/withApollo'
 
 const Contract: NextPage = () => {
+  const { locale } = useRouter()
+
   const { format } = useFormatIntl()
   const [pagination, setPagination] = useState({ skip: 0, take: 10 })
   const { data, loading, error } = useGetContractsQuery({ variables: pagination })
@@ -33,7 +36,7 @@ const Contract: NextPage = () => {
   const getLastEventTime = (index: number) => {
     const { events } = contracts[index] || {}
     if (events.length > 0) {
-      return formatTimeAgo(events[0].timestamp)
+      return formatTimeAgo(events[0].timestamp, locale)
     }
     return 'No events'
   }

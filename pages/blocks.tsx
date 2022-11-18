@@ -11,9 +11,11 @@ import { useToast } from '../hooks'
 import { useFormatIntl } from '../hooks/useFormatIntl'
 import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
+import { useRouter } from 'next/router'
 
 const Home: NextPage = () => {
   const { format } = useFormatIntl()
+  const { locale } = useRouter()
   const [pagination, setPagination] = useState({ skip: 0, take: 10, orderByNumber: false, orderAsc: false })
   const { data, loading, error } = useGetBlocksQuery({ variables: pagination })
   const blocks = get(data, 'getBlocks', []) as GetBlocksQuery['getBlocks']
@@ -94,7 +96,7 @@ const Home: NextPage = () => {
                       <a>{block.hash}</a>
                     </Link>
                   </td>
-                  <td>{formatTimeAgo(block.timestamp)}</td>
+                  <td>{formatTimeAgo(block.timestamp, locale)}</td>
                   <td className="black">
                     <Link href={'/block/details/' + block.parentHash}>
                       <a>{showShortHash(block.parentHash)}</a>

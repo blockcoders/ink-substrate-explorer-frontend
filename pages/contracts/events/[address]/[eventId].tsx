@@ -91,7 +91,7 @@ const Event: NextPage = () => {
                 </tr>
                 <tr>
                   <td className="black">Time:</td>
-                  <td>{formatTimeAgo(event.timestamp)}</td>
+                  <td>{formatTimeAgo(event.timestamp, router.locale)}</td>
                 </tr>
                 <tr>
                   <td className="black">Identifier:</td>

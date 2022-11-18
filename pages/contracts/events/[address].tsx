@@ -90,7 +90,7 @@ const Events: NextPage = () => {
                   <td className="black">
                     <Link href={'/transaction/details/' + event.transactionHash}>{event?.transactionHash}</Link>
                   </td>
-                  <td>{formatTimeAgo(event.timestamp)}</td>
+                  <td>{formatTimeAgo(event.timestamp, router.locale)}</td>
                   <td>
                     <span className="ink-button_showmore">
                       <Link href={`/contracts/events/${address}/${event.id}`}> Show more</Link>

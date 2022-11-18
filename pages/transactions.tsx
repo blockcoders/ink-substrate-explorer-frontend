@@ -11,9 +11,11 @@ import { useToast } from '../hooks'
 import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
 import { useFormatIntl } from '../hooks/useFormatIntl'
+import { useRouter } from 'next/router'
 
 const Transaction: NextPage = () => {
   const { format } = useFormatIntl()
+  const { locale } = useRouter()
   const [pagination, setPagination] = useState({ skip: 0, take: 10, orderAsc: false })
   const { data, loading, error } = useGetTransactionsQuery({ variables: pagination })
   const transactions = get(data, 'getTransactions', []) as GetTransactionsQuery['getTransactions']
@@ -88,7 +90,7 @@ const Transaction: NextPage = () => {
                       {showShortHash(transaction.blockHash || '')}
                     </Link>
                   </td>
-                  <td>{formatTimeAgo(transaction.timestamp)}</td>
+                  <td>{formatTimeAgo(transaction.timestamp, locale)}</td>
                   <td>{transaction.section}</td>
                   <td>{transaction.method}</td>
                   <td className="black">{transaction.signer}</td>

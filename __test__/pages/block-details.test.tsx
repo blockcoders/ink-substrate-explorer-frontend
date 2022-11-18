@@ -50,7 +50,7 @@ describe('Block details', () => {
 
     expect(blockInfo.children[0].children[1].innerHTML).toContain(oneBlockMock.number.toString())
     expect(blockInfo.children[1].children[1].innerHTML).toContain(oneBlockMock.hash)
-    expect(blockInfo.children[2].children[1].innerHTML).toContain(formatTimeAgo(oneBlockMock.timestamp))
+    expect(blockInfo.children[2].children[1].innerHTML).toContain(formatTimeAgo(oneBlockMock.timestamp, 'en'))
     expect(blockInfo.children[3].children[1].innerHTML).toContain(oneBlockMock.parentHash)
     expect(blockInfo.children[4].children[1].innerHTML).toContain(`${oneBlockMock.encodedLength} bytes`)
   })

@@ -99,7 +99,7 @@ const Transaction: NextPage = () => {
                       {showShortHash(transaction.blockHash || '')}
                     </Link>
                   </td>
-                  <td>{formatTimeAgo(transaction.timestamp)}</td>
+                  <td>{formatTimeAgo(transaction.timestamp, router.locale)}</td>
                   <td>{transaction.section}</td>
                   <td>{transaction.method}</td>
                   <td className="black">{transaction.signer}</td>

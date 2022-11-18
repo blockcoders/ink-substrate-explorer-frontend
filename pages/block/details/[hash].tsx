@@ -81,7 +81,7 @@ const Block: NextPage = () => {
               </tr>
               <tr>
                 <td className="black">{format('header_timestamp')}</td>
-                <td>{formatTimeAgo(block.timestamp)}</td>
+                <td>{formatTimeAgo(block.timestamp, router.locale)}</td>
               </tr>
               <tr>
                 <td className="black">{format('header_parent')}</td>
@@ -126,7 +126,7 @@ const Block: NextPage = () => {
                       {showShortHash(transaction.blockHash || '')}
                     </Link>
                   </td>
-                  <td>{formatTimeAgo(transaction.timestamp)}</td>
+                  <td>{formatTimeAgo(transaction.timestamp, router.locale)}</td>
                   <td>{transaction.method}</td>
                   <td>{transaction.section}</td>
                   <td className="black">{transaction.signer}</td>
