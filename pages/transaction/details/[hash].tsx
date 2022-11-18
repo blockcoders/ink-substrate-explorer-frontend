@@ -181,7 +181,7 @@ const Transaction: NextPage = () => {
                       </td>
                     </tr>
                     <tr>
-                      <td className="black">{format('header_transaction_hash')}</td>
+                      <td className="black">{format('header_tx_hash')}</td>
                       <td>{event.transactionHash}</td>
                     </tr>
                     <tr>
