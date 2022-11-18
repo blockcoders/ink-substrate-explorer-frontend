@@ -30,11 +30,24 @@ jest.mock('../../generated', () => ({
 
 jest.mock('../../hooks/useSendingTx')
 
-jest.mock('@polkadot/extension-dapp', () => ({
-  web3FromAddress: jest.fn().mockResolvedValue({}),
-  web3Accounts: jest.fn(() => [{ address: '1234' }]),
-  web3Enable: jest.fn(() => [{ address: '1234' }]),
+const showErrorToastMock = jest.fn()
+const startLoadingMock = jest.fn()
+const endLoadingMock = jest.fn()
+
+jest.mock('../../hooks', () => ({
+  useToast: jest.fn().mockImplementation(() => ({
+    showErrorToast: showErrorToastMock,
+    showLoadingToast: jest.fn(),
+    showSuccessToast: jest.fn(),
+  })),
+  useLoading: jest.fn().mockImplementation(() => ({
+    isLoading: false,
+    startLoading: startLoadingMock,
+    endLoading: endLoadingMock,
+  })),
 }))
+
+const web3EnableMock = jest.fn(() => [{ address: '1234' }])
 
 describe('Contract Details', () => {
   let element: HTMLElement
@@ -62,68 +75,84 @@ describe('Contract Details', () => {
     }))
   })
 
-  describe('send method by query', () => {
-    it('should send query', async () => {
-      await act(() => {
-        render(<ContractDetails />)
-      })
+  it('should send query', async () => {
+    jest.doMock('@polkadot/extension-dapp', () => ({
+      __esModule: true,
+      web3FromAddress: jest.fn().mockResolvedValue({}),
+      web3Accounts: jest.fn(() => [{ address: '1234' }]),
+      web3Enable: web3EnableMock,
+    }))
 
-      const el = element.getElementsByClassName('ink-tab_button')[2]
-      fireEvent.click(el)
+    let localElement: HTMLElement
 
-      const sendBtn = screen.getAllByText('Send')[0]
-
-      await act(() => {
-        fireEvent.click(sendBtn)
-      })
-
-      expect(await screen.findByTestId('result-wrapper')).toBeInTheDocument()
+    await act(() => {
+      const { container: _container } = render(<ContractDetails />)
+      localElement = _container
     })
+
+    const el = localElement.getElementsByClassName('ink-tab_button')[2]
+
+    fireEvent.click(el)
+
+    const sendBtn = localElement.getElementsByClassName('send-btn')[0]
+
+    await act(() => {
+      fireEvent.click(sendBtn)
+    })
+
+    expect(endLoadingMock).toHaveBeenCalled()
   })
 
-  describe('send method by tx', () => {
-    it('should send tx', async () => {
-      ;(hook.useSendingTx as jest.Mock) = jest.fn().mockImplementation(() => ({
-        connect: jest.fn().mockImplementation(() => ({})),
-        getContractInstance: jest.fn(() => ({
-          tx: jest.fn(() => ({
-            signAndSend: jest.fn((account: any, signer: any, cb) =>
-              cb({
-                status: '1',
-                txHash: '0x',
-                dispatchError: '{',
-                dispatchInfo: '1',
-                internalError: '2',
-                events: [
-                  {
-                    event: {
-                      method: '',
-                    },
+  it('should send tx', async () => {
+    jest.doMock('@polkadot/extension-dapp', () => ({
+      __esModule: true,
+      web3FromAddress: jest.fn().mockResolvedValue({}),
+      web3Accounts: jest.fn(() => [{ address: '1234' }]),
+      web3Enable: web3EnableMock,
+    }))
+    ;(hook.useSendingTx as jest.Mock) = jest.fn().mockImplementation(() => ({
+      connect: jest.fn().mockImplementation(() => ({})),
+      getContractInstance: jest.fn(() => ({
+        tx: jest.fn(() => ({
+          signAndSend: jest.fn((account: any, signer: any, cb) =>
+            cb({
+              status: '1',
+              txHash: '0x',
+              dispatchError: '{',
+              dispatchInfo: '1',
+              internalError: '2',
+              events: [
+                {
+                  event: {
+                    method: '',
                   },
-                ],
-              }),
-            ),
-          })),
-          query: {
-            meta: {
-              isMutating: true,
-            },
-          },
+                },
+              ],
+            }),
+          ),
         })),
-      }))
-      await act(() => {
-        render(<ContractDetails />)
-      })
+        query: {
+          meta: {
+            isMutating: true,
+          },
+        },
+      })),
+    }))
+    let localElement: HTMLElement
 
-      const el = element.getElementsByClassName('ink-tab_button')[2]
-      fireEvent.click(el)
-      const sendBtn = screen.getAllByText('Send')[0]
-
-      await act(() => {
-        fireEvent.click(sendBtn)
-      })
-      expect(1).toBe(1)
+    await act(() => {
+      const { container } = render(<ContractDetails />)
+      localElement = container
     })
+
+    const el = element.getElementsByClassName('ink-tab_button')[2]
+    fireEvent.click(el)
+    const sendBtn = localElement.getElementsByClassName('send-btn')[0]
+
+    await act(() => {
+      fireEvent.click(sendBtn)
+    })
+    expect(endLoadingMock).toHaveBeenCalled()
   })
 
   it('should render contract ABI verified', async () => {
@@ -140,6 +169,12 @@ describe('Contract Details', () => {
 
   describe('Upload ABI', () => {
     it('should show upload ABI textarea', async () => {
+      jest.doMock('@polkadot/extension-dapp', () => ({
+        __esModule: true,
+        web3FromAddress: jest.fn().mockResolvedValue({}),
+        web3Accounts: jest.fn(() => [{ address: '1234' }]),
+        web3Enable: web3EnableMock,
+      }))
       const el = element.getElementsByClassName('ink-tab_button')[1]
 
       fireEvent.click(el)
@@ -152,6 +187,12 @@ describe('Contract Details', () => {
     })
 
     it('should upload metadata', async () => {
+      jest.doMock('@polkadot/extension-dapp', () => ({
+        __esModule: true,
+        web3FromAddress: jest.fn().mockResolvedValue({}),
+        web3Accounts: jest.fn(() => [{ address: '1234' }]),
+        web3Enable: web3EnableMock,
+      }))
       const el = element.getElementsByClassName('ink-tab_button')[1]
 
       fireEvent.click(el)
@@ -172,6 +213,12 @@ describe('Contract Details', () => {
   })
 
   it('should render contract methods accordion', () => {
+    jest.doMock('@polkadot/extension-dapp', () => ({
+      __esModule: true,
+      web3FromAddress: jest.fn().mockResolvedValue({}),
+      web3Accounts: jest.fn(() => [{ address: '1234' }]),
+      web3Enable: web3EnableMock,
+    }))
     const el = element.getElementsByClassName('ink-tab_button')[2]
 
     fireEvent.click(el)
@@ -186,6 +233,12 @@ describe('Contract Details', () => {
   })
 
   it('should fill gasLimit, storageLimint and value', () => {
+    jest.doMock('@polkadot/extension-dapp', () => ({
+      __esModule: true,
+      web3FromAddress: jest.fn().mockResolvedValue({}),
+      web3Accounts: jest.fn(() => [{ address: '1234' }]),
+      web3Enable: web3EnableMock,
+    }))
     const el = element.getElementsByClassName('ink-tab_button')[2]
     fireEvent.click(el)
 
@@ -205,15 +258,82 @@ describe('Contract Details', () => {
     expect(inputElements[2].value).toContain('100')
   })
 
+  it('should show error sending', async () => {
+    jest.doMock('@polkadot/extension-dapp', () => ({
+      __esModule: true,
+      web3FromAddress: 1,
+      web3Accounts: jest.fn(() => [{ address: '1234' }]),
+      web3Enable: web3EnableMock,
+    }))
+    ;(hook.useSendingTx as jest.Mock) = jest.fn().mockImplementation(() => ({
+      connect: jest.fn().mockImplementation(() => ({})),
+      getContractInstance: jest.fn(() => ({
+        tx: jest.fn(() => ({
+          signAndSend: jest.fn((account: any, signer: any, cb) =>
+            cb({
+              status: '1',
+              txHash: '0x',
+              dispatchError: '{',
+              dispatchInfo: '1',
+              internalError: '2',
+              events: [
+                {
+                  event: {
+                    method: '',
+                  },
+                },
+              ],
+            }),
+          ),
+        })),
+        query: {
+          meta: {
+            isMutating: true,
+          },
+        },
+      })),
+    }))
+    let localElement: HTMLElement
+
+    await act(() => {
+      const { container } = render(<ContractDetails />)
+      localElement = container
+    })
+
+    const el = element.getElementsByClassName('ink-tab_button')[2]
+    await act(() => {
+      fireEvent.click(el)
+    })
+
+    const sendBtn = localElement.getElementsByClassName('send-btn')[0]
+
+    await act(() => {
+      fireEvent.click(sendBtn)
+    })
+
+    await act(() => {
+      const { container } = render(<ContractDetails />)
+      localElement = container
+    })
+
+    expect(showErrorToastMock).toHaveBeenCalled()
+  })
+
   it('should show results', async () => {
+    jest.doMock('@polkadot/extension-dapp', () => ({
+      __esModule: true,
+      web3FromAddress: jest.fn().mockResolvedValue({}),
+      web3Accounts: jest.fn(() => [{ address: '1234' }]),
+      web3Enable: jest.fn(() => [{ address: '1234' }]),
+    }))
+
     jest.spyOn(React, 'useEffect').mockImplementation(() => jest.fn()())
 
     jest
       .spyOn(React, 'useState')
-      .mockImplementationOnce(() => [1, jest.fn()])
-      .mockImplementationOnce(() => [2, jest.fn()])
-      .mockImplementationOnce(() => [3, jest.fn()])
-      .mockImplementationOnce(() => [4, jest.fn()])
+      .mockImplementationOnce(() => [{}, jest.fn()])
+      .mockImplementationOnce(() => [{}, jest.fn()])
+      .mockImplementationOnce(() => [{}, jest.fn()])
       .mockImplementationOnce(() => [
         {
           totalSupply: {
@@ -255,5 +375,22 @@ describe('Contract Details', () => {
     expect(txResult.children[5].innerHTML).toContain('{"charge":0}') // storageDeposit
     expect(txResult.children[6].innerHTML).toContain('0x123') // txHash
     expect(txResult.children[7].innerHTML).toContain('0x123') // status
+  })
+
+  describe('No polkadot extension', () => {
+    it('should show "No extension installed!" message', async () => {
+      jest.doMock('@polkadot/extension-dapp', () => ({
+        __esModule: true,
+        web3FromAddress: jest.fn(() => {}),
+        web3Accounts: jest.fn(() => [{ address: '1234' }]),
+        web3Enable: jest.fn(() => []),
+      }))
+
+      await act(() => {
+        render(<ContractDetails />)
+      })
+
+      expect(showErrorToastMock).toHaveBeenCalled()
+    })
   })
 })

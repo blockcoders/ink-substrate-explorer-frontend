@@ -158,7 +158,7 @@ const Contract: NextPage = () => {
   const extensionSetup = async (extension: any) => {
     const { web3Accounts, web3Enable, web3FromAddress } = extension
     const extensions = await web3Enable('Ink! Explorer')
-    if (extensions.length === 0) {
+    if (extensions?.length === 0) {
       showErrorToast('No extension installed!')
       return
     }
@@ -340,14 +340,14 @@ const Contract: NextPage = () => {
             <Tab className="ink-tab_button" eventKey="Read" title="Run contract methods">
               <Row>
                 <Col className="my-5">
-                  {contract?.queries && contract?.queries.length > 0 ? (
+                  {contract?.queries && contract?.queries?.length > 0 ? (
                     <Accordion className="ink-accordion" defaultActiveKey={['0']}>
                       {contract?.queries?.map((query, index) => (
                         <Accordion.Item key={index} eventKey={`${index}`} className="ink-accordion_item">
                           <Accordion.Header>{query.name}</Accordion.Header>
                           <Accordion.Body>
                             {query.docs}
-                            {query.args.length > 0 && (
+                            {query?.args?.length > 0 && (
                               <Row className="my-3">
                                 <Col xs="12">
                                   <b>Method Arguments</b>
@@ -439,7 +439,7 @@ const Contract: NextPage = () => {
                                       </Col>
                                     </Row>
 
-                                    {resultsToShow.length > 0 && (
+                                    {resultsToShow?.length > 0 && (
                                       <div className="tx-result" data-testid="result-wrapper">
                                         {resultsToShow.map((result, i) => (
                                           <Row key={i} className="my-3">
@@ -457,9 +457,10 @@ const Contract: NextPage = () => {
                             <Row className="my-3 d-flex justify-content-end">
                               <Col xs={2}>
                                 <LoadingButton
+                                  id="send-btn"
                                   disabled={isLoading}
                                   isLoading={isLoading}
-                                  className="ink-button ink-button_violet mt-3"
+                                  className="ink-button ink-button_violet mt-3 send-btn"
                                   onClick={() => send(query?.method)}
                                   text="Send"
                                 />
