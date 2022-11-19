@@ -12,7 +12,7 @@ export const getTimeAgo = (timestamp: number, locale?: string | undefined) => {
   }
   interval = Math.floor(seconds / 86400)
   if (interval > 1) {
-    return isNotEspanish ? `${interval} days ago` : `Hace ${interval} horas`
+    return isNotEspanish ? `${interval} days ago` : `Hace ${interval} dias`
   }
   interval = Math.floor(seconds / 3600)
   if (interval > 1) {
