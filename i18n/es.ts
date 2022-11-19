@@ -71,7 +71,7 @@ export const es = {
 
   show_options: 'Ver Opciones',
   hide_options: 'Ocultar Opciones',
-  gast_limit: 'límite de gas',
+  gas_limit: 'límite de gas',
   storage_limit: 'límite de almacenamiento',
   value: 'valor',
 
@@ -84,7 +84,7 @@ export const es = {
   method_arguments: 'Argumentos del método',
 
   loading: 'Cargando',
-  successfull_upload: 'Carga exitosa',
+  successful_upload: 'Carga exitosa',
 
   not_found: 'No encontrado',
   summary: 'Resumen',

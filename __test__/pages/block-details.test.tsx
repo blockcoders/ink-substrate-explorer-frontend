@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event'
 import { oneBlockMock } from '../../_mocks/block-mocks'
 import { formatTimeAgo } from '../../lib/utils'
 import BlockDetails from '../../pages/block/details/[hash]'
+import { IntlProvider } from 'react-intl'
+import { messages } from '../../pages/_app'
 
 userEvent.setup()
 
@@ -40,9 +42,19 @@ jest.mock('../../generated', () => ({
   }),
 }))
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    locale: 'en',
+  })),
+}))
+
 describe('Block details', () => {
   beforeEach(() => {
-    render(<BlockDetails />)
+    render(
+      <IntlProvider locale="en" messages={messages['en']}>
+        <BlockDetails />
+      </IntlProvider>,
+    )
   })
 
   it('should show block info', async () => {

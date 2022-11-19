@@ -1,7 +1,9 @@
 import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { IntlProvider } from 'react-intl'
 import { transactionsMocks } from '../../_mocks/transactions-mocks'
+import { messages } from '../../pages/_app'
 import Transactions from '../../pages/transactions'
 
 userEvent.setup()
@@ -24,9 +26,19 @@ jest.mock('../../generated', () => ({
   }),
 }))
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    locale: 'en',
+  })),
+}))
+
 describe('Transactions', () => {
   beforeEach(() => {
-    render(<Transactions />)
+    render(
+      <IntlProvider locale="en" messages={messages['en']}>
+        <Transactions />
+      </IntlProvider>,
+    )
   })
 
   it('should render 10 transaction rows', async () => {

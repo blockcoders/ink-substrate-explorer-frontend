@@ -1,5 +1,4 @@
 export const getTimeAgo = (timestamp: number, locale?: string | undefined) => {
-  console.log(locale)
   const isNotEspanish = locale !== 'es'
 
   const seconds = Math.floor((Date.now() - timestamp) / 1000)

@@ -3,6 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { contractTransactionsMocks } from '../../_mocks/contracts-mocks'
 import ContractTransactions from '../../pages/contracts/transactions/[address]'
+import { IntlProvider } from 'react-intl'
+import { messages } from '../../pages/_app'
 
 userEvent.setup()
 
@@ -11,6 +13,7 @@ jest.mock('next/router', () => ({
     query: {
       hash: '5G63pMxBnvnvdxDDbGrNsR27vkBmgLbSLXi134dxzaDhTL9v',
     },
+    locale: 'en',
   }),
 }))
 
@@ -37,7 +40,11 @@ jest.mock('../../generated', () => ({
 
 describe('Contract transactions', () => {
   beforeEach(() => {
-    render(<ContractTransactions />)
+    render(
+      <IntlProvider locale="en" messages={messages['en']}>
+        <ContractTransactions />
+      </IntlProvider>,
+    )
   })
 
   it('should render 5 transactions', async () => {

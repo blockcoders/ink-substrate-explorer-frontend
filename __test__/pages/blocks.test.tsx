@@ -1,7 +1,9 @@
 import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { IntlProvider } from 'react-intl'
 import { blockMocks } from '../../_mocks/block-mocks'
+import { messages } from '../../pages/_app'
 import Blocks from '../../pages/blocks'
 
 userEvent.setup()
@@ -28,12 +30,19 @@ jest.mock('../../generated', () => ({
   }),
 }))
 
-describe('Home', () => {
-  let container: HTMLElement | null = null
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    locale: 'en',
+  })),
+}))
 
+describe('Home', () => {
   beforeEach(() => {
-    const r = render(<Blocks />)
-    container = r.container
+    render(
+      <IntlProvider locale="en" messages={messages['en']}>
+        <Blocks />
+      </IntlProvider>,
+    )
   })
 
   it('should render 10 block rows', async () => {

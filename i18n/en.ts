@@ -71,7 +71,7 @@ export const en = {
 
   show_options: 'Show Options',
   hide_options: 'Hide options',
-  gast_limit: 'gasLimit',
+  gas_limit: 'gasLimit',
   storage_limit: 'Storage Limit',
   value: 'value',
 
@@ -84,7 +84,7 @@ export const en = {
   method_arguments: 'Method Arguments',
 
   loading: 'Loading',
-  successfull_upload: 'Successful Upload',
+  successful_upload: 'Successful Upload',
 
   not_found: 'Not found',
   summary: 'Summary',

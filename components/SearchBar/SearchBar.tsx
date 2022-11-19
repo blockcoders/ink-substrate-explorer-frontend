@@ -1,5 +1,5 @@
-import { useRouter } from 'next/dist/client/router'
 import Image from 'next/future/image'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import icon from '../../assets/img/search-icon.svg'
@@ -16,6 +16,7 @@ function Searchbar() {
   }
 
   const handleKeyPress = (e: any) => {
+    console.log('presiona')
     if (e.key === 'Enter') {
       handleSubmit()
     }
@@ -57,9 +58,10 @@ function Searchbar() {
               </span>
               <input
                 type="text"
+                aria-label="search input"
                 className="form-control ink_searchbar-input"
                 placeholder={format('search_placeholder')}
-                onKeyPress={handleKeyPress}
+                onKeyPress={(e) => handleKeyPress(e.key)}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -67,6 +69,7 @@ function Searchbar() {
                 className="btn btn-outline-secondary ink_searchbar-icon"
                 type="button"
                 id="search"
+                role="search-btn"
                 onClick={handleSubmit}
               >
                 <Image src={icon} alt="Icon" />

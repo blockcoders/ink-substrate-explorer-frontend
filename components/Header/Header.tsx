@@ -1,13 +1,13 @@
+import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Col, Dropdown, DropdownButton, InputGroup, Row } from 'react-bootstrap'
+import LanguageIcon from '../../assets/img/language.svg'
 import { useFormatIntl } from '../../hooks/useFormatIntl'
 import { getTitle } from '../../utils/pagetitile'
 import InfoCard from '../InfoCard/InfoCard'
 import Searchbar from '../SearchBar/SearchBar'
-import LanguageIcon from '../../assets/img/language.svg'
-import Image from 'next/image'
-import Link from 'next/link'
 
 export const Header = () => {
   const { format } = useFormatIntl()

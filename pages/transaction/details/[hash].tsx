@@ -9,9 +9,9 @@ import { BackButton } from '../../../components/BackButton/BackButton'
 import { Loading } from '../../../components/Loading/Loading'
 import { useGetTransactionQuery, GetTransactionQuery } from '../../../generated'
 import { useToast } from '../../../hooks'
+import { useFormatIntl } from '../../../hooks/useFormatIntl'
 import { formatTimeAgo } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
-import { useFormatIntl } from '../../../hooks/useFormatIntl'
 
 const Transaction: NextPage = () => {
   const { format } = useFormatIntl()

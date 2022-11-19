@@ -1,14 +1,14 @@
 import Binance, { AvgPriceResult } from 'binance-api-node'
 import { get } from 'lodash'
 import Image from 'next/future/image'
+import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import time from '../../assets/img/bxs_time.svg'
 import coin from '../../assets/img/ph_coin-vertical-fill.svg'
 import { useGetLastBlockQuery, GetLastBlockQuery, useVersionQuery, VersionQuery } from '../../generated'
+import { useFormatIntl } from '../../hooks/useFormatIntl'
 import { getTimeAgo } from '../../lib/utils'
 import withApollo from '../../lib/withApollo'
-import { useFormatIntl } from '../../hooks/useFormatIntl'
-import { useRouter } from 'next/router'
 
 function InfoCard() {
   const { format } = useFormatIntl()

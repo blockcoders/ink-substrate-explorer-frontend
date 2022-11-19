@@ -3,19 +3,17 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { Row, Container } from 'react-bootstrap'
-import { ToastContainer } from 'react-toastify'
-
-import Sidebar from '../components/Sidebar/Sidebar'
 import { IntlProvider } from 'react-intl'
+import { ToastContainer } from 'react-toastify'
+import { Header } from '../components/Header/Header'
+import Sidebar from '../components/Sidebar/Sidebar'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/main.scss'
 import 'react-toastify/dist/ReactToastify.css'
-
 import { en } from '../i18n/en'
 import { es } from '../i18n/es'
-import { Header } from '../components/Header/Header'
 
-const messages: any = { en, es }
+export const messages: any = { en, es }
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { locale } = useRouter()

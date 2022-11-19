@@ -6,6 +6,8 @@ import React from 'react'
 import { contractBase64Metada, contractDetailsMock } from '../../_mocks/contracts-mocks'
 import * as hook from '../../hooks/useSendingTx'
 import ContractDetails from '../../pages/contracts/contract/[address]'
+import { IntlProvider } from 'react-intl'
+import { messages } from '../../pages/_app'
 
 userEvent.setup()
 
@@ -49,11 +51,17 @@ jest.mock('../../hooks', () => ({
 
 const web3EnableMock = jest.fn(() => [{ address: '1234' }])
 
+const MockComponent = () => (
+  <IntlProvider locale="en" messages={messages['en']}>
+    <ContractDetails />
+  </IntlProvider>
+)
+
 describe('Contract Details', () => {
   let element: HTMLElement
   beforeEach(async () => {
     await act(() => {
-      const { container } = render(<ContractDetails />)
+      const { container } = render(<MockComponent />)
       element = container
     })
   })
@@ -86,7 +94,7 @@ describe('Contract Details', () => {
     let localElement: HTMLElement
 
     await act(() => {
-      const { container: _container } = render(<ContractDetails />)
+      const { container: _container } = render(<MockComponent />)
       localElement = _container
     })
 
@@ -141,7 +149,7 @@ describe('Contract Details', () => {
     let localElement: HTMLElement
 
     await act(() => {
-      const { container } = render(<ContractDetails />)
+      const { container } = render(<MockComponent />)
       localElement = container
     })
 
@@ -180,7 +188,7 @@ describe('Contract Details', () => {
       fireEvent.click(el)
 
       const textAreaEl = await screen.getByPlaceholderText(
-        'Plase upload the metadata of the contract in a Base64 encoded format.',
+        'Please upload the metadata of the contract in a Base64 encoded format.',
       )
 
       expect(textAreaEl).toBeInTheDocument()
@@ -198,7 +206,7 @@ describe('Contract Details', () => {
       fireEvent.click(el)
 
       const textAreaEl = screen.getByPlaceholderText(
-        'Plase upload the metadata of the contract in a Base64 encoded format.',
+        'Please upload the metadata of the contract in a Base64 encoded format.',
       )
 
       fireEvent.change(textAreaEl, { target: { value: contractBase64Metada } })
@@ -296,7 +304,7 @@ describe('Contract Details', () => {
     let localElement: HTMLElement
 
     await act(() => {
-      const { container } = render(<ContractDetails />)
+      const { container } = render(<MockComponent />)
       localElement = container
     })
 
@@ -312,7 +320,7 @@ describe('Contract Details', () => {
     })
 
     await act(() => {
-      const { container } = render(<ContractDetails />)
+      const { container } = render(<MockComponent />)
       localElement = container
     })
 
@@ -358,7 +366,7 @@ describe('Contract Details', () => {
     let container: any
 
     await act(() => {
-      const { container: c } = render(<ContractDetails />)
+      const { container: c } = render(<MockComponent />)
       container = c
     })
 
@@ -387,7 +395,7 @@ describe('Contract Details', () => {
       }))
 
       await act(() => {
-        render(<ContractDetails />)
+        render(<MockComponent />)
       })
 
       expect(showErrorToastMock).toHaveBeenCalled()
