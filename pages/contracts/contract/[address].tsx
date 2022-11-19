@@ -13,9 +13,9 @@ import verifed from '../../../assets/img/verifed.svg'
 import LoadingButton from '../../../components/LoadingButton/LoadingButton'
 import { useGetContractQueriesQuery, GetContractQueriesQuery, useUploadMetadataMutation } from '../../../generated'
 import { useLoading, useToast } from '../../../hooks'
+import { useFormatIntl } from '../../../hooks/useFormatIntl'
 import { useSendingTx } from '../../../hooks/useSendingTx'
 import withApollo from '../../../lib/withApollo'
-import { useFormatIntl } from '../../../hooks/useFormatIntl'
 
 const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
 const DEFAULT_OPTIONS = { gasLimit: '' }

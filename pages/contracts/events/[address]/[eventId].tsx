@@ -10,10 +10,10 @@ import { Loading } from '../../../../components/Loading/Loading'
 import LoadingButton from '../../../../components/LoadingButton/LoadingButton'
 import { GetEventQuery, useDecodeEventMutation, useGetEventQuery } from '../../../../generated'
 import { useLoading, useToast } from '../../../../hooks'
+import { useFormatIntl } from '../../../../hooks/useFormatIntl'
 import { formatTimeAgo } from '../../../../lib/utils'
 import withApollo from '../../../../lib/withApollo'
 import { formatJsonData } from '../../../../utils/json'
-import { useFormatIntl } from '../../../../hooks/useFormatIntl'
 
 const Event: NextPage = () => {
   const { format } = useFormatIntl()

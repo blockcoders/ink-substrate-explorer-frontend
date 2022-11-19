@@ -2,16 +2,16 @@ import { get } from 'lodash'
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Row, Col, Table, Pagination } from 'react-bootstrap'
 import sortIcon from '../assets/img/sort.svg'
 import { Loading } from '../components/Loading/Loading'
 import { useGetTransactionsQuery, GetTransactionsQuery } from '../generated'
 import { useToast } from '../hooks'
+import { useFormatIntl } from '../hooks/useFormatIntl'
 import { formatTimeAgo, showShortHash } from '../lib/utils'
 import withApollo from '../lib/withApollo'
-import { useFormatIntl } from '../hooks/useFormatIntl'
-import { useRouter } from 'next/router'
 
 const Transaction: NextPage = () => {
   const { format } = useFormatIntl()

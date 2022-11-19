@@ -9,9 +9,9 @@ import sortIcon from '../../../assets/img/sort.svg'
 import { Loading } from '../../../components/Loading/Loading'
 import { GetEventsQuery, useGetEventsQuery } from '../../../generated'
 import { useToast } from '../../../hooks'
+import { useFormatIntl } from '../../../hooks/useFormatIntl'
 import { formatTimeAgo } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
-import { useFormatIntl } from '../../../hooks/useFormatIntl'
 
 const Events: NextPage = () => {
   const { format } = useFormatIntl()
