@@ -20,7 +20,7 @@ export const Header = () => {
 
   return (
     <>
-      <div className="mb-2 d-flex justify-content-between">
+      <div className="d-flex justify-content-between mb-2">
         <Searchbar />
         <InputGroup className="w-auto">
           <DropdownButton

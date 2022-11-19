@@ -167,7 +167,7 @@ const Transaction: NextPage = () => {
           {loading && <Loading />}
 
           {!loading && transaction?.events?.length === 0 && (
-            <p className="text-center py-2">{format('no_logs_to_show')}</p>
+            <p className="py-2 text-center">{format('no_logs_to_show')}</p>
           )}
 
           {transaction?.events?.map((event, index) => (
