@@ -9,7 +9,6 @@ describe('Utils', () => {
 
     it('should show in spanish', () => {
       const date = getTimeAgo(timestamp, 'es')
-      expect(date).toContain('Hace')
       expect(date).toContain('años')
     })
 
@@ -24,7 +23,6 @@ describe('Utils', () => {
 
     it('should show in spanish', () => {
       const date = getTimeAgo(timestamp, 'es')
-      expect(date).toContain('Hace')
       expect(date).toContain('meses')
     })
 
@@ -39,7 +37,6 @@ describe('Utils', () => {
 
     it('should show in spanish', () => {
       const date = getTimeAgo(timestamp, 'es')
-      expect(date).toContain('Hace')
       expect(date).toContain('dias')
     })
 
@@ -54,7 +51,6 @@ describe('Utils', () => {
 
     it('should show in spanish', () => {
       const date = getTimeAgo(timestamp, 'es')
-      expect(date).toContain('Hace')
       expect(date).toContain('horas')
     })
 
@@ -69,7 +65,6 @@ describe('Utils', () => {
 
     it('should show in spanish', () => {
       const date = getTimeAgo(timestamp, 'es')
-      expect(date).toContain('Hace')
       expect(date).toContain('minutos')
     })
 
@@ -84,7 +79,6 @@ describe('Utils', () => {
 
     it('should show in spanish', () => {
       const date = getTimeAgo(timestamp, 'es')
-      expect(date).toContain('Hace')
       expect(date).toContain('segundos')
     })
 

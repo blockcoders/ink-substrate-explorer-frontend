@@ -13,6 +13,7 @@ export const Header = () => {
   const { format } = useFormatIntl()
   const [title, setTitle] = useState('')
   const router = useRouter()
+
   useEffect(() => {
     const value: string = getTitle(router.pathname)
     setTitle(value)
@@ -28,16 +29,20 @@ export const Header = () => {
             title={<Image src={LanguageIcon} alt="language icon" width={20} height={20} />}
             id="input-group-dropdown-1"
           >
-            <Dropdown.Item>
-              <Link href={router.asPath} locale="en">
-                {format('english')}
-              </Link>
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <Link href={router.asPath} locale="es">
-                {format('spanish')}
-              </Link>
-            </Dropdown.Item>
+            {title && (
+              <>
+                <Dropdown.Item className="decoration-none">
+                  <Link href={router.asPath} locale="en">
+                    {format('english')}
+                  </Link>
+                </Dropdown.Item>
+                <Dropdown.Item className="decoration-none">
+                  <Link href={router.asPath} locale="es">
+                    {format('spanish')}
+                  </Link>
+                </Dropdown.Item>
+              </>
+            )}
           </DropdownButton>
         </InputGroup>
       </div>

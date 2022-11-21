@@ -30,3 +30,10 @@
         font-weight: 600;
     }
 }
+
+.decoration-none {
+  a {
+    text-decoration: none !important;
+    color: black
+  }
+}
