@@ -1,7 +1,9 @@
 import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { IntlProvider } from 'react-intl'
 import { contractsMocks } from '../../_mocks/contracts-mocks'
+import { messages } from '../../pages/_app'
 import Contracts from '../../pages/contracts'
 
 userEvent.setup()
@@ -24,9 +26,19 @@ jest.mock('../../generated', () => ({
   }),
 }))
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    locale: 'en',
+  })),
+}))
+
 describe('Contracts', () => {
   beforeEach(() => {
-    render(<Contracts />)
+    render(
+      <IntlProvider locale="en" messages={messages['en']}>
+        <Contracts />
+      </IntlProvider>,
+    )
   })
 
   it('should render 10 contracts', async () => {

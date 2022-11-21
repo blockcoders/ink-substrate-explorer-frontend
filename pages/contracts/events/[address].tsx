@@ -9,10 +9,12 @@ import sortIcon from '../../../assets/img/sort.svg'
 import { Loading } from '../../../components/Loading/Loading'
 import { GetEventsQuery, useGetEventsQuery } from '../../../generated'
 import { useToast } from '../../../hooks'
+import { useFormatIntl } from '../../../hooks/useFormatIntl'
 import { formatTimeAgo } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
 
 const Events: NextPage = () => {
+  const { format } = useFormatIntl()
   const router = useRouter()
   const address = router.query?.address as string
   const [pagination, setPagination] = useState({
@@ -51,17 +53,17 @@ const Events: NextPage = () => {
       <Row className="mb-5">
         <Col>
           <Link href={'/contracts/transactions/' + address}>
-            <button className="ink-button ink-button_violetligth">Transactions</button>
+            <button className="ink-button ink-button_violetligth">{format('transactions')}</button>
           </Link>
         </Col>
         <Col>
           <Link href={'/contracts/contract/' + address}>
-            <button className="ink-button ink-button_violetligth">Contract</button>
+            <button className="ink-button ink-button_violetligth">{format('contract')}</button>
           </Link>
         </Col>
         <Col>
           <Link href={'/contracts/events/' + address}>
-            <button className="ink-button ink-button_violet">Events</button>
+            <button className="ink-button ink-button_violet">{format('events')}</button>
           </Link>
         </Col>
       </Row>
@@ -70,15 +72,15 @@ const Events: NextPage = () => {
           <Table responsive hover className="ink_table">
             <thead>
               <tr>
-                <th>Index</th>
-                <th>Section</th>
-                <th>Method</th>
-                <th>Transaction Hash</th>
+                <th>{format('header_index')}</th>
+                <th>{format('header_section')}</th>
+                <th>{format('header_method')}</th>
+                <th>{format('header_tx_hash')}</th>
                 <th onClick={() => toogleOrder()} role="button" className="d-flex align-center gap-1">
                   <Image src={sortIcon} width={20} height={20} />
-                  Time
+                  {format('header_time')}
                 </th>
-                <th>More</th>
+                <th>{format('header_more')}</th>
               </tr>
             </thead>
             <tbody data-testid="tbody">
@@ -90,10 +92,10 @@ const Events: NextPage = () => {
                   <td className="black">
                     <Link href={'/transaction/details/' + event.transactionHash}>{event?.transactionHash}</Link>
                   </td>
-                  <td>{formatTimeAgo(event.timestamp)}</td>
+                  <td>{formatTimeAgo(event.timestamp, router.locale)}</td>
                   <td>
                     <span className="ink-button_showmore">
-                      <Link href={`/contracts/events/${address}/${event.id}`}> Show more</Link>
+                      <Link href={`/contracts/events/${address}/${event.id}`}>{format('show_more')}</Link>
                     </span>
                   </td>
                 </tr>

@@ -1,10 +1,12 @@
-import { useRouter } from 'next/dist/client/router'
 import Image from 'next/future/image'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import icon from '../../assets/img/search-icon.svg'
+import { useFormatIntl } from '../../hooks/useFormatIntl'
 
 function Searchbar() {
+  const { format } = useFormatIntl()
   const [selectedType, setSelectedType] = useState('type')
   const [search, setSearch] = useState('')
   const router = useRouter()
@@ -14,6 +16,7 @@ function Searchbar() {
   }
 
   const handleKeyPress = (e: any) => {
+    console.log('presiona')
     if (e.key === 'Enter') {
       handleSubmit()
     }
@@ -47,17 +50,18 @@ function Searchbar() {
                   value={selectedType}
                   onChange={change}
                 >
-                  <option value={'type'}>Search by...</option>
-                  <option value="transaction">Transaction Hash</option>
-                  <option value="block">Block Hash</option>
-                  <option value="contracts/transactions">Contract Address</option>
+                  <option value={'type'}>{format('search_by')}</option>
+                  <option value="transaction">{format('transaction_hash')}</option>
+                  <option value="block">{format('block_hash')}</option>
+                  <option value="contracts/transactions">{format('contract_address')}</option>
                 </select>
               </span>
               <input
                 type="text"
+                aria-label="search input"
                 className="form-control ink_searchbar-input"
-                placeholder="Contract Address, Tx Hash, Block Hash"
-                onKeyPress={handleKeyPress}
+                placeholder={format('search_placeholder')}
+                onKeyPress={(e) => handleKeyPress(e.key)}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -65,6 +69,7 @@ function Searchbar() {
                 className="btn btn-outline-secondary ink_searchbar-icon"
                 type="button"
                 id="search"
+                role="search-btn"
                 onClick={handleSubmit}
               >
                 <Image src={icon} alt="Icon" />

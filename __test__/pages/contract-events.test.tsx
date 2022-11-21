@@ -3,6 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { contractEventsMocks } from '../../_mocks/contracts-mocks'
 import ContractTransactions from '../../pages/contracts/events/[address]'
+import { IntlProvider } from 'react-intl'
+import { messages } from '../../pages/_app'
 
 userEvent.setup()
 
@@ -32,9 +34,19 @@ jest.mock('../../generated', () => ({
   }),
 }))
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    locale: 'en',
+  })),
+}))
+
 describe('Contract Events', () => {
   beforeEach(() => {
-    render(<ContractTransactions />)
+    render(
+      <IntlProvider locale="en" messages={messages['en']}>
+        <ContractTransactions />
+      </IntlProvider>,
+    )
   })
 
   it('should render 5 transactions', async () => {

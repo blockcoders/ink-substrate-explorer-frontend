@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event'
 import { oneBlockMock } from '../../_mocks/block-mocks'
 import { formatTimeAgo } from '../../lib/utils'
 import BlockDetails from '../../pages/block/details/[hash]'
+import { IntlProvider } from 'react-intl'
+import { messages } from '../../pages/_app'
 
 userEvent.setup()
 
@@ -40,9 +42,19 @@ jest.mock('../../generated', () => ({
   }),
 }))
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    locale: 'en',
+  })),
+}))
+
 describe('Block details', () => {
   beforeEach(() => {
-    render(<BlockDetails />)
+    render(
+      <IntlProvider locale="en" messages={messages['en']}>
+        <BlockDetails />
+      </IntlProvider>,
+    )
   })
 
   it('should show block info', async () => {
@@ -50,7 +62,7 @@ describe('Block details', () => {
 
     expect(blockInfo.children[0].children[1].innerHTML).toContain(oneBlockMock.number.toString())
     expect(blockInfo.children[1].children[1].innerHTML).toContain(oneBlockMock.hash)
-    expect(blockInfo.children[2].children[1].innerHTML).toContain(formatTimeAgo(oneBlockMock.timestamp))
+    expect(blockInfo.children[2].children[1].innerHTML).toContain(formatTimeAgo(oneBlockMock.timestamp, 'en'))
     expect(blockInfo.children[3].children[1].innerHTML).toContain(oneBlockMock.parentHash)
     expect(blockInfo.children[4].children[1].innerHTML).toContain(`${oneBlockMock.encodedLength} bytes`)
   })

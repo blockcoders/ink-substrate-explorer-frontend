@@ -1,6 +1,8 @@
 import '@testing-library/jest-dom'
-import { renderHook } from '@testing-library/react'
+import { render, renderHook } from '@testing-library/react'
+import { IntlProvider } from 'react-intl'
 import { useToast } from '../../hooks'
+import { messages } from '../../pages/_app'
 
 const dismissMock = jest.fn()
 const successMock = jest.fn()
@@ -16,7 +18,17 @@ jest.mock('react-toastify', () => ({
   },
 }))
 
+jest.mock('../../hooks/useFormatIntl', () => ({
+  useFormatIntl: jest.fn(() => ({
+    format: jest.fn(),
+  })),
+}))
+
 describe('useToast', () => {
+  beforeEach(() => {
+    render(<IntlProvider locale="en" messages={messages['en']}></IntlProvider>)
+  })
+
   it('should call success toast', () => {
     const { result } = renderHook(() => useToast())
 

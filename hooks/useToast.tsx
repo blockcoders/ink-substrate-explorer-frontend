@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify'
+import { useFormatIntl } from './useFormatIntl'
 
 const toastCommonProps = {
   style: {
@@ -8,6 +9,8 @@ const toastCommonProps = {
 }
 
 export const useToast = () => {
+  const { format } = useFormatIntl()
+
   const showSuccessToast = (message: string) => {
     toast.dismiss()
     toast.success(message, {
@@ -26,7 +29,7 @@ export const useToast = () => {
 
   const showLoadingToast = () => {
     toast.dismiss()
-    toast.loading('Loading', {
+    toast.loading(format('loading'), {
       autoClose: false,
       toastId: 'toast-loading',
       ...toastCommonProps,

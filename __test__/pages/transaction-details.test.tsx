@@ -1,8 +1,10 @@
 import '@testing-library/jest-dom'
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { IntlProvider } from 'react-intl'
 import { oneTransactionMck } from '../../_mocks/transactions-mocks'
 import { formatTimeAgo } from '../../lib/utils'
+import { messages } from '../../pages/_app'
 import TransactionDetails from '../../pages/transaction/details/[hash]'
 
 userEvent.setup()
@@ -12,6 +14,7 @@ jest.mock('next/router', () => ({
     query: {
       hash: oneTransactionMck.hash,
     },
+    locale: 'en',
   }),
 }))
 
@@ -29,7 +32,11 @@ describe('Transaction details', () => {
   let element: HTMLElement
 
   beforeEach(() => {
-    const { container } = render(<TransactionDetails />)
+    const { container } = render(
+      <IntlProvider locale="en" messages={messages['en']}>
+        <TransactionDetails />
+      </IntlProvider>,
+    )
     element = container
   })
 
@@ -38,7 +45,7 @@ describe('Transaction details', () => {
 
     expect(txInfo.children[0].children[1].innerHTML).toContain(oneTransactionMck.hash)
     expect(txInfo.children[1].children[1].innerHTML).toContain(oneTransactionMck.blockHash)
-    expect(txInfo.children[2].children[1].innerHTML).toContain(formatTimeAgo(oneTransactionMck.timestamp))
+    expect(txInfo.children[2].children[1].innerHTML).toContain(formatTimeAgo(oneTransactionMck.timestamp, 'en'))
     expect(txInfo.children[3].children[1].innerHTML).toContain(oneTransactionMck.section)
     expect(txInfo.children[4].children[1].innerHTML).toContain(oneTransactionMck.method)
     expect(txInfo.children[5].children[1].innerHTML).toContain(oneTransactionMck.signer)

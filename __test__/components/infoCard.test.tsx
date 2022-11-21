@@ -33,10 +33,17 @@ jest.mock('binance-api-node', () => {
   }
 })
 
-// jest.mock('react', () => ({
-//   ...jest.requireActual('react'),
-//   useState: () => [price, () => ''],
-// }))
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    locale: 'en',
+  })),
+}))
+
+jest.mock('../../hooks/useFormatIntl', () => ({
+  useFormatIntl: jest.fn(() => ({
+    format: jest.fn(() => 'Latest Block'),
+  })),
+}))
 
 describe('InfoCard', () => {
   it('show render', async () => {

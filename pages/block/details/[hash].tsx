@@ -15,10 +15,12 @@ import {
   useGetTransactionsByBlockQuery,
 } from '../../../generated'
 import { useToast } from '../../../hooks'
+import { useFormatIntl } from '../../../hooks/useFormatIntl'
 import { formatTimeAgo, showShortHash } from '../../../lib/utils'
 import withApollo from '../../../lib/withApollo'
 
 const Block: NextPage = () => {
+  const { format } = useFormatIntl()
   const router = useRouter()
   const hash = router.query?.hash as string
   const { data, loading, error } = useGetBlockQuery({ variables: { hash } })
@@ -56,7 +58,7 @@ const Block: NextPage = () => {
         <Col className="mb-4 d-flex align-items-center">
           <BackButton />
           <h4 className="d-flex gap-4 align-items-center">
-            <b>Summary</b>
+            <b>{format('summary')}</b>
             {loading && <Loading />}
           </h4>
         </Col>
@@ -66,11 +68,11 @@ const Block: NextPage = () => {
           <Table className="ink_table">
             <tbody data-testid="tbody-block">
               <tr>
-                <td className="black">Number</td>
+                <td className="black">{format('header_number')}</td>
                 <td>{block.number}</td>
               </tr>
               <tr>
-                <td className="black">Hash</td>
+                <td className="black">{format('header_hash')}</td>
                 <td>
                   <Link href={'/block/details/' + block.hash}>
                     <a>{block.hash}</a>
@@ -78,11 +80,11 @@ const Block: NextPage = () => {
                 </td>
               </tr>
               <tr>
-                <td className="black">Timestamp</td>
-                <td>{formatTimeAgo(block.timestamp)}</td>
+                <td className="black">{format('header_timestamp')}</td>
+                <td>{formatTimeAgo(block.timestamp, router.locale)}</td>
               </tr>
               <tr>
-                <td className="black">Parent</td>
+                <td className="black">{format('header_parent')}</td>
                 <td>
                   <Link href={'/block/details/' + block.parentHash}>
                     <a>{block.parentHash}</a>
@@ -90,7 +92,7 @@ const Block: NextPage = () => {
                 </td>
               </tr>
               <tr>
-                <td className="black">Size</td>
+                <td className="black">{format('header_size')}</td>
                 <td>{block.encodedLength} bytes</td>
               </tr>
             </tbody>
@@ -102,15 +104,15 @@ const Block: NextPage = () => {
           <Table responsive hover className="ink_table">
             <thead>
               <tr>
-                <th>Tx Hash</th>
-                <th>Block</th>
+                <th>{format('header_tx_hash')}</th>
+                <th>{format('header_block')}</th>
                 <th onClick={() => toogleOrder()} role="button" className="d-flex align-center gap-1">
                   <Image src={sortIcon} width={20} height={20} />
-                  Time
+                  {format('header_time')}
                 </th>
-                <th>Method</th>
-                <th>Section</th>
-                <th>Signer</th>
+                <th>{format('header_method')}</th>
+                <th>{format('header_section')}</th>
+                <th>{format('header_signer')}</th>
               </tr>
             </thead>
             <tbody data-testid="tbody-tx">
@@ -124,7 +126,7 @@ const Block: NextPage = () => {
                       {showShortHash(transaction.blockHash || '')}
                     </Link>
                   </td>
-                  <td>{formatTimeAgo(transaction.timestamp)}</td>
+                  <td>{formatTimeAgo(transaction.timestamp, router.locale)}</td>
                   <td>{transaction.method}</td>
                   <td>{transaction.section}</td>
                   <td className="black">{transaction.signer}</td>

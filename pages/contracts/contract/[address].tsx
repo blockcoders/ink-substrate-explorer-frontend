@@ -13,6 +13,7 @@ import verifed from '../../../assets/img/verifed.svg'
 import LoadingButton from '../../../components/LoadingButton/LoadingButton'
 import { useGetContractQueriesQuery, GetContractQueriesQuery, useUploadMetadataMutation } from '../../../generated'
 import { useLoading, useToast } from '../../../hooks'
+import { useFormatIntl } from '../../../hooks/useFormatIntl'
 import { useSendingTx } from '../../../hooks/useSendingTx'
 import withApollo from '../../../lib/withApollo'
 
@@ -32,6 +33,7 @@ const getArgType = (arg: string) => {
 }
 
 const Contract: NextPage = () => {
+  const { format } = useFormatIntl()
   const router = useRouter()
   const address = router.query?.address as string
   const { isLoading, startLoading, endLoading } = useLoading()
@@ -145,7 +147,7 @@ const Contract: NextPage = () => {
     showLoadingToast()
     try {
       await uploadMetadataMutation({ variables: { contractAddress: address, metadata: base64Abi } })
-      showSuccessToast('Successful upload')
+      showSuccessToast(format('successful_upload'))
       setBase64Abi('')
       refetch()
     } catch (error) {
@@ -159,7 +161,7 @@ const Contract: NextPage = () => {
     const { web3Accounts, web3Enable, web3FromAddress } = extension
     const extensions = await web3Enable('Ink! Explorer')
     if (extensions?.length === 0) {
-      showErrorToast('No extension installed!')
+      showErrorToast(format('no_extension_installed'))
       return
     }
     const accounts = await web3Accounts()
@@ -178,12 +180,12 @@ const Contract: NextPage = () => {
       const api = await connect(WS_PROVIDER)
       const { metadata } = contract || {}
       if (!metadata) {
-        throw new Error('Contract metadata not found')
+        throw new Error(format('contract_metadata_not_found'))
       }
       const abi = new Abi(metadata)
       const { query, tx } = getContractInstance(api, abi, address, method)
       if (!query || !tx) {
-        throw new Error('Query/Transaction method not found')
+        throw new Error(format('query_not_found'))
       }
       const values: string[] = Object.values(parameters[method]) || []
       if (query?.meta?.isMutating) {
@@ -277,30 +279,30 @@ const Contract: NextPage = () => {
       <Row className="mb-5">
         <Col>
           <Link href={'/contracts/transactions/' + address}>
-            <button className="ink-button ink-button_violetligth">Transactions</button>
+            <button className="ink-button ink-button_violetligth">{format('transactions')}</button>
           </Link>
         </Col>
         <Col>
           <Link href={'/contracts/contract/' + address}>
-            <button className="ink-button ink-button_violet">Contract</button>
+            <button className="ink-button ink-button_violet">{format('contract')}</button>
           </Link>
         </Col>
         <Col>
           <Link href={'/contracts/events/' + address}>
-            <button className="ink-button ink-button_violetligth">Events</button>
+            <button className="ink-button ink-button_violetligth">{format('events')}</button>
           </Link>
         </Col>
       </Row>
       <Row>
         <Col>
           <Tabs className="mb-3 ink-tab" defaultActiveKey="contractAbi">
-            <Tab className="ink-tab_button" eventKey="contractAbi" title="Contract ABI">
+            <Tab className="ink-tab_button" eventKey="contractAbi" title={format('contract_abi')}>
               <Row>
                 <Col className="my-3" xs={12}>
                   {contract?.metadata && (
                     <>
                       <Image src={verifed} alt="Icon" />
-                      <b> Contract ABI Verified</b>
+                      <b>{format('contract_abi_verified')}</b>
                     </>
                   )}
                 </Col>
@@ -309,19 +311,19 @@ const Contract: NextPage = () => {
                     className="form-control"
                     rows={15}
                     placeholder="No metadata found. Upload your contract metadata to verify your contract."
-                    value={contract?.metadata || 'Not found'}
+                    value={contract?.metadata || format('not_found')}
                     readOnly
                   ></textarea>
                 </Col>
               </Row>
             </Tab>
-            <Tab className="ink-tab_button" eventKey="uploadAbi" title="Upload ABI">
+            <Tab className="ink-tab_button" eventKey="uploadAbi" title={format('upload_abi')}>
               <Row>
                 <Col xs="12" className="mt-3">
                   <textarea
                     className="form-control"
                     rows={12}
-                    placeholder="Plase upload the metadata of the contract in a Base64 encoded format."
+                    placeholder={format('upload_placeholder')}
                     onChange={(e) => setBase64Abi(e.target.value)}
                     value={base64Abi || ''}
                   ></textarea>
@@ -332,12 +334,12 @@ const Contract: NextPage = () => {
                     isLoading={isLoading}
                     className="ink-button ink-button_violet mt-3"
                     onClick={uploadAbi}
-                    text="Upload"
+                    text={format('upload')}
                   />
                 </Col>
               </Row>
             </Tab>
-            <Tab className="ink-tab_button" eventKey="Read" title="Run contract methods">
+            <Tab className="ink-tab_button" eventKey="Read" title={format('run_contract_methods')}>
               <Row>
                 <Col className="my-5">
                   {contract?.queries && contract?.queries?.length > 0 ? (
@@ -350,7 +352,7 @@ const Contract: NextPage = () => {
                             {query?.args?.length > 0 && (
                               <Row className="my-3">
                                 <Col xs="12">
-                                  <b>Method Arguments</b>
+                                  <b>{format('method_arguments')}</b>
                                 </Col>
                               </Row>
                             )}
@@ -378,7 +380,7 @@ const Contract: NextPage = () => {
                                   className="ink-button ink-button_small"
                                   onClick={() => setShowOptions(!showOptions)}
                                 >
-                                  {showOptions ? 'Hide Options' : 'Show Options'}
+                                  {showOptions ? format('hide_options') : format('show_options')}
                                 </button>
                               </Col>
                             </Row>
@@ -386,7 +388,7 @@ const Contract: NextPage = () => {
                               <>
                                 <Row key={`gasLimit-${index}`} className="my-3">
                                   <Col xs="12">
-                                    <b>gasLimit</b>
+                                    <b>{format('gas_limit')}</b>
                                     <input
                                       type="text"
                                       className="form-control ink_searchbar-input"
@@ -399,7 +401,7 @@ const Contract: NextPage = () => {
                                 </Row>
                                 <Row key={`storageLimit-${index}`} className="my-3">
                                   <Col xs="12">
-                                    <b>storageLimit</b>
+                                    <b>{format('storage_limit')}</b>
                                     <input
                                       type="text"
                                       className="form-control ink_searchbar-input"
@@ -411,7 +413,7 @@ const Contract: NextPage = () => {
                                 </Row>
                                 <Row key={`value-${index}`} className="my-3">
                                   <Col xs="12">
-                                    <b>value</b>
+                                    <b>{format('value')}</b>
                                     <input
                                       type="text"
                                       className="form-control ink_searchbar-input"
@@ -435,7 +437,7 @@ const Contract: NextPage = () => {
                                   <>
                                     <Row className="my-3">
                                       <Col xs="12">
-                                        <b>Result</b>
+                                        <b>{format('result')}</b>
                                       </Col>
                                     </Row>
 
@@ -474,7 +476,7 @@ const Contract: NextPage = () => {
                     <>
                       <Row>
                         <Col xs="12" className="my-3 text-center">
-                          <p> No queries found. Try uploading the metadata for this contract.</p>
+                          <p>{format('no_queries_found')}</p>
                         </Col>
                       </Row>
                     </>
