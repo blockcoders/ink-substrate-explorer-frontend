@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/21**
+- [#9](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/9) fix language routes build
+
 ## 1.0.2
 Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/21**
 - [#8](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/8) Feature/add switch language
