@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/21**
+- [#8](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/8) Feature/add switch language
+- [#7](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/6) fix tests
+
 ## 1.0.1
 Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/17**
 - [#6](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/6) Fix dependencies
