@@ -7,11 +7,9 @@ networks:
 
 services:
   frontend:
-    image: blockcoders/ink-substrate-explorer-frontend:latest
-    restart: on-failure
-    #build:
-    #  context: .
-    #  dockerfile: Dockerfile
+    build:
+     context: .
+     dockerfile: dev.Dockerfile
     expose:
       - "3000"
     ports:
