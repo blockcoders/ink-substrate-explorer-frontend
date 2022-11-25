@@ -3,9 +3,11 @@ import { get } from 'lodash'
 import Image from 'next/future/image'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
 import time from '../../assets/img/bxs_time.svg'
 import coin from '../../assets/img/ph_coin-vertical-fill.svg'
 import { useGetLastBlockQuery, GetLastBlockQuery, useVersionQuery, VersionQuery } from '../../generated'
+import { useGetSyncQuery } from '../../generated/index'
 import { useFormatIntl } from '../../hooks/useFormatIntl'
 import { getTimeAgo } from '../../lib/utils'
 import withApollo from '../../lib/withApollo'
@@ -17,6 +19,10 @@ function InfoCard() {
   const { data } = useGetLastBlockQuery({ variables: { skip: 0, take: 1 } })
   const blocks = get(data, 'getBlocks', []) as GetLastBlockQuery['getBlocks']
   const { data: versionData } = useVersionQuery()
+  const { data: syncData, refetch } = useGetSyncQuery()
+  const [sync, setSync] = useState<any>()
+  const [isSyncing, setIsSyncing] = useState(false)
+  const [syncingFromBlock, setSyncingFromBlock] = useState(0)
   const version = get(versionData, 'version', []) as VersionQuery['version']
   const token = 'DOT'
 
@@ -32,6 +38,44 @@ function InfoCard() {
         console.log(err)
       })
   }, [])
+
+  useEffect(() => {
+    if (syncData) {
+      setSync(syncData?.getSync)
+      if (!syncingFromBlock) setSyncingFromBlock(syncData?.getSync?.lastSynced)
+    }
+  }, [syncData, syncingFromBlock])
+
+  useEffect(() => {
+    if (sync) {
+      if (sync?.status) {
+        if (sync?.status?.toLocaleLowerCase().includes('syncing')) {
+          setIsSyncing(true)
+          toast.info(`${format('syncing')} ${syncingFromBlock}...`, {
+            position: 'bottom-right',
+            isLoading: true,
+            closeButton: false,
+            draggable: false,
+            autoClose: false,
+            closeOnClick: false,
+            toastId: 'syncing',
+          })
+
+          setTimeout(() => {
+            refetch()
+          }, 60000)
+        } else if (isSyncing) {
+          toast.dismiss()
+          toast.success(format('all_block_synced'), {
+            position: 'bottom-right',
+            closeOnClick: false,
+            toastId: 'synced',
+          })
+        }
+      }
+    }
+  }, [sync, isSyncing, syncingFromBlock])
+
   return (
     <>
       <div className="ink_infocard">

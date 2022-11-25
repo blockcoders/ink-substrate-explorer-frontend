@@ -16,7 +16,6 @@ function Searchbar() {
   }
 
   const handleKeyPress = (e: any) => {
-    console.log('presiona')
     if (e.key === 'Enter') {
       handleSubmit()
     }

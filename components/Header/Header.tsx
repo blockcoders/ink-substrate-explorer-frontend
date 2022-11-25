@@ -5,11 +5,12 @@ import { useEffect, useState } from 'react'
 import { Col, Dropdown, DropdownButton, InputGroup, Row } from 'react-bootstrap'
 import LanguageIcon from '../../assets/img/language.svg'
 import { useFormatIntl } from '../../hooks/useFormatIntl'
+import withApollo from '../../lib/withApollo'
 import { getTitle } from '../../utils/pagetitile'
 import InfoCard from '../InfoCard/InfoCard'
 import Searchbar from '../SearchBar/SearchBar'
 
-export const Header = () => {
+export const Header = withApollo(() => {
   const { format } = useFormatIntl()
   const [title, setTitle] = useState('')
   const router = useRouter()
@@ -60,4 +61,4 @@ export const Header = () => {
       </Col>
     </>
   )
-}
+})

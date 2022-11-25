@@ -210,3 +210,11 @@ export const DECODE_EVENT_MUTATION = gql`
     decodeEvent(contractAddress: $contractAddress, id: $id)
   }
 `
+export const GET_SYNC_QUERY = gql`
+  query getSync {
+    getSync {
+      lastSynced
+      status
+    }
+  }
+`
