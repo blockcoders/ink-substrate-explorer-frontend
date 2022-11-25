@@ -26,6 +26,7 @@ jest.mock('../../generated', () => ({
       data: {
         getBlocks: getBlocks.slice(variables?.skip || 0, variables?.skip + variables?.take || 10),
       },
+      loading: true,
     }
   }),
 }))
