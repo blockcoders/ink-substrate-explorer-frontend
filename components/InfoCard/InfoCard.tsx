@@ -20,7 +20,6 @@ function InfoCard() {
   const blocks = get(data, 'getBlocks', []) as GetLastBlockQuery['getBlocks']
   const { data: versionData } = useVersionQuery()
   const { data: syncData, refetch } = useGetSyncQuery()
-  const [sync, setSync] = useState<any>()
   const [isSyncing, setIsSyncing] = useState(false)
   const [syncingFromBlock, setSyncingFromBlock] = useState(0)
   const version = get(versionData, 'version', []) as VersionQuery['version']
@@ -41,15 +40,11 @@ function InfoCard() {
 
   useEffect(() => {
     if (syncData) {
-      setSync(syncData?.getSync)
+      const data = syncData.getSync
       if (!syncingFromBlock) setSyncingFromBlock(syncData?.getSync?.lastSynced)
-    }
-  }, [syncData, syncingFromBlock])
 
-  useEffect(() => {
-    if (sync) {
-      if (sync?.status) {
-        if (sync?.status?.toLocaleLowerCase().includes('syncing')) {
+      if (data?.status) {
+        if (data?.status?.toLocaleLowerCase().includes('syncing') && syncingFromBlock) {
           setIsSyncing(true)
           toast.info(`${format('syncing')} ${syncingFromBlock}...`, {
             position: 'bottom-right',
@@ -74,7 +69,7 @@ function InfoCard() {
         }
       }
     }
-  }, [sync, isSyncing, syncingFromBlock])
+  }, [syncData, syncingFromBlock])
 
   return (
     <>

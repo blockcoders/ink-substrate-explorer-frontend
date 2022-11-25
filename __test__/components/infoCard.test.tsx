@@ -23,7 +23,10 @@ jest.mock('../../generated', () => ({
   useGetSyncQuery: jest.fn(() => {
     return {
       data: {
-        lastSynced: 100,
+        getSync: {
+          status: 'syncing',
+          lastSynced: 100,
+        },
       },
       refetch: jest.fn(),
     }
