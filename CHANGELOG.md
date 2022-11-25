@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4
+Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/25**
+- [#10](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/10) add syncing toast
+
 ## 1.0.3
 Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/21**
 - [#9](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/9) fix language routes build
