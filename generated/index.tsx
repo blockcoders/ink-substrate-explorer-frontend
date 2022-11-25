@@ -96,6 +96,7 @@ export type Query = {
   getContracts: Array<Contract>;
   getEvent: Event;
   getEvents: Array<Event>;
+  getSync: Sync;
   getTransaction: Transaction;
   getTransactions: Array<Transaction>;
   getTransactionsByContract: Array<Transaction>;
@@ -165,6 +166,14 @@ export type QueryGetTransactionsByContractArgs = {
   orderAsc?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+export type Sync = {
+  __typename?: 'Sync';
+  id: Scalars['Float'];
+  lastSynced: Scalars['Float'];
+  status: Scalars['String'];
+  timestamp: Scalars['String'];
 };
 
 export type Transaction = {
@@ -304,6 +313,11 @@ export type DecodeEventMutationVariables = Exact<{
 
 
 export type DecodeEventMutation = { __typename?: 'Mutation', decodeEvent: string };
+
+export type GetSyncQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSyncQuery = { __typename?: 'Query', getSync: { __typename?: 'Sync', lastSynced: number, status: string } };
 
 
 export const GetBlocksDocument = gql`
@@ -936,3 +950,38 @@ export function useDecodeEventMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DecodeEventMutationHookResult = ReturnType<typeof useDecodeEventMutation>;
 export type DecodeEventMutationResult = Apollo.MutationResult<DecodeEventMutation>;
 export type DecodeEventMutationOptions = Apollo.BaseMutationOptions<DecodeEventMutation, DecodeEventMutationVariables>;
+export const GetSyncDocument = gql`
+    query getSync {
+  getSync {
+    lastSynced
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetSyncQuery__
+ *
+ * To run a query within a React component, call `useGetSyncQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSyncQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSyncQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetSyncQuery(baseOptions?: Apollo.QueryHookOptions<GetSyncQuery, GetSyncQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSyncQuery, GetSyncQueryVariables>(GetSyncDocument, options);
+      }
+export function useGetSyncLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSyncQuery, GetSyncQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSyncQuery, GetSyncQueryVariables>(GetSyncDocument, options);
+        }
+export type GetSyncQueryHookResult = ReturnType<typeof useGetSyncQuery>;
+export type GetSyncLazyQueryHookResult = ReturnType<typeof useGetSyncLazyQuery>;
+export type GetSyncQueryResult = Apollo.QueryResult<GetSyncQuery, GetSyncQueryVariables>;

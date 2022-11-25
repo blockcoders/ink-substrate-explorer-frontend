@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { contractTransactionsMocks } from '../../_mocks/contracts-mocks'
-import ContractTransactions from '../../pages/contracts/transactions/[address]'
 import { IntlProvider } from 'react-intl'
+import { contractTransactionsMocks } from '../../_mocks/contracts-mocks'
 import { messages } from '../../pages/_app'
+import ContractTransactions from '../../pages/contracts/transactions/[address]'
 
 userEvent.setup()
 
@@ -83,6 +83,14 @@ describe('Contract transactions', () => {
     const nextBtn = await screen.getByTestId('next-btn')
     await fireEvent.click(nextBtn)
 
+    const prevBtn = await screen.getByTestId('prev-btn')
+    await fireEvent.click(prevBtn)
+
+    const tbody = await screen.getByTestId('tbody')
+    expect(tbody.children.length).toBe(5)
+  })
+
+  it('should show first page', async () => {
     const prevBtn = await screen.getByTestId('prev-btn')
     await fireEvent.click(prevBtn)
 

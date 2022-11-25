@@ -20,6 +20,17 @@ jest.mock('../../generated', () => ({
       data: { version },
     }
   }),
+  useGetSyncQuery: jest.fn(() => {
+    return {
+      data: {
+        getSync: {
+          status: 'syncing',
+          lastSynced: 100,
+        },
+      },
+      refetch: jest.fn(),
+    }
+  }),
 }))
 
 jest.mock('binance-api-node', () => {

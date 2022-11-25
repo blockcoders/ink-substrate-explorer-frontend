@@ -97,4 +97,7 @@ export const es = {
 
   english: 'Inglés',
   spanish: 'Español',
+
+  syncing: 'Sincronizando desde bloque',
+  all_block_synced: 'Todos los bloques fueron sincronizados',
 }
