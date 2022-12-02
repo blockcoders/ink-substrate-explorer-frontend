@@ -100,4 +100,7 @@ export const es = {
 
   syncing: 'Sincronizando desde bloque',
   all_block_synced: 'Todos los bloques fueron sincronizados',
+
+  'deploy-contract': 'Subir Contrato',
+  'deploy contract': 'Subir Contrato',
 }

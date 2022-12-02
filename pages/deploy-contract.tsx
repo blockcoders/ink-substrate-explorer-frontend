@@ -1,12 +1,17 @@
 import { Abi, CodePromise } from '@polkadot/api-contract'
 import React, { useRef, useState, useEffect } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
+import LoadingButton from '../components/LoadingButton/LoadingButton'
+import { useToast } from '../hooks'
+import { useLoading } from '../hooks/useLoading'
 import { useSendingTx } from '../hooks/useSendingTx'
 
 const WS_PROVIDER = 'ws://127.0.0.1:9944'
 
 export default function DeployContract() {
   const { connect } = useSendingTx()
+  const { showErrorToast } = useToast()
+  const { isLoading, endLoading, startLoading } = useLoading()
 
   const fileRef = useRef(null)
   const [file, setFile] = useState(null)
@@ -14,7 +19,7 @@ export default function DeployContract() {
   const [constructorParams, setConstructorParams] = useState([])
   const [deployOptions, setDeployOptions] = useState({
     salt: '',
-    gasLimit: 0,
+    gasLimit: 200000,
     storageDepositLimit: 0,
     value: 0,
   })
@@ -49,7 +54,7 @@ export default function DeployContract() {
 
   const onSubmit = async () => {
     if (!metadata) return
-
+    startLoading()
     try {
       const { web3FromAddress, web3Accounts, web3Enable } = await import('@polkadot/extension-dapp')
 
@@ -62,9 +67,9 @@ export default function DeployContract() {
       const codeOrBlueprint = new CodePromise(api, metadata, wasm && wasm.toU8a?.())
 
       const options = {
-        gasLimit: 1104389514,
+        gasLimit: deployOptions.gasLimit,
         salt: null,
-        storageDepositLimit: undefined,
+        storageDepositLimit: deployOptions.storageDepositLimit || undefined,
         value: undefined,
       }
 
@@ -77,7 +82,9 @@ export default function DeployContract() {
       const injector = await web3FromAddress(accountId as any)
       const account = accountId
 
-      const tx = codeOrBlueprint.tx[constructor.method](options, 1000)
+      const params = constructorParams.map((el) => el.value)
+
+      const tx = codeOrBlueprint.tx[constructor.method](options, ...params)
       const sub = await tx.signAndSend(account, { signer: injector?.signer || undefined })
 
       setResult({
@@ -85,14 +92,24 @@ export default function DeployContract() {
         status: 'success',
         data: sub.toHuman()?.toString() || '',
       })
+
+      setDeployOptions({
+        salt: '',
+        gasLimit: 0,
+        storageDepositLimit: 0,
+        value: 0,
+      })
+
+      setFile(null)
     } catch (error) {
-      console.log(error)
+      showErrorToast(error as string)
       setResult({
         error: true,
         status: 'error',
         data: String(error),
       })
     }
+    endLoading()
   }
 
   useEffect(() => {
@@ -108,6 +125,17 @@ export default function DeployContract() {
 
     setConstructorParams(params)
   }, [metadata])
+
+  const updateConstructorParams = (index: number, value: any) => {
+    setConstructorParams((state) => state.map((p, _index) => (_index === index ? { ...p, value } : p)))
+  }
+
+  const updateDeployOptions = (name: string, value: any) => {
+    setDeployOptions((state) => ({
+      ...state,
+      [name]: value,
+    }))
+  }
 
   return (
     <>
@@ -127,8 +155,8 @@ export default function DeployContract() {
             {metadata?.constructors[0]?.args.length > 0 && (
               <>
                 <p className="mb-0">constructor: </p>
-                {constructorParams?.map((c) => (
-                  <Row className="mb-2">
+                {constructorParams?.map((c, index) => (
+                  <Row key={index.toString()} className="mb-2">
                     <Col xs="12">
                       <b>
                         {c.name} : {c?.type?.type}
@@ -136,10 +164,8 @@ export default function DeployContract() {
                       <input
                         type="text"
                         className="form-control"
-                        value={c.value}
-                        // onChange={(e) => {
-                        //   updateOptions(query.method, 'value', e.target.value)
-                        // }}
+                        value={c.value || ''}
+                        onChange={({ target }) => updateConstructorParams(index, target.value)}
                       />
                     </Col>
                   </Row>
@@ -154,9 +180,7 @@ export default function DeployContract() {
                   type="text"
                   className="form-control"
                   value={deployOptions.gasLimit}
-                  // onChange={(e) => {
-                  //   updateOptions(query.method, 'value', e.target.value)
-                  // }}
+                  onChange={({ target }) => updateDeployOptions('gasLimit', target.value)}
                 />
               </Col>
             </Row>
@@ -167,16 +191,14 @@ export default function DeployContract() {
                   type="text"
                   className="form-control"
                   value={deployOptions.storageDepositLimit}
-                  // onChange={(e) => {
-                  //   updateOptions(query.method, 'value', e.target.value)
-                  // }}
+                  onChange={({ target }) => updateDeployOptions('storageDepositLimit', target.value)}
                 />
               </Col>
             </Row>
 
             <Row className="mb-4">
               <Col xs="12">
-                <Button onClick={onSubmit}>submit</Button>
+                <LoadingButton isLoading={isLoading} disabled={isLoading} onClick={onSubmit} text="submit" />
               </Col>
             </Row>
           </>

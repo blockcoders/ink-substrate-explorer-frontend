@@ -16,5 +16,11 @@
         "value": "contract",
         "img": "contract.svg",
         "route": "/contracts"
-    }
+    },
+    {
+      "label": "Deploy Contract",
+      "value": "deploy",
+      "img": "contract.svg",
+      "route": "/deploy-contract"
+  }
 ]

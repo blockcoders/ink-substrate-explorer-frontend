@@ -100,4 +100,7 @@ export const en = {
 
   syncing: 'Syncing from block',
   all_block_synced: 'All blocks synced',
+
+  'deploy-contract': 'Deploy Contract',
+  'deploy contract': 'Deploy Contrato',
 }
