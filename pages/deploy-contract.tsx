@@ -1,4 +1,5 @@
 import { Abi, CodePromise } from '@polkadot/api-contract'
+import { BN } from '@polkadot/util'
 import React, { useRef, useState, useEffect } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
 import LoadingButton from '../components/LoadingButton/LoadingButton'
@@ -8,6 +9,32 @@ import { useSendingTx } from '../hooks/useSendingTx'
 
 const WS_PROVIDER = 'ws://127.0.0.1:9944'
 
+interface DeployState {
+  salt?: string
+  gasLimit: number
+  storageDepositLimit: number
+  value?: number
+}
+
+interface ConstructorState {
+  name: string
+  value: any
+  type: string
+}
+
+interface Metadata {
+  accountId: string
+  argValues?: Record<string, unknown>
+  value?: BN
+  metadata?: Abi
+  name: string
+  constructorIndex: number
+  salt?: string
+  storageDepositLimit?: BN
+  weight: BN
+  codeHash?: string
+}
+
 export default function DeployContract() {
   const { connect } = useSendingTx()
   const { showErrorToast } = useToast()
@@ -15,9 +42,9 @@ export default function DeployContract() {
 
   const fileRef = useRef(null)
   const [file, setFile] = useState(null)
-  const [metadata, setMetadata] = useState<any>(null)
-  const [constructorParams, setConstructorParams] = useState([])
-  const [deployOptions, setDeployOptions] = useState({
+  const [metadata, setMetadata] = useState<Abi | null>(null)
+  const [constructorParams, setConstructorParams] = useState<ConstructorState[]>([])
+  const [deployOptions, setDeployOptions] = useState<DeployState>({
     salt: '',
     gasLimit: 200000,
     storageDepositLimit: 0,
@@ -120,10 +147,10 @@ export default function DeployContract() {
     const params = metadata?.constructors[0]?.args?.map((c) => ({
       name: c.name,
       value: '',
-      type: c.type,
+      type: c.type.type,
     }))
 
-    setConstructorParams(params)
+    setConstructorParams(params || [])
   }, [metadata])
 
   const updateConstructorParams = (index: number, value: any) => {
@@ -150,7 +177,7 @@ export default function DeployContract() {
             onChange={({ target }) => onChangeFile(target.files?.[0] || null)}
           />
         </div>
-        {metadata?.json && (
+        {metadata && (
           <>
             {metadata?.constructors[0]?.args.length > 0 && (
               <>
@@ -159,7 +186,7 @@ export default function DeployContract() {
                   <Row key={index.toString()} className="mb-2">
                     <Col xs="12">
                       <b>
-                        {c.name} : {c?.type?.type}
+                        {c.name} : {c?.type}
                       </b>
                       <input
                         type="text"
@@ -196,9 +223,15 @@ export default function DeployContract() {
               </Col>
             </Row>
 
-            <Row className="mb-4">
-              <Col xs="12">
-                <LoadingButton isLoading={isLoading} disabled={isLoading} onClick={onSubmit} text="submit" />
+            <Row className="mb-4 d-flex justify-content-end">
+              <Col xs="3">
+                <LoadingButton
+                  className="ink-button ink-button_violet mt-3"
+                  isLoading={isLoading}
+                  disabled={isLoading}
+                  onClick={onSubmit}
+                  text="submit"
+                />
               </Col>
             </Row>
           </>
