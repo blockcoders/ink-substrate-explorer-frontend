@@ -47,7 +47,7 @@ export default function DeployContract() {
   const [constructorParams, setConstructorParams] = useState<ConstructorState[]>([])
   const [deployOptions, setDeployOptions] = useState<DeployState>({
     salt: '',
-    gasLimit: 200000,
+    gasLimit: 1000000000,
     storageDepositLimit: 0,
     value: 0,
   })
@@ -118,22 +118,31 @@ export default function DeployContract() {
       const params = constructorParams.map((el) => el.value)
 
       const tx = codeOrBlueprint.tx[constructor.method](options, ...params)
-      const sub = await tx.signAndSend(account, { signer: injector?.signer || undefined })
+      await tx.signAndSend(account, { signer: injector?.signer || undefined }, (result) => {
+        if (result.dispatchError?.toString()) {
+          setResult({
+            error: true,
+            status: 'error',
+            data: result.dispatchError?.toString(),
+          })
+        } else if (result.dispatchInfo) {
+          setResult({
+            error: false,
+            status: 'success',
+            data: result.status.toHuman(),
+          })
+        }
 
-      setResult({
-        error: false,
-        status: 'success',
-        data: sub.toHuman()?.toString() || '',
+        setDeployOptions({
+          salt: '',
+          gasLimit: 1000000000,
+          storageDepositLimit: 0,
+          value: 0,
+        })
+
+        setFile(null)
+        endLoading()
       })
-
-      setDeployOptions({
-        salt: '',
-        gasLimit: 0,
-        storageDepositLimit: 0,
-        value: 0,
-      })
-
-      setFile(null)
     } catch (error) {
       showErrorToast(error as string)
       setResult({
@@ -141,8 +150,8 @@ export default function DeployContract() {
         status: 'error',
         data: String(error),
       })
+      endLoading()
     }
-    endLoading()
   }
 
   useEffect(() => {
@@ -169,8 +178,6 @@ export default function DeployContract() {
       [name]: value,
     }))
   }
-
-  console.log(metadata)
 
   return (
     <>
@@ -273,6 +280,7 @@ export default function DeployContract() {
         )}
         {result.data && (
           <div className="mt-4">
+            {result?.error ? 'Error:' : 'Success:'}
             <p className="text-break">Deployed to: {result.data}</p>
           </div>
         )}
