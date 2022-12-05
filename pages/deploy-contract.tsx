@@ -55,21 +55,25 @@ export default function DeployContract() {
     const reader = new FileReader()
     reader.readAsArrayBuffer(file)
     reader.onload = async (loadedFile) => {
-      const utf8decoder = new TextDecoder()
+      try {
+        const utf8decoder = new TextDecoder()
 
-      const data = new Uint8Array(loadedFile.target?.result as ArrayBuffer)
-      const json = JSON.parse(utf8decoder.decode(data)) as Record<string, unknown>
+        const data = new Uint8Array(loadedFile.target?.result as ArrayBuffer)
+        const json = JSON.parse(utf8decoder.decode(data)) as Record<string, unknown>
 
-      const api = await connect(WS_PROVIDER)
+        const api = await connect(WS_PROVIDER)
 
-      const value = new Abi(json, api?.registry.getChainProperties())
+        const value = new Abi(json, api?.registry.getChainProperties())
 
-      if (!value?.info?.source?.wasm) {
-        return showErrorToast('Invalid, wasm is missing')
+        if (!value?.info?.source?.wasm) {
+          return showErrorToast('Invalid file, wasm is missing')
+        }
+
+        setFile(file)
+        setMetadata(value)
+      } catch (error) {
+        return showErrorToast('Invalid file, please upload a contract file')
       }
-
-      setFile(file)
-      setMetadata(value)
     }
   }
 
@@ -173,11 +177,11 @@ export default function DeployContract() {
   return (
     <>
       <Row className="mb-5" data-testid="header-links">
-        <div className="d-flex mb-3 align-items-center">
+        <div className="d-flex mb-3 align-items-center justify-content-between">
+          <p className="my-0 ms-4">{file?.name}</p>
           <Button className="ink-Buttonton ink-button_small" onClick={() => console.log(fileRef?.current?.click())}>
             {format('upload_contract')}
           </Button>
-          <p className="my-0 ms-4">{file?.name}</p>
           <input
             ref={fileRef}
             style={{ display: 'none' }}
@@ -186,87 +190,90 @@ export default function DeployContract() {
           />
         </div>
 
-        {metadata && metadata?.constructors[0]?.args.length > 0 && (
+        {metadata && (
           <>
-            <p className="mb-0">constructor: </p>
-            {constructorParams?.map((c, index) => (
-              <Row key={index.toString()} className="mb-2 ps-5">
-                <Col xs="12">
-                  <b>
-                    {c.name} : {c?.type}
-                  </b>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={c.value || ''}
-                    onChange={({ target }) => updateConstructorParams(index, target.value)}
-                  />
-                </Col>
-              </Row>
-            ))}
-          </>
-        )}
-
-        <Row className="mb-2">
-          <Col xs="12">
-            <b>{format('gas_limit')}</b>
-            <input
-              type="text"
-              className="form-control"
-              value={deployOptions.gasLimit}
-              onChange={({ target }) => updateDeployOptions('gasLimit', target.value)}
-            />
-          </Col>
-        </Row>
-
-        {metadata && metadata?.messages.length > 0 && (
-          <>
-            <Row>
-              <Col xs="3" className="mb-3">
-                <button className="ink-button ink-button_small" onClick={() => setShowMessages(!showMessages)}>
-                  {format('messages')}
-                </button>
-              </Col>
+            {metadata?.constructors[0]?.args.length > 0 && (
+              <>
+                <p className="mb-0">constructor: </p>
+                {constructorParams?.map((c, index) => (
+                  <Row key={index.toString()} className="mb-2 ps-5">
+                    <Col xs="12">
+                      <b>
+                        {c.name} : {c?.type}
+                      </b>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={c.value || ''}
+                        onChange={({ target }) => updateConstructorParams(index, target.value)}
+                      />
+                    </Col>
+                  </Row>
+                ))}
+              </>
+            )}
+            <Row className="mb-4">
               <Col xs="12">
-                {showMessages &&
-                  metadata?.messages?.map((msg, index) => (
-                    <Row key={index.toString()} className="mb-2">
-                      <Col xs="12">
-                        <p className="mb-0 fw-bold">
-                          {msg.method}({`${msg.args.map((a) => `${a.name} : ${a.type.type}`).join(' ')}`})
-                        </p>
-                        <p>{msg.docs[0]}</p>
-                      </Col>
-                    </Row>
-                  ))}
-              </Col>
-            </Row>
-            <Row className="mb-4 d-flex justify-content-end">
-              <Col xs="3">
-                <LoadingButton
-                  className="ink-button ink-button_violet mt-3"
-                  isLoading={isLoading}
-                  disabled={isLoading}
-                  onClick={onSubmit}
-                  text={format('submit')}
+                <b>{format('gas_limit')}</b>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={deployOptions.gasLimit}
+                  onChange={({ target }) => updateDeployOptions('gasLimit', target.value)}
                 />
               </Col>
             </Row>
-          </>
-        )}
 
-        {result.data && (
-          <div className="mt-4">
-            {result?.error ? (
+            {metadata?.messages.length > 0 && (
               <>
-                <p className="text-break">error: {result.data}</p>
-              </>
-            ) : (
-              <>
-                <p className="text-break">tx hash: {result.data}</p>
+                <Row>
+                  <Col xs="3" className="mb-3">
+                    <button className="ink-button ink-button_small" onClick={() => setShowMessages(!showMessages)}>
+                      {format('methods')}({metadata?.messages?.length || 0})
+                    </button>
+                  </Col>
+                  <Col xs="12">
+                    {showMessages &&
+                      metadata?.messages?.map((msg, index) => (
+                        <Row key={index.toString()} className="mb-2">
+                          <Col xs="12">
+                            <p className="mb-0 fw-bold">
+                              {msg.method}({`${msg.args.map((a) => `${a.name} : ${a.type.type}`).join(' ')}`})
+                            </p>
+                            <p>{msg.docs[0]}</p>
+                          </Col>
+                        </Row>
+                      ))}
+                  </Col>
+                </Row>
+                <Row className="mb-4 d-flex justify-content-end">
+                  <Col xs="3">
+                    <LoadingButton
+                      className="ink-button ink-button_violet mt-3"
+                      isLoading={isLoading}
+                      disabled={isLoading}
+                      onClick={onSubmit}
+                      text={format('submit')}
+                    />
+                  </Col>
+                </Row>
               </>
             )}
-          </div>
+
+            {result.data && (
+              <div className="mt-4">
+                {result?.error ? (
+                  <>
+                    <p className="text-break">error: {result.data}</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-break">tx hash: {result.data}</p>
+                  </>
+                )}
+              </div>
+            )}
+          </>
         )}
       </Row>
     </>
