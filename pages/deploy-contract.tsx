@@ -1,6 +1,7 @@
 import { Abi, CodePromise } from '@polkadot/api-contract'
 import React, { useRef, useState, useEffect } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
+import Dropzone, { useDropzone } from 'react-dropzone'
 import LoadingButton from '../components/LoadingButton/LoadingButton'
 import { useToast } from '../hooks'
 import { useFormatIntl } from '../hooks/useFormatIntl'
@@ -198,116 +199,123 @@ export default function DeployContract() {
 
   return (
     <>
-      <Row className="mb-5" data-testid="header-links">
-        <div className="d-flex mb-3 align-items-center justify-content-between">
-          <p className="my-0 ms-1">{file && format('uploading') + `: ${file.name}`}</p>
-          <Button
-            className="ink-Buttonton ink-button_small"
-            onClick={() => console.log((fileRef?.current as any)?.click())}
-          >
-            {format('deploy_contract')}
-          </Button>
-          <input
-            ref={fileRef}
-            style={{ display: 'none' }}
-            type="file"
-            onChange={({ target }) => onChangeFile(target.files?.[0] || null)}
-          />
-        </div>
-
-        {metadata && (
-          <>
-            {metadata?.constructors[0]?.args.length > 0 && (
-              <>
-                <p className="mb-0">{format('constructor')}: </p>
-                {constructorParams?.map((c, index) => (
-                  <Row key={index.toString()} className="mb-2 ps-5">
-                    <Col xs="12">
-                      <b>
-                        {c.name} : {c?.type}
-                      </b>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={c.value || ''}
-                        onChange={({ target }) => updateConstructorParams(index, target.value)}
-                      />
-                    </Col>
-                  </Row>
-                ))}
-              </>
-            )}
-            <Row className="mb-4">
-              <Col xs="12">
-                <b>{format('gas_limit')}</b>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={deployOptions.gasLimit}
-                  onChange={({ target }) => updateDeployOptions('gasLimit', target.value)}
-                />
-              </Col>
-            </Row>
-
-            {metadata?.messages.length > 0 && (
-              <>
-                <Row>
-                  <Col xs="3" className="mb-3">
-                    <button className="ink-button ink-button_small" onClick={() => setShowMessages(!showMessages)}>
-                      {format('methods')}({metadata?.messages?.length || 0})
-                    </button>
-                  </Col>
+      <div className="d-flex mb-3 align-items-center justify-content-between">
+        <p className="my-0 ms-1">{file && format('uploading') + `: ${file.name}`}</p>
+        <Button
+          className="ink-Buttonton ink-button_small"
+          onClick={() => console.log((fileRef?.current as any)?.click())}
+        >
+          {format('deploy_contract')}
+        </Button>
+        <input
+          ref={fileRef}
+          style={{ display: 'none' }}
+          type="file"
+          onChange={({ target }) => onChangeFile(target.files?.[0] || null)}
+        />
+      </div>
+      {!file && (
+        <Dropzone multiple={false} onDrop={(files) => onChangeFile(files?.[0] || null)}>
+          {({ getRootProps, getInputProps }) => (
+            <div {...getRootProps({ className: 'dropzone' })}>
+              <input {...getInputProps()} />
+              <p>{format('deploy_file_here')} </p>
+            </div>
+          )}
+        </Dropzone>
+      )}
+      {metadata && (
+        <>
+          {metadata?.constructors[0]?.args.length > 0 && (
+            <>
+              <p className="mb-0">{format('constructor')}: </p>
+              {constructorParams?.map((c, index) => (
+                <Row key={index.toString()} className="mb-2 ps-5">
                   <Col xs="12">
-                    {showMessages &&
-                      metadata?.messages?.map((msg, index) => (
-                        <Row key={index.toString()} className="mb-2">
-                          <Col xs="12">
-                            <p className="mb-0 fw-bold">
-                              {msg.method}({`${msg.args.map((a) => `${a.name} : ${a.type.type}`).join(' ')}`})
-                            </p>
-                            <p>{msg.docs[0]}</p>
-                          </Col>
-                        </Row>
-                      ))}
-                  </Col>
-                </Row>
-                <Row className="mb-4 d-flex justify-content-end">
-                  <Col xs="3">
-                    <LoadingButton
-                      className="ink-button ink-button_violet mt-3"
-                      isLoading={isLoading}
-                      disabled={isLoading}
-                      onClick={onSubmit}
-                      text={format('deploy')}
+                    <b>
+                      {c.name} : {c?.type}
+                    </b>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={c.value || ''}
+                      onChange={({ target }) => updateConstructorParams(index, target.value)}
                     />
                   </Col>
                 </Row>
-              </>
-            )}
-          </>
-        )}
-
-        <Col>
-          {result.data && (
-            <>
-              <div className="mt-4">
-                <p className="fw-bold">{format('result')}:</p>
-              </div>
-              <div className="tx-result-deploy">
-                {Object.keys(result.data)
-                  .filter((k) => !k.startsWith('_'))
-                  .map((c: any, index) => (
-                    <Row key={index.toString()} className="my-3">
-                      <Col className="text-break" xs="12">
-                        {c}: {result?.data[c]}
-                      </Col>
-                    </Row>
-                  ))}
-              </div>
+              ))}
             </>
           )}
-        </Col>
-      </Row>
+          <Row className="mb-4">
+            <Col xs="12">
+              <b>{format('gas_limit')}</b>
+              <input
+                type="text"
+                className="form-control"
+                value={deployOptions.gasLimit}
+                onChange={({ target }) => updateDeployOptions('gasLimit', target.value)}
+              />
+            </Col>
+          </Row>
+
+          {metadata?.messages.length > 0 && (
+            <>
+              <Row>
+                <Col xs="3" className="mb-3">
+                  <button className="ink-button ink-button_small" onClick={() => setShowMessages(!showMessages)}>
+                    {format('methods')}({metadata?.messages?.length || 0})
+                  </button>
+                </Col>
+                <Col xs="12">
+                  {showMessages &&
+                    metadata?.messages?.map((msg, index) => (
+                      <Row key={index.toString()} className="mb-2">
+                        <Col xs="12">
+                          <p className="mb-0 fw-bold">
+                            {msg.method}({`${msg.args.map((a) => `${a.name} : ${a.type.type}`).join(' ')}`})
+                          </p>
+                          <p>{msg.docs[0]}</p>
+                        </Col>
+                      </Row>
+                    ))}
+                </Col>
+              </Row>
+              <Row className="mb-4 d-flex justify-content-end">
+                <Col xs="3">
+                  <LoadingButton
+                    className="ink-button ink-button_violet mt-3"
+                    isLoading={isLoading}
+                    disabled={isLoading}
+                    onClick={onSubmit}
+                    text={format('deploy')}
+                  />
+                </Col>
+              </Row>
+            </>
+          )}
+        </>
+      )}
+
+      <Col>
+        {result.data && (
+          <>
+            <div className="mt-4">
+              <p className="fw-bold">{format('result')}:</p>
+            </div>
+            <div className="tx-result-deploy">
+              {Object.keys(result.data)
+                .filter((k) => !k.startsWith('_'))
+                .map((c: any, index) => (
+                  <Row key={index.toString()} className="my-3">
+                    <Col className="text-break" xs="12">
+                      {c}: {result?.data[c]}
+                    </Col>
+                  </Row>
+                ))}
+            </div>
+          </>
+        )}
+      </Col>
     </>
   )
 }

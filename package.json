@@ -82,6 +82,7 @@
     "react-bootstrap": "^2.6.0",
     "react-bootstrap-sidebar-menu": "^2.0.3",
     "react-dom": "18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-intl": "^6.2.1",
     "react-toastify": "^9.1.1",
     "sass": "^1.56.1",

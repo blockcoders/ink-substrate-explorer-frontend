@@ -37,3 +37,13 @@
     color: black;
   }
 }
+
+.dropzone {
+  border: 3px dashed #0003;
+  padding: 4rem 0.4rem;
+  margin-bottom: 2rem;
+  & p {
+    margin: 0;
+    text-align: center;
+  }
+}
