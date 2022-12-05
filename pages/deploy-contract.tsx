@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
 import LoadingButton from '../components/LoadingButton/LoadingButton'
 import { useToast } from '../hooks'
+import { useFormatIntl } from '../hooks/useFormatIntl'
 import { useLoading } from '../hooks/useLoading'
 import { useSendingTx } from '../hooks/useSendingTx'
 
@@ -22,20 +23,8 @@ interface ConstructorState {
   type: string
 }
 
-interface Metadata {
-  accountId: string
-  argValues?: Record<string, unknown>
-  value?: BN
-  metadata?: Abi
-  name: string
-  constructorIndex: number
-  salt?: string
-  storageDepositLimit?: BN
-  weight: BN
-  codeHash?: string
-}
-
 export default function DeployContract() {
+  const { format } = useFormatIntl()
   const { connect } = useSendingTx()
   const { showErrorToast } = useToast()
   const { isLoading, endLoading, startLoading } = useLoading()
@@ -47,7 +36,7 @@ export default function DeployContract() {
   const [constructorParams, setConstructorParams] = useState<ConstructorState[]>([])
   const [deployOptions, setDeployOptions] = useState<DeployState>({
     salt: '',
-    gasLimit: 1000000000,
+    gasLimit: 10000000000,
     storageDepositLimit: 0,
     value: 0,
   })
@@ -129,16 +118,18 @@ export default function DeployContract() {
           setResult({
             error: false,
             status: 'success',
-            data: result.status.toHuman(),
+            data: String(result?.txHash?.toHuman()),
           })
         }
 
         setDeployOptions({
           salt: '',
-          gasLimit: 1000000000,
+          gasLimit: 10000000000,
           storageDepositLimit: 0,
           value: 0,
         })
+
+        setMetadata(null)
 
         setFile(null)
         endLoading()
@@ -184,7 +175,7 @@ export default function DeployContract() {
       <Row className="mb-5" data-testid="header-links">
         <div className="d-flex mb-3 align-items-center">
           <Button className="ink-Buttonton ink-button_small" onClick={() => console.log(fileRef?.current?.click())}>
-            Upload contract
+            {format('upload_contract')}
           </Button>
           <p className="my-0 ms-4">{file?.name}</p>
           <input
@@ -194,94 +185,88 @@ export default function DeployContract() {
             onChange={({ target }) => onChangeFile(target.files?.[0] || null)}
           />
         </div>
-        {metadata && (
+
+        {metadata && metadata?.constructors[0]?.args.length > 0 && (
           <>
-            {metadata?.constructors[0]?.args.length > 0 && (
-              <>
-                <p className="mb-0">constructor: </p>
-                {constructorParams?.map((c, index) => (
-                  <Row key={index.toString()} className="mb-2">
-                    <Col xs="12">
-                      <b>
-                        {c.name} : {c?.type}
-                      </b>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={c.value || ''}
-                        onChange={({ target }) => updateConstructorParams(index, target.value)}
-                      />
-                    </Col>
-                  </Row>
-                ))}
-              </>
-            )}
+            <p className="mb-0">constructor: </p>
+            {constructorParams?.map((c, index) => (
+              <Row key={index.toString()} className="mb-2 ps-5">
+                <Col xs="12">
+                  <b>
+                    {c.name} : {c?.type}
+                  </b>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={c.value || ''}
+                    onChange={({ target }) => updateConstructorParams(index, target.value)}
+                  />
+                </Col>
+              </Row>
+            ))}
+          </>
+        )}
 
-            <Row className="mb-2">
-              <Col xs="12">
-                <b>Max gas allowed</b>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={deployOptions.gasLimit}
-                  onChange={({ target }) => updateDeployOptions('gasLimit', target.value)}
-                />
+        <Row className="mb-2">
+          <Col xs="12">
+            <b>{format('gas_limit')}</b>
+            <input
+              type="text"
+              className="form-control"
+              value={deployOptions.gasLimit}
+              onChange={({ target }) => updateDeployOptions('gasLimit', target.value)}
+            />
+          </Col>
+        </Row>
+
+        {metadata && metadata?.messages.length > 0 && (
+          <>
+            <Row>
+              <Col xs="3" className="mb-3">
+                <button className="ink-button ink-button_small" onClick={() => setShowMessages(!showMessages)}>
+                  {format('messages')}
+                </button>
               </Col>
-            </Row>
-            <Row className="mb-4">
               <Col xs="12">
-                <b>storage deposit</b>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={deployOptions.storageDepositLimit}
-                  onChange={({ target }) => updateDeployOptions('storageDepositLimit', target.value)}
-                />
-              </Col>
-            </Row>
-
-            {metadata?.messages.length > 0 && (
-              <>
-                <Row>
-                  <Col xs="3" className="mb-3">
-                    <button className="ink-button ink-button_small" onClick={() => setShowMessages(!showMessages)}>
-                      Messages
-                    </button>
-                  </Col>
-                  <Col xs="12">
-                    {showMessages &&
-                      metadata?.messages?.map((msg, index) => (
-                        <Row key={index.toString()} className="mb-2">
-                          <Col xs="12">
-                            <p className="mb-0 fw-bold">
-                              {msg.method}({`${msg.args.map((a) => `${a.name} : ${a.type.type}`).join(' ')}`})
-                            </p>
-                            <p>{msg.docs[0]}</p>
-                          </Col>
-                        </Row>
-                      ))}
-                  </Col>
-                </Row>
-              </>
-            )}
-
-            <Row className="mb-4 d-flex justify-content-end">
-              <Col xs="3">
-                <LoadingButton
-                  className="ink-button ink-button_violet mt-3"
-                  isLoading={isLoading}
-                  disabled={isLoading}
-                  onClick={onSubmit}
-                  text="submit"
-                />
+                {showMessages &&
+                  metadata?.messages?.map((msg, index) => (
+                    <Row key={index.toString()} className="mb-2">
+                      <Col xs="12">
+                        <p className="mb-0 fw-bold">
+                          {msg.method}({`${msg.args.map((a) => `${a.name} : ${a.type.type}`).join(' ')}`})
+                        </p>
+                        <p>{msg.docs[0]}</p>
+                      </Col>
+                    </Row>
+                  ))}
               </Col>
             </Row>
           </>
         )}
+
+        <Row className="mb-4 d-flex justify-content-end">
+          <Col xs="3">
+            <LoadingButton
+              className="ink-button ink-button_violet mt-3"
+              isLoading={isLoading}
+              disabled={isLoading}
+              onClick={onSubmit}
+              text="submit"
+            />
+          </Col>
+        </Row>
+
         {result.data && (
           <div className="mt-4">
-            {result?.error ? 'Error:' : 'Success:'}
-            <p className="text-break">Deployed to: {result.data}</p>
+            {result?.error ? (
+              <>
+                <p className="text-break">error: {result.data}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-break">tx hash: {result.data}</p>
+              </>
+            )}
           </div>
         )}
       </Row>

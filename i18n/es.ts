@@ -103,4 +103,8 @@ export const es = {
 
   'deploy-contract': 'Subir Contrato',
   'deploy contract': 'Subir Contrato',
+
+  messages: 'mensajes',
+
+  upload_contract: 'Subir contrato',
 }

@@ -103,4 +103,8 @@ export const en = {
 
   'deploy-contract': 'Deploy Contract',
   'deploy contract': 'Deploy Contract',
+
+  messages: 'messages',
+
+  upload_contract: 'Upload contract',
 }
