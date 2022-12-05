@@ -111,4 +111,6 @@ export const es = {
   deploy: 'Desplegar',
 
   constructor: 'Constructor',
+
+  deploy_file_here: 'Suelte el archivo aquí',
 }

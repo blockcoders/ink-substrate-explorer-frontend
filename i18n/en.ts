@@ -111,4 +111,6 @@ export const en = {
   deploy: 'Deploy',
 
   constructor: 'Constructor',
+
+  deploy_file_here: 'Drop file here',
 }
