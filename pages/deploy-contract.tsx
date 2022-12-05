@@ -1,5 +1,4 @@
 import { Abi, CodePromise } from '@polkadot/api-contract'
-import { BN } from '@polkadot/util'
 import React, { useRef, useState, useEffect } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
 import LoadingButton from '../components/LoadingButton/LoadingButton'
@@ -31,7 +30,7 @@ export default function DeployContract() {
 
   const fileRef = useRef(null)
   const [showMessages, setShowMessages] = useState(false)
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
   const [metadata, setMetadata] = useState<Abi | null>(null)
   const [constructorParams, setConstructorParams] = useState<ConstructorState[]>([])
   const [deployOptions, setDeployOptions] = useState<DeployState>({
@@ -43,7 +42,7 @@ export default function DeployContract() {
   const [result, setResult] = useState({
     status: '',
     error: false,
-    data: '',
+    data: '' as any,
   })
 
   const onChangeFile = (file: any) => {
@@ -128,7 +127,7 @@ export default function DeployContract() {
             evt.event.method.toString().toLowerCase().includes('newaccount'),
           )
 
-          const contractAddress = events[contractAddressIndex].event.data[0].toString()
+          const contractAddress = events[contractAddressIndex]?.event?.data[0]?.toString()
 
           if (contractAddress) res['contract address'] = contractAddress || ''
 
@@ -201,9 +200,12 @@ export default function DeployContract() {
     <>
       <Row className="mb-5" data-testid="header-links">
         <div className="d-flex mb-3 align-items-center justify-content-between">
-          <p className="my-0 ms-1">{file && `uploading: ${file.name}`}</p>
-          <Button className="ink-Buttonton ink-button_small" onClick={() => console.log(fileRef?.current?.click())}>
-            {format('upload_contract')}
+          <p className="my-0 ms-1">{file && format('uploading') + `: ${file.name}`}</p>
+          <Button
+            className="ink-Buttonton ink-button_small"
+            onClick={() => console.log((fileRef?.current as any)?.click())}
+          >
+            {format('deploy_contract')}
           </Button>
           <input
             ref={fileRef}
@@ -217,7 +219,7 @@ export default function DeployContract() {
           <>
             {metadata?.constructors[0]?.args.length > 0 && (
               <>
-                <p className="mb-0">constructor: </p>
+                <p className="mb-0">{format('constructor')}: </p>
                 {constructorParams?.map((c, index) => (
                   <Row key={index.toString()} className="mb-2 ps-5">
                     <Col xs="12">
@@ -276,7 +278,7 @@ export default function DeployContract() {
                       isLoading={isLoading}
                       disabled={isLoading}
                       onClick={onSubmit}
-                      text={format('submit')}
+                      text={format('deploy')}
                     />
                   </Col>
                 </Row>
@@ -289,12 +291,12 @@ export default function DeployContract() {
           {result.data && (
             <>
               <div className="mt-4">
-                <p className="fw-bold">Result:</p>
+                <p className="fw-bold">{format('result')}:</p>
               </div>
               <div className="tx-result-deploy">
                 {Object.keys(result.data)
                   .filter((k) => !k.startsWith('_'))
-                  .map((c, index) => (
+                  .map((c: any, index) => (
                     <Row key={index.toString()} className="my-3">
                       <Col className="text-break" xs="12">
                         {c}: {result?.data[c]}

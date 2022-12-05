@@ -103,9 +103,12 @@ export const en = {
 
   'deploy-contract': 'Deploy Contract',
   'deploy contract': 'Deploy Contract',
+  uploading: 'Uploading file',
 
   methods: 'methods',
 
-  upload_contract: 'Upload contract',
-  submit: 'Submit',
+  deploy_contract: 'Deploy contract',
+  deploy: 'Deploy',
+
+  constructor: 'Constructor',
 }
