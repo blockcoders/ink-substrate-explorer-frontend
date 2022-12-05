@@ -115,7 +115,7 @@ export default function DeployContract() {
         account,
         { signer: injector?.signer || undefined },
         ({ events, status, txHash, dispatchError, dispatchInfo, internalError }) => {
-          const res = {
+          const res: any = {
             status: status.toString(),
             txHash: txHash.toString() || '',
             dispatchError: dispatchError?.toString() || '',
@@ -123,6 +123,14 @@ export default function DeployContract() {
             internalError: internalError?.toString() || '',
             events: events.map((e) => ` ${e.event.method}`).toString() || '',
           }
+
+          const contractAddressIndex = events.findIndex((evt) =>
+            evt.event.method.toString().toLowerCase().includes('newaccount'),
+          )
+
+          const contractAddress = events[contractAddressIndex].event.data[0].toString()
+
+          if (contractAddress) res['contract address'] = contractAddress || ''
 
           if (dispatchError?.toString()) {
             setResult({
@@ -283,7 +291,7 @@ export default function DeployContract() {
               <div className="mt-4">
                 <p className="fw-bold">Result:</p>
               </div>
-              <div className="tx-result">
+              <div className="tx-result-deploy">
                 {Object.keys(result.data)
                   .filter((k) => !k.startsWith('_'))
                   .map((c, index) => (
