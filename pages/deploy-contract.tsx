@@ -111,39 +111,54 @@ export default function DeployContract() {
       const params = constructorParams.map((el) => el.value)
 
       const tx = codeOrBlueprint.tx[constructor.method](options, ...params)
-      await tx.signAndSend(account, { signer: injector?.signer || undefined }, (result) => {
-        if (result.dispatchError?.toString()) {
-          setResult({
-            error: true,
-            status: 'error',
-            data: result.dispatchError?.toString(),
+      await tx.signAndSend(
+        account,
+        { signer: injector?.signer || undefined },
+        ({ events, status, txHash, dispatchError, dispatchInfo, internalError }) => {
+          const res = {
+            status: status.toString(),
+            txHash: txHash.toString() || '',
+            dispatchError: dispatchError?.toString() || '',
+            dispatchInfo: dispatchInfo?.toString() || '',
+            internalError: internalError?.toString() || '',
+            events: events.map((e) => ` ${e.event.method}`).toString() || '',
+          }
+
+          if (dispatchError?.toString()) {
+            setResult({
+              error: true,
+              status: 'error',
+              data: res,
+            })
+          } else if (dispatchInfo?.toString()) {
+            setResult({
+              error: false,
+              status: 'success',
+              data: res,
+            })
+          }
+
+          setDeployOptions({
+            salt: '',
+            gasLimit: 10000000000,
+            storageDepositLimit: 0,
+            value: 0,
           })
-        } else if (result.dispatchInfo) {
-          setResult({
-            error: false,
-            status: 'success',
-            data: String(result?.txHash?.toHuman()),
-          })
-        }
 
-        setDeployOptions({
-          salt: '',
-          gasLimit: 10000000000,
-          storageDepositLimit: 0,
-          value: 0,
-        })
+          setMetadata(null)
 
-        setMetadata(null)
-
-        setFile(null)
-        endLoading()
-      })
+          setFile(null)
+          endLoading()
+        },
+      )
     } catch (error) {
       showErrorToast(error as string)
       setResult({
         error: true,
         status: 'error',
-        data: String(error),
+        data: {
+          error: String(error),
+        },
       })
       endLoading()
     }
@@ -178,7 +193,7 @@ export default function DeployContract() {
     <>
       <Row className="mb-5" data-testid="header-links">
         <div className="d-flex mb-3 align-items-center justify-content-between">
-          <p className="my-0 ms-4">{file?.name}</p>
+          <p className="my-0 ms-1">{file && `uploading: ${file.name}`}</p>
           <Button className="ink-Buttonton ink-button_small" onClick={() => console.log(fileRef?.current?.click())}>
             {format('upload_contract')}
           </Button>
@@ -259,22 +274,29 @@ export default function DeployContract() {
                 </Row>
               </>
             )}
-
-            {result.data && (
-              <div className="mt-4">
-                {result?.error ? (
-                  <>
-                    <p className="text-break">error: {result.data}</p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-break">tx hash: {result.data}</p>
-                  </>
-                )}
-              </div>
-            )}
           </>
         )}
+
+        <Col>
+          {result.data && (
+            <>
+              <div className="mt-4">
+                <p className="fw-bold">Result:</p>
+              </div>
+              <div className="tx-result">
+                {Object.keys(result.data)
+                  .filter((k) => !k.startsWith('_'))
+                  .map((c, index) => (
+                    <Row key={index.toString()} className="my-3">
+                      <Col className="text-break" xs="12">
+                        {c}: {result?.data[c]}
+                      </Col>
+                    </Row>
+                  ))}
+              </div>
+            </>
+          )}
+        </Col>
       </Row>
     </>
   )
