@@ -41,6 +41,7 @@ export default function DeployContract() {
   const { isLoading, endLoading, startLoading } = useLoading()
 
   const fileRef = useRef(null)
+  const [showMessages, setShowMessages] = useState(false)
   const [file, setFile] = useState(null)
   const [metadata, setMetadata] = useState<Abi | null>(null)
   const [constructorParams, setConstructorParams] = useState<ConstructorState[]>([])
@@ -74,6 +75,10 @@ export default function DeployContract() {
 
       const value = new Abi(json, api?.registry.getChainProperties())
 
+      if (!value?.info?.source?.wasm) {
+        return showErrorToast('Invalid, wasm is missing')
+      }
+
       setFile(file)
       setMetadata(value)
     }
@@ -81,6 +86,7 @@ export default function DeployContract() {
 
   const onSubmit = async () => {
     if (!metadata) return
+
     startLoading()
     try {
       const { web3FromAddress, web3Accounts, web3Enable } = await import('@polkadot/extension-dapp')
@@ -164,11 +170,15 @@ export default function DeployContract() {
     }))
   }
 
+  console.log(metadata)
+
   return (
     <>
       <Row className="mb-5" data-testid="header-links">
         <div className="d-flex mb-3 align-items-center">
-          <Button onClick={() => console.log(fileRef?.current?.click())}>Upload contract</Button>
+          <Button className="ink-Buttonton ink-button_small" onClick={() => console.log(fileRef?.current?.click())}>
+            Upload contract
+          </Button>
           <p className="my-0 ms-4">{file?.name}</p>
           <input
             ref={fileRef}
@@ -222,6 +232,31 @@ export default function DeployContract() {
                 />
               </Col>
             </Row>
+
+            {metadata?.messages.length > 0 && (
+              <>
+                <Row>
+                  <Col xs="3" className="mb-3">
+                    <button className="ink-button ink-button_small" onClick={() => setShowMessages(!showMessages)}>
+                      Messages
+                    </button>
+                  </Col>
+                  <Col xs="12">
+                    {showMessages &&
+                      metadata?.messages?.map((msg, index) => (
+                        <Row key={index.toString()} className="mb-2">
+                          <Col xs="12">
+                            <p className="mb-0 fw-bold">
+                              {msg.method}({`${msg.args.map((a) => `${a.name} : ${a.type.type}`).join(' ')}`})
+                            </p>
+                            <p>{msg.docs[0]}</p>
+                          </Col>
+                        </Row>
+                      ))}
+                  </Col>
+                </Row>
+              </>
+            )}
 
             <Row className="mb-4 d-flex justify-content-end">
               <Col xs="3">
