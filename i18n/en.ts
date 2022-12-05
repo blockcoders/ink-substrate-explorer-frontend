@@ -107,4 +107,5 @@ export const en = {
   messages: 'messages',
 
   upload_contract: 'Upload contract',
+  submit: 'Submit',
 }

@@ -241,20 +241,19 @@ export default function DeployContract() {
                   ))}
               </Col>
             </Row>
+            <Row className="mb-4 d-flex justify-content-end">
+              <Col xs="3">
+                <LoadingButton
+                  className="ink-button ink-button_violet mt-3"
+                  isLoading={isLoading}
+                  disabled={isLoading}
+                  onClick={onSubmit}
+                  text={format('submit')}
+                />
+              </Col>
+            </Row>
           </>
         )}
-
-        <Row className="mb-4 d-flex justify-content-end">
-          <Col xs="3">
-            <LoadingButton
-              className="ink-button ink-button_violet mt-3"
-              isLoading={isLoading}
-              disabled={isLoading}
-              onClick={onSubmit}
-              text="submit"
-            />
-          </Col>
-        </Row>
 
         {result.data && (
           <div className="mt-4">
