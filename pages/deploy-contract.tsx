@@ -8,7 +8,7 @@ import { useFormatIntl } from '../hooks/useFormatIntl'
 import { useLoading } from '../hooks/useLoading'
 import { useSendingTx } from '../hooks/useSendingTx'
 
-const WS_PROVIDER = 'ws://127.0.0.1:9944'
+const WS_PROVIDER = process.env.WS_PROVIDER || 'ws://127.0.0.1:9944'
 
 interface DeployState {
   salt?: string
