@@ -5,7 +5,7 @@ import InfoCard from '../../components/InfoCard/InfoCard'
 import { getTimeAgo } from '../../lib/utils'
 
 const price = 30
-const version = '1.0.4'
+const version = '1.0.6'
 
 jest.mock('../../generated', () => ({
   useGetLastBlockQuery: jest.fn(() => {

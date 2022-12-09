@@ -100,4 +100,17 @@ export const es = {
 
   syncing: 'Sincronizando desde bloque',
   all_block_synced: 'Todos los bloques fueron sincronizados',
+
+  'deploy-contract': 'Desplegar Contrato',
+  'deploy contract': 'Desplegar Contrato',
+  uploading: 'Subiendo archivo',
+
+  methods: 'métodos',
+
+  deploy_contract: 'Desplegar contrato',
+  deploy: 'Desplegar',
+
+  constructor: 'Constructor',
+
+  deploy_file_here: 'Suelte el archivo aquí',
 }

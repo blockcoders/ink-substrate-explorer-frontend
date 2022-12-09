@@ -100,4 +100,17 @@ export const en = {
 
   syncing: 'Syncing from block',
   all_block_synced: 'All blocks synced',
+
+  'deploy-contract': 'Deploy Contract',
+  'deploy contract': 'Deploy Contract',
+  uploading: 'Uploading file',
+
+  methods: 'methods',
+
+  deploy_contract: 'Deploy contract',
+  deploy: 'Deploy',
+
+  constructor: 'Constructor',
+
+  deploy_file_here: 'Drop file here',
 }

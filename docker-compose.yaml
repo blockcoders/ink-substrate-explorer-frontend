@@ -8,8 +8,8 @@ networks:
 services:
   frontend:
     build:
-     context: .
-     dockerfile: dev.Dockerfile
+      context: .
+      dockerfile: dev.Dockerfile
     expose:
       - "3000"
     ports:

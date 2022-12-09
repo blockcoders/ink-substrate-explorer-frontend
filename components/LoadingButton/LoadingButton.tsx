@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
-import LoadingSpinner from '../../assets/img/loading.svg'
+import LoadingSpinner from '../../assets/img/loading-white.svg'
 
 interface LoadingButtonProps {
   isLoading?: boolean
