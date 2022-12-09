@@ -1,7 +1,7 @@
 import { Abi, CodePromise } from '@polkadot/api-contract'
 import React, { useRef, useState, useEffect } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
-import Dropzone, { useDropzone } from 'react-dropzone'
+import Dropzone from 'react-dropzone'
 import LoadingButton from '../components/LoadingButton/LoadingButton'
 import { useToast } from '../hooks'
 import { useFormatIntl } from '../hooks/useFormatIntl'
