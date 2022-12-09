@@ -146,17 +146,19 @@ export default function DeployContract() {
             })
           }
 
-          setDeployOptions({
-            salt: '',
-            gasLimit: 10000000000,
-            storageDepositLimit: 0,
-            value: 0,
-          })
+          if (dispatchError?.toString() || dispatchInfo?.toString()) {
+            setDeployOptions({
+              salt: '',
+              gasLimit: 10000000000,
+              storageDepositLimit: 0,
+              value: 0,
+            })
 
-          setMetadata(null)
+            setMetadata(null)
 
-          setFile(null)
-          endLoading()
+            setFile(null)
+            endLoading()
+          }
         },
       )
     } catch (error) {
