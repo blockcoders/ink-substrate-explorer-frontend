@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5
+Published by **[blockcoders](http://github.com/blockcoders)** on **2022/12/09**
+- [#11](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/11) deploy contract feature
+
 ## 1.0.4
 Published by **[blockcoders](https://github.com/blockcoders)** on **2022/11/25**
 - [#10](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/10) add syncing toast
