@@ -33,15 +33,8 @@ jest.mock('../../generated', () => ({
   }),
 }))
 
-jest.mock('binance-api-node', () => {
-  return {
-    __esModule: true,
-    default: () => ({
-      avgPrice: jest.fn().mockResolvedValue({
-        price,
-      }),
-    }),
-  }
+global.fetch = jest.fn().mockResolvedValue({
+  json: jest.fn().mockResolvedValue({ polkadot: { usd: price } }),
 })
 
 jest.mock('next/router', () => ({
