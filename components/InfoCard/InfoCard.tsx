@@ -1,4 +1,3 @@
-import Binance, { AvgPriceResult } from 'binance-api-node'
 import { get } from 'lodash'
 import Image from 'next/future/image'
 import { useRouter } from 'next/router'
@@ -26,16 +25,17 @@ function InfoCard() {
   const token = 'DOT'
 
   useEffect(() => {
-    const client = Binance()
-    client
-      .avgPrice({ symbol: `${token}USDT` })
-      .then((res) => {
-        const result = Number((res as AvgPriceResult).price)
-        setPrice(result)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    ;(async () => {
+      try {
+        const data = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=polkadot&vs_currencies=usd')
+        const price = await data.json()
+
+        setPrice(price?.polkadot?.usd || 0)
+      } catch (error) {
+        console.error(error)
+        setPrice(0)
+      }
+    })()
   }, [])
 
   useEffect(() => {
