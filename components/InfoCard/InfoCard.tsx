@@ -32,6 +32,7 @@ function InfoCard() {
 
         setPrice(price?.polkadot?.usd || 0)
       } catch (error) {
+        console.error(error)
         setPrice(0)
       }
     })()
