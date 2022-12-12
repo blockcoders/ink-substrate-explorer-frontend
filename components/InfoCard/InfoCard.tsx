@@ -30,8 +30,10 @@ function InfoCard() {
         const data = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=polkadot&vs_currencies=usd')
         const price = await data.json()
 
-        setPrice(price?.polkadot?.usd)
-      } catch (error) {}
+        setPrice(price?.polkadot?.usd || 0)
+      } catch (error) {
+        setPrice(0)
+      }
     })()
   }, [])
 
