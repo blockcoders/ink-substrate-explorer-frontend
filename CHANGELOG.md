@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6
+Published by **[blockcoders](http://github.com/blockcoders)** on **2022/12/12**
+- [#12](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/12) change binance-api to fetch from gecko
+
 ## 1.0.5
 Published by **[blockcoders](http://github.com/blockcoders)** on **2022/12/09**
 - [#11](https://github.com/blockcoders/ink-substrate-explorer-frontend/pull/11) deploy contract feature
