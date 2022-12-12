@@ -79,4 +79,18 @@ describe('InfoCard', () => {
 
     await waitFor(() => expect(tokenElement?.innerHTML).toContain(token + `: $0`))
   })
+
+  it('show price 0', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue({}),
+    })
+
+    const token = 'DOT'
+
+    const { container } = render(<InfoCard />)
+
+    const tokenElement = container?.getElementsByClassName('ink_infocard-dot')[0]
+
+    await waitFor(() => expect(tokenElement?.innerHTML).toContain(token + `: $0`))
+  })
 })
