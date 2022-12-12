@@ -33,10 +33,6 @@ jest.mock('../../generated', () => ({
   }),
 }))
 
-global.fetch = jest.fn().mockResolvedValue({
-  json: jest.fn().mockResolvedValue({ polkadot: { usd: price } }),
-})
-
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
     locale: 'en',
@@ -51,6 +47,10 @@ jest.mock('../../hooks/useFormatIntl', () => ({
 
 describe('InfoCard', () => {
   it('show render', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue({ polkadot: { usd: price } }),
+    })
+
     const token = 'DOT'
 
     const { container } = render(<InfoCard />)
@@ -66,5 +66,17 @@ describe('InfoCard', () => {
       ),
     )
     await waitFor(() => expect(sdkVersionElement.innerHTML).toContain(`SDK: ${version}`))
+  })
+
+  it('show price error', async () => {
+    global.fetch = jest.fn().mockRejectedValue(new Error('invalid url'))
+
+    const token = 'DOT'
+
+    const { container } = render(<InfoCard />)
+
+    const tokenElement = container?.getElementsByClassName('ink_infocard-dot')[0]
+
+    await waitFor(() => expect(tokenElement?.innerHTML).toContain(token + `: $0`))
   })
 })
